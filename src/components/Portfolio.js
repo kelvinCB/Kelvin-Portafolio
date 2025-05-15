@@ -6,71 +6,84 @@ const PortfolioSection = styled.section`
   padding: 3rem 1.5rem;
 `;
 const Title = styled.h2`
-  color: #ffb07c;
+  color: #98ca3f;
   font-size: 2rem;
   margin-bottom: 2rem;
   text-align: center;
 `;
 const ProjectsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
+  padding: 0 2rem;
 `;
 const Card = styled.div`
-  background: #261b47;
+  background: rgba(18, 31, 61, 0.7);
   border-radius: 1rem;
-  box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.15);
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.2);
   padding: 1.5rem;
   color: #fff;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.3);
+  }
 `;
 const ProjectImg = styled.img`
   width: 100%;
   border-radius: 0.7rem;
   margin-bottom: 1rem;
+  border: 2px solid #98ca3f;
+  object-fit: cover;
+  height: 160px;
 `;
 const ProjectTitle = styled.h3`
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
+  color: #98ca3f;
 `;
 const ProjectDesc = styled.p`
   font-size: 1rem;
   margin-bottom: 1rem;
+  line-height: 1.5;
 `;
 const ProjectLink = styled.a`
-  color: #ffb07c;
+  color: #98ca3f;
   font-weight: bold;
   display: flex;
   align-items: center;
   text-decoration: none;
+  margin-top: auto;
   &:hover { text-decoration: underline; }
 `;
 
 const projects = [
   {
-    title: 'Landing Page Moderna',
-    img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
-    desc: 'Sitio de presentación para una agencia digital.',
+    title: 'QA Automation Dashboard',
+    img: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80',
+    desc: 'Dashboard para monitoreo de pruebas automatizadas con Cypress y Selenium.',
     link: '#',
   },
   {
-    title: 'Dashboard Interactivo',
-    img: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=400&q=80',
-    desc: 'Panel administrativo con estadísticas y gráficos.',
-    link: '#',
-  },
-  {
-    title: 'E-commerce UI',
+    title: 'Mobile Testing Suite',
     img: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80',
-    desc: 'Interfaz de tienda online moderna y responsiva.',
+    desc: 'Automatización de pruebas móviles usando Appium y reportes visuales.',
+    link: '#',
+  },
+  {
+    title: 'API Automation CI/CD',
+    img: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=400&q=80',
+    desc: 'Integración de pruebas automáticas de API en pipelines CI/CD con Postman y Playwright.',
     link: '#',
   },
 ];
 
-const Portfolio = () => (
-  <PortfolioSection>
+const Portfolio = ({ id }) => (
+  <PortfolioSection id={id}>
     <Title>Mi Portafolio</Title>
     <ProjectsGrid>
       {projects.map((proj, idx) => (

@@ -6,7 +6,7 @@ const Section = styled.section`
   padding: 3rem 1.5rem;
 `;
 const Title = styled.h2`
-  color: #ffb07c;
+  color: #98ca3f;
   font-size: 2rem;
   margin-bottom: 2rem;
   text-align: center;
@@ -19,16 +19,17 @@ const Timeline = styled.div`
   margin: 0 auto;
 `;
 const Job = styled.div`
-  background: #261b47;
+  background: rgba(18, 31, 61, 0.7);
   border-radius: 1rem;
-  box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.15);
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.2);
   padding: 1.5rem;
   color: #fff;
   display: flex;
   flex-direction: column;
+  border-left: 4px solid #98ca3f;
 `;
 const JobTitle = styled.h3`
-  color: #ffb07c;
+  color: #98ca3f;
   margin-bottom: 0.2rem;
 `;
 const Company = styled.span`
@@ -36,8 +37,9 @@ const Company = styled.span`
   color: #fff;
 `;
 const Period = styled.span`
-  color: #ffb07c;
+  color: #98ca3f;
   font-size: 0.95rem;
+  opacity: 0.9;
 `;
 const Description = styled.p`
   margin: 0.5rem 0 0 0;
@@ -45,26 +47,26 @@ const Description = styled.p`
 
 const experiences = [
   {
-    title: 'Senior Frontend Developer',
-    company: 'Awesome Tech Inc.',
-    period: '2023 - Present',
-    desc: 'Leading the frontend team and building modern web applications with React and TypeScript.',
+    title: 'QA Automation Engineer',
+    company: 'Interfell',
+    period: '2022 - Actualidad',
+    desc: 'Automatización de pruebas para aplicaciones web y móviles usando Cypress, Playwright, Selenium, Appium y Postman. Enfoque en calidad y mejora continua.',
   },
   {
-    title: 'UI/UX Designer',
-    company: 'Creative Studio',
-    period: '2021 - 2023',
-    desc: 'Designed user interfaces and improved user experience for various digital products.',
+    title: 'QA Automation Engineer',
+    company: 'CENIT',
+    period: '2021 - 2022',
+    desc: 'Diseño y ejecución de pruebas automatizadas para proyectos de software, asegurando la calidad en cada entrega.',
   },
   {
-    title: 'Junior Web Developer',
-    company: 'Startup Hub',
-    period: '2019 - 2021',
-    desc: 'Developed and maintained websites and landing pages using HTML, CSS, and JavaScript.',
+    title: 'QA Tester',
+    company: 'Interfell',
+    period: '2020 - 2021',
+    desc: 'Ejecución de pruebas funcionales y reporte de bugs en aplicaciones web y móviles.',
   },
 ];
 
-const Experience = () => (
+const Experience = ({ id }) => (
   <Section id="experience">
     <Title><FaBriefcase style={{ marginRight: '10px' }} /> Experience</Title>
     <Timeline>

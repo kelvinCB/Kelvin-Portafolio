@@ -4,17 +4,17 @@ import { FaEnvelope, FaPhoneAlt } from 'react-icons/fa';
 
 const Section = styled.section`
   padding: 3rem 1.5rem;
-  background: linear-gradient(135deg, #2e2257 60%, #ffb07c 100%);
+  background: linear-gradient(135deg, #121f3d 0%, #0a1b2a 100%);
   border-radius: 1.5rem;
-  margin: 2rem 0;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+  margin: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
   color: #fff;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
 `;
 const Title = styled.h2`
-  color: #ffb07c;
+  color: #98ca3f;
   font-size: 2rem;
   margin-bottom: 1.5rem;
   text-align: center;
@@ -27,28 +27,46 @@ const Form = styled.form`
 const Input = styled.input`
   padding: 0.8rem 1rem;
   border-radius: 0.5rem;
-  border: none;
+  border: 2px solid rgba(152, 202, 63, 0.3);
   font-size: 1rem;
+  background-color: rgba(18, 31, 61, 0.7);
+  color: #fff;
+  transition: border-color 0.3s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: #98ca3f;
+  }
 `;
 const TextArea = styled.textarea`
   padding: 0.8rem 1rem;
   border-radius: 0.5rem;
-  border: none;
+  border: 2px solid rgba(152, 202, 63, 0.3);
   font-size: 1rem;
   min-height: 100px;
+  background-color: rgba(18, 31, 61, 0.7);
+  color: #fff;
+  transition: border-color 0.3s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: #98ca3f;
+  }
 `;
 const Button = styled.button`
-  background: #ffb07c;
-  color: #2e2257;
+  background: #98ca3f;
+  color: #0a1b2a;
   border: none;
   border-radius: 0.5rem;
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
+  
   &:hover {
-    background: #ff8c42;
+    background: #7bac23;
+    transform: translateY(-2px);
   }
 `;
 const Info = styled.div`
@@ -64,7 +82,7 @@ const IconText = styled.div`
   gap: 0.5rem;
 `;
 
-const Contact = () => {
+const Contact = ({ id }) => {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
 
@@ -82,8 +100,8 @@ const Contact = () => {
     <Section id="contact">
       <Title>Contact Me</Title>
       <Info>
-        <IconText><FaEnvelope /> email@example.com</IconText>
-        <IconText><FaPhoneAlt /> +1 234 567 8901</IconText>
+        <IconText><FaEnvelope /> kelvin.calcano@example.com</IconText>
+        <IconText><FaPhoneAlt /> +1 809 123 4567</IconText>
       </Info>
       <Form onSubmit={handleSubmit}>
         <Input
@@ -111,7 +129,7 @@ const Contact = () => {
         />
         <Button type="submit">Send Message</Button>
       </Form>
-      {submitted && <p style={{ color: '#ffb07c', textAlign: 'center', marginTop: '1rem' }}>Thank you for your message!</p>}
+      {submitted && <p style={{ color: '#98ca3f', textAlign: 'center', marginTop: '1rem' }}>Thank you for your message!</p>}
     </Section>
   );
 };
