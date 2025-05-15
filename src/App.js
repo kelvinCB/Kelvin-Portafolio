@@ -2,6 +2,8 @@ import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import AboutMe from './components/AboutMe';
 import Portfolio from './components/Portfolio';
+import Experience from './components/Experience';
+import Contact from './components/Contact';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -22,7 +24,9 @@ function App() {
     <MainContainer>
       <GlobalStyle />
       <AboutMe />
+      <Experience />
       <Portfolio />
+      <Contact />
     </MainContainer>
   );
 }
