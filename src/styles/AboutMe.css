@@ -1,0 +1,28 @@
+/* Estilos para el componente AboutMe */
+.about-wrapper {
+  background: linear-gradient(135deg, #121f3d 0%, #0a1b2a 100%);
+  color: #fff;
+  padding: 3rem 1.5rem;
+  border-radius: 1.5rem;
+  margin: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1.5rem;
+  border: 4px solid #98ca3f;
+}
+
+.section-description {
+  font-size: 1.1rem;
+  max-width: 600px;
+  text-align: center;
+  line-height: 1.6;
+}

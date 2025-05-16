@@ -1,0 +1,62 @@
+/* Estilos para el componente Portfolio */
+.portfolio-section {
+  padding: 3rem 1.5rem;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 0 2rem;
+}
+
+.project-card {
+  background: rgba(18, 31, 61, 0.7);
+  border-radius: 1rem;
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.3);
+}
+
+.project-img {
+  width: 100%;
+  border-radius: 0.7rem;
+  margin-bottom: 1rem;
+  border: 2px solid #98ca3f;
+  object-fit: cover;
+  height: 160px;
+}
+
+.project-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #98ca3f;
+}
+
+.project-desc {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.project-link {
+  color: #98ca3f;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin-top: auto;
+}
+
+.project-link:hover {
+  text-decoration: underline;
+}

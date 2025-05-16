@@ -1,0 +1,43 @@
+/* Estilos para el componente Experience */
+.experience-section {
+  padding: 3rem 1.5rem;
+}
+
+.experience-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.experience-job {
+  background: rgba(18, 31, 61, 0.7);
+  border-radius: 1rem;
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  border-left: 4px solid #98ca3f;
+}
+
+.job-title {
+  color: #98ca3f;
+  margin-bottom: 0.2rem;
+}
+
+.company-name {
+  font-weight: bold;
+  color: #fff;
+}
+
+.job-period {
+  color: #98ca3f;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.job-description {
+  margin: 0.5rem 0 0 0;
+}

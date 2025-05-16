@@ -1,49 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
 import { FaBriefcase } from 'react-icons/fa';
-
-const Section = styled.section`
-  padding: 3rem 1.5rem;
-`;
-const Title = styled.h2`
-  color: #98ca3f;
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  text-align: center;
-`;
-const Timeline = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  max-width: 700px;
-  margin: 0 auto;
-`;
-const Job = styled.div`
-  background: rgba(18, 31, 61, 0.7);
-  border-radius: 1rem;
-  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.2);
-  padding: 1.5rem;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  border-left: 4px solid #98ca3f;
-`;
-const JobTitle = styled.h3`
-  color: #98ca3f;
-  margin-bottom: 0.2rem;
-`;
-const Company = styled.span`
-  font-weight: bold;
-  color: #fff;
-`;
-const Period = styled.span`
-  color: #98ca3f;
-  font-size: 0.95rem;
-  opacity: 0.9;
-`;
-const Description = styled.p`
-  margin: 0.5rem 0 0 0;
-`;
+import '../styles/Experience.css';
 
 const experiences = [
   {
@@ -67,18 +24,21 @@ const experiences = [
 ];
 
 const Experience = ({ id }) => (
-  <Section id="experience">
-    <Title><FaBriefcase style={{ marginRight: '10px' }} /> Experience</Title>
-    <Timeline>
+  <section id={id} className="experience-section">
+    <h2 className="section-title">
+      <FaBriefcase style={{ marginRight: '10px' }} /> Experience
+    </h2>
+    <div className="experience-timeline">
       {experiences.map((job, idx) => (
-        <Job key={idx}>
-          <JobTitle>{job.title}</JobTitle>
-          <Company>{job.company}</Company> <Period>({job.period})</Period>
-          <Description>{job.desc}</Description>
-        </Job>
+        <div key={idx} className="experience-job">
+          <h3 className="job-title">{job.title}</h3>
+          <span className="company-name">{job.company}</span> 
+          <span className="job-period">({job.period})</span>
+          <p className="job-description">{job.desc}</p>
+        </div>
       ))}
-    </Timeline>
-  </Section>
+    </div>
+  </section>
 );
 
 export default Experience;
