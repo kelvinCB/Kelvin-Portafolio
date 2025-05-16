@@ -86,6 +86,34 @@
   transform: translateY(-2px);
 }
 
+.error-message {
+  color: #fff;
+  background: linear-gradient(90deg, #ff3b47 60%, #ff7b47 100%);
+  font-size: 1em;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  padding: 6px 14px 6px 2.2em;
+  border-radius: 5px;
+  border-left: 5px solid #ff3b47;
+  box-shadow: 0 2px 8px 0 rgba(255, 59, 71, 0.08);
+  position: relative;
+  font-weight: 600;
+  display: block;
+  animation: errorFadeIn 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+}
+.error-message::before {
+  content: "⚠️";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2em;
+}
+@keyframes errorFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .success-message {
   color: #98ca3f;
   text-align: center;
