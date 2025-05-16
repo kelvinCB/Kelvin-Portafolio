@@ -6,6 +6,9 @@ const Contact = ({ id }) => {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [responseMessage, setResponseMessage] = useState('');
+  const [responseError, setResponseError] = useState('');
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,17 +26,39 @@ const Contact = ({ id }) => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setResponseMessage('');
+    setResponseError('');
+    setSubmitted(false);
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      setSubmitted(false);
       return;
     }
     setErrors({});
-    setSubmitted(true);
-    setForm({ name: '', email: '', message: '' });
+    setLoading(true);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+      if (response.ok) {
+        setResponseMessage('¡Gracias por tu mensaje!');
+        setSubmitted(true);
+        setForm({ name: '', email: '', message: '' });
+      } else {
+        const data = await response.json();
+        setResponseError(data.error || 'Hubo un error al enviar el mensaje.');
+      }
+    } catch (error) {
+      setResponseError('No se pudo conectar con el servidor.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -70,9 +95,12 @@ const Contact = ({ id }) => {
           onChange={handleChange}
         />
         {errors.message && <span className="error-message">{errors.message}</span>}
-        <button className="submit-button" type="submit">Send Message</button>
+        <button className="submit-button" type="submit" disabled={loading}>
+          {loading ? 'Sending...' : 'Send Message'}
+        </button>
       </form>
-      {submitted && <p className="success-message">Thank you for your message!</p>}
+      {responseMessage && <p className="success-message">{responseMessage}</p>}
+      {responseError && <p className="error-message">{responseError}</p>}
     </section>
   );
 };
