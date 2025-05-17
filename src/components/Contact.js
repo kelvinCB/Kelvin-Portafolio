@@ -3,7 +3,7 @@ import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaLinkedinIn, FaGithub, FaTwitt
 import '../styles/Contact.css';
 
 const Contact = ({ id }) => {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '', honeypot: '' });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -23,6 +23,15 @@ const Contact = ({ id }) => {
       newErrors.email = 'El email no tiene un formato válido.';
     }
     if (!form.message.trim()) newErrors.message = 'El mensaje es obligatorio.';
+    // Validación de teléfono (opcional pero si se llena debe ser válido)
+    if (form.phone && form.phone.trim() !== '') {
+      const phoneSanitized = form.phone.trim();
+      const phoneDigits = phoneSanitized.replace(/\D/g, '');
+      if (!/^[+]?\d[\d\s-]{6,}$/.test(phoneSanitized) || phoneDigits.length < 7 || phoneDigits.length > 15) {
+        newErrors.phone = 'El teléfono no es válido.';
+      }
+    }
+
     return newErrors;
   };
 
@@ -119,7 +128,17 @@ const Contact = ({ id }) => {
           </div>
           
           <div className="contact-form-column">
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <form className="contact-form" onSubmit={handleSubmit} autoComplete="off">
+                {/* Honeypot anti-spam */}
+                <input
+                  type="text"
+                  name="honeypot"
+                  value={form.honeypot}
+                  onChange={handleChange}
+                  style={{display:'none'}}
+                  tabIndex="-1"
+                  autoComplete="off"
+                />
               <div className="form-header">
                 <h3>Envíame un mensaje</h3>
                 <p>Completá el formulario y te responderé a la brevedad</p>
@@ -163,6 +182,7 @@ const Contact = ({ id }) => {
                   value={form.phone}
                   onChange={handleChange}
                 />
+                {errors.phone && <span className="error-message">{errors.phone}</span>}
               </div>
               
               <div className="form-group">

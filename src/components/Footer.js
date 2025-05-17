@@ -10,12 +10,6 @@ const Footer = () => {
           KC<span>Dev</span>
         </div>
         
-        <div className="footer-links">
-          <a href="#about">About Me</a>
-          <a href="#experience">Experience</a>
-          <a href="#portfolio">Portfolio</a>
-          <a href="#contact">Contact Me</a>
-        </div>
 
         <div className="social-links">
           <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon">

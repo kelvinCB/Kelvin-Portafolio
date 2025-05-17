@@ -46,7 +46,36 @@ app.post('/api/create-checkout-session', async (req, res) => {
 
 // Endpoint para recibir mensajes de contacto
 app.post('/api/contact', async (req, res) => {
-  const { name, email, message } = req.body;
+  console.log('BODY RECIBIDO:', req.body);
+  const { name, email, phone, message, honeypot, captcha } = req.body;
+
+  // Protección anti-spam: honeypot
+  if (honeypot && honeypot.trim() !== "") {
+    return res.status(400).json({ message: 'Detección de spam.' });
+  }
+
+  // Validación básica de campos
+  if (!name || !name.trim()) return res.status(400).json({ message: 'El nombre es obligatorio.' });
+  if (!email || !/^\S+@\S+\.\S+$/.test(email)) return res.status(400).json({ message: 'El email no es válido.' });
+  if (!message || !message.trim()) return res.status(400).json({ message: 'El mensaje es obligatorio.' });
+
+  // Validación de teléfono (solo si se proporciona)
+  let phoneValid = false;
+  let phoneSanitized = '';
+  if (phone && phone.trim() !== "") {
+    // Permite +, dígitos y espacios, mínimo 7 dígitos reales
+    const phoneDigits = phone.replace(/\D/g, '');
+    phoneSanitized = phone.trim();
+    if (/^[+]?\d[\d\s-]{6,}$/.test(phoneSanitized) && phoneDigits.length >= 7 && phoneDigits.length <= 15) {
+      phoneValid = true;
+      console.log('Teléfono válido recibido:', phoneSanitized);
+    } else {
+      console.log('Teléfono inválido recibido:', phone);
+      return res.status(400).json({ message: 'El teléfono no es válido.' });
+    }
+  } else {
+    console.log('No se recibió teléfono o está vacío.');
+  }
 
   // Configura tu cuenta de correo (puede ser Gmail, Outlook, etc.)
   // Si usas Gmail, activa "Acceso de apps menos seguras" o usa una App Password
@@ -81,6 +110,7 @@ app.post('/api/contact', async (req, res) => {
       <h2 style="color: #0078d7;">¡Nuevo mensaje de contacto!</h2>
       <p><strong>Nombre:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
+      ${phoneValid ? `<p><strong>Teléfono:</strong> ${phoneSanitized}</p>` : '<!-- Teléfono no proporcionado o inválido -->'}
       <p><strong>Mensaje:</strong></p>
       <div style="background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 5px;">
         ${message}
@@ -89,6 +119,7 @@ app.post('/api/contact', async (req, res) => {
       <small style="color: #888;">Este mensaje fue enviado desde el formulario de tu portafolio.</small>
     </div>
   `;
+  console.log('¿Se incluirá teléfono en el email?', phoneValid ? phoneSanitized : 'NO');
 
   try {
     await transporter.sendMail({
