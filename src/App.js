@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import AboutMe from './components/AboutMe';
 import Portfolio from './components/Portfolio';
 import Experience from './components/Experience';
@@ -9,15 +9,23 @@ import './styles/App.css';
 function App() {
   const [activeSection, setActiveSection] = useState('about');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const topRef = useRef(null);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
   return (
-    <div className="main-container">
+    <div className="main-container" ref={topRef}>
       <header className="app-header">
-        <div className="logo">
+        <div className="logo" onClick={scrollToTop} style={{ cursor: 'pointer' }}>
           KC<span>Dev</span>
         </div>
         <button className="mobile-menu-button" onClick={toggleMobileMenu}>
