@@ -97,7 +97,7 @@ const Contact = ({ id }) => {
                   <div className="contact-icon"><FaPhoneAlt /></div>
                   <div>
                     <h4>Llámame</h4>
-                    <p>+1 809 123 4567</p>
+                    <p>+1 829 969 8254</p>
                   </div>
                 </div>
                 
@@ -105,7 +105,7 @@ const Contact = ({ id }) => {
                   <div className="contact-icon"><FaEnvelope /></div>
                   <div>
                     <h4>Email</h4>
-                    <p>kelvin.calcano@example.com</p>
+                    <p>kelvinr02@hotmail.com</p>
                   </div>
                 </div>
                 
@@ -114,6 +114,7 @@ const Contact = ({ id }) => {
                   <div>
                     <h4>Ubicación</h4>
                     <p>Santo Domingo, República Dominicana</p>
+                    <p>Remoto</p>
                   </div>
                 </div>
               </div>
@@ -129,7 +130,7 @@ const Contact = ({ id }) => {
           
           <div className="contact-form-column">
             <form className="contact-form" onSubmit={handleSubmit} autoComplete="off">
-                {/* Honeypot anti-spam */}
+                {/* Campo oculto para evitar bots - funciona mejor que captcha */}
                 <input
                   type="text"
                   name="honeypot"

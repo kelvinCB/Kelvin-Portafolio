@@ -26,11 +26,11 @@ function App() {
     });
   };
 
-  // Scrollspy effect
+  // Mi implementación del scrollspy - revisar si hay delay en móviles
   React.useEffect(() => {
     const handleScroll = () => {
-      const sectionIds = ['about', 'experience', 'portfolio', 'contact'];
-      const offset = 130; // Ajuste para header
+      const sectionIds = ['about', 'portfolio', 'experience', 'contact'];
+      const offset = 130; // OJO: ajusté esto por el tamaño del header, no cambiar
       let current = 'about';
       for (let i = 0; i < sectionIds.length; i++) {
         const el = document.getElementById(sectionIds[i]);
@@ -44,7 +44,7 @@ function App() {
       setActiveSection(current);
     };
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Trigger on mount
+    handleScroll(); // inicializa al cargar la página
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -66,18 +66,18 @@ function App() {
             About Me
           </a>
           <a 
-            href="#experience" 
-            className={`nav-link ${activeSection === 'experience' ? 'active' : ''}`}
-            onClick={() => setActiveSection('experience')}
-          >
-            Experience
-          </a>
-          <a 
             href="#portfolio" 
             className={`nav-link ${activeSection === 'portfolio' ? 'active' : ''}`}
             onClick={() => setActiveSection('portfolio')}
           >
             Portfolio
+          </a>
+          <a 
+            href="#experience" 
+            className={`nav-link ${activeSection === 'experience' ? 'active' : ''}`}
+            onClick={() => setActiveSection('experience')}
+          >
+            Experience
           </a>
           <a 
             href="#contact" 
@@ -90,8 +90,8 @@ function App() {
       </header>
       <BackgroundElements />
       <AboutMe id="about" />
-      <Experience id="experience" />
       <Portfolio id="portfolio" />
+      <Experience id="experience" />
       <Contact id="contact" />
       <Footer />
       <WhatsAppButton 

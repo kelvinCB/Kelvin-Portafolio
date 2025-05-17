@@ -47,7 +47,7 @@ const DonateButton = () => {
         <img 
           src={require('../resources/donation.png')} 
           alt="Donar" 
-          style={{ width: '100px', height: 'auto', borderRadius: '40px' }}
+          style={{ width: '80px', height: 'auto', borderRadius: '40px' }}
         />
       </button>
 
@@ -59,7 +59,7 @@ const DonateButton = () => {
             <p>Gracias por considerar hacer una donación. Tu aporte me ayuda a seguir desarrollando proyectos como este.</p>
             
             <div className="donation-options">
-              {/* PayPal Donation Button */}
+              {/* Botón PayPal - verificar cuenta */}
               <div className="paypal-option">
                 <h3>Donar con PayPal</h3>
                 <form action="https://www.paypal.com/donate" method="post" target="_blank">
@@ -69,7 +69,7 @@ const DonateButton = () => {
                 </form>
               </div>
 
-              {/* Stripe/Credit Card Option */}
+              {/* Opción con Stripe - revisar comisiones */}
               <div className="card-option">
                 <h3>Donar con tarjeta</h3>
                 <div className="amount-options">
