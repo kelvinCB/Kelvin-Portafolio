@@ -45,10 +45,28 @@ exports.contactFormLimiter = rateLimit({
 });
 
 // Middleware para sanitizar datos y prevenir inyección NoSQL
-exports.sanitize = mongoSanitize();
+exports.sanitize = mongoSanitize({
+  // Configuración segura para producción que evita el error de query
+  onSanitize: (req, key) => {
+    console.warn(`Se intentó inyección NoSQL detectada en el campo: ${key}`);
+  },
+  dryRun: process.env.NODE_ENV !== 'production' // Solo registra en desarrollo, aplica en producción
+});
 
 // Middleware para añadir headers de seguridad
 exports.secureHeaders = helmet({
-  contentSecurityPolicy: false, // Deshabilitado para desarrollo, habilitar en producción
-  crossOriginEmbedderPolicy: false // Para permitir cargar recursos de otras fuentes
+  contentSecurityPolicy: process.env.NODE_ENV === 'production', // Habilitar en producción
+  crossOriginEmbedderPolicy: false, // Para permitir cargar recursos de otras fuentes
+  
+  // Configuración adicional para producción
+  hsts: process.env.NODE_ENV === 'production' ? {
+    maxAge: 31536000, // 1 año en segundos
+    includeSubDomains: true,
+    preload: true
+  } : false,
+  
+  // Habilitar referrer policy 
+  referrerPolicy: {
+    policy: 'strict-origin-when-cross-origin'
+  }
 });

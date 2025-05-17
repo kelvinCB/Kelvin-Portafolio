@@ -23,7 +23,7 @@ const PORT = process.env.PORT || 5000;
 // Middlewares de seguridad y formateo
 app.use(cors());
 app.use(express.json());
-// app.use(sanitize); // Protección contra inyección NoSQL - DESACTIVADO TEMPORALMENTE
+app.use(sanitize); // Protección contra inyección NoSQL - Configuración segura
 app.use(secureHeaders); // Headers de seguridad
 
 // Endpoint para donaciones con Stripe
