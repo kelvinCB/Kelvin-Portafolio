@@ -3,6 +3,7 @@ import AboutMe from './components/AboutMe';
 import Portfolio from './components/Portfolio';
 import Experience from './components/Experience';
 import Contact from './components/Contact';
+import WhatsAppButton from './components/WhatsAppButton';
 import './styles/App.css';
 
 function App() {
@@ -57,6 +58,10 @@ function App() {
       <Experience id="experience" />
       <Portfolio id="portfolio" />
       <Contact id="contact" />
+      <WhatsAppButton 
+        phoneNumber="18299698254" 
+        message="Hola, vi tu portafolio y me gustaria hablar contigo" 
+      />
     </div>
   );
 }

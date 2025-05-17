@@ -4,6 +4,7 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 
+require('dotenv').config();
 const app = express();
 const PORT = 5000;
 
@@ -21,8 +22,8 @@ app.post('/api/contact', async (req, res) => {
     // --- Configuración para Gmail + App Password ---
     service: 'gmail',
     auth: {
-      user: 'kelvinc0219@gmail.com', // Tu correo de Gmail
-      pass: 'tnnt kpdf ofhx erty',  // Tu App Password de Gmail
+      user: process.env.EMAIL_USER, // Tu correo de Gmail
+      pass: process.env.EMAIL_PASS,  // Tu App Password de Gmail
     },
     // --- Fin configuración Gmail + App Password ---
 
