@@ -3,6 +3,8 @@ import AboutMe from './components/AboutMe';
 import Portfolio from './components/Portfolio';
 import Experience from './components/Experience';
 import Contact from './components/Contact';
+import Footer from './components/Footer';
+import BackgroundElements from './components/BackgroundElements';
 import WhatsAppButton from './components/WhatsAppButton';
 import DonateButton from './components/DonateButton';
 import './styles/App.css';
@@ -11,6 +13,7 @@ function App() {
   const [activeSection, setActiveSection] = useState('about');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const topRef = useRef(null);
+
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -23,12 +26,34 @@ function App() {
     });
   };
 
+  // Scrollspy effect
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const sectionIds = ['about', 'experience', 'portfolio', 'contact'];
+      const offset = 130; // Ajuste para header
+      let current = 'about';
+      for (let i = 0; i < sectionIds.length; i++) {
+        const el = document.getElementById(sectionIds[i]);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top - offset <= 0) {
+            current = sectionIds[i];
+          }
+        }
+      }
+      setActiveSection(current);
+    };
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Trigger on mount
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="main-container" ref={topRef}>
       <header className="app-header">
         <div className="logo" onClick={scrollToTop} style={{ cursor: 'pointer' }}>
-          KC<span>Dev</span>
-        </div>
+  <span className="logo-blue">KC</span><span className="logo-purple">Dev</span>
+</div>
         <button className="mobile-menu-button" onClick={toggleMobileMenu}>
           ☰
         </button>
@@ -63,10 +88,12 @@ function App() {
           </a>
         </nav>
       </header>
+      <BackgroundElements />
       <AboutMe id="about" />
       <Experience id="experience" />
       <Portfolio id="portfolio" />
       <Contact id="contact" />
+      <Footer />
       <WhatsAppButton 
         phoneNumber="18299698254" 
         message="Hola, vi tu portafolio y me gustaria hablar contigo" 

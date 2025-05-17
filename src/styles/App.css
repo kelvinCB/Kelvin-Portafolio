@@ -23,28 +23,25 @@
 }
 
 .logo {
-  font-size: 1.7rem;
+  font-size: 2rem;
   font-weight: 900;
-  color: #647dee;
-  display: flex;
-  align-items: center;
   letter-spacing: 0.03em;
   text-shadow: 0 2px 8px rgba(100,100,200,0.13);
-  transition: color 0.2s;
-  cursor: pointer;
-}
-.logo span {
-  color: #7f53ac;
-  margin-left: 7px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  font-size: 1.2em;
+  display: flex;
+  align-items: center;
 }
 
-.logo span {
-  color: #fff;
-  margin-left: 5px;
+.logo-blue {
+  color: #647dee;
+  font-weight: 900;
 }
+
+.logo-purple {
+  color: #7f53ac;
+  font-weight: 900;
+  margin-left: 3px;
+}
+
 
 .main-nav {
   display: flex;

@@ -1,0 +1,113 @@
+.background-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* Triángulos decorativos */
+.triangle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-bottom: 60px solid rgba(127, 83, 172, 0.15);
+  transform: rotate(var(--rotate, 0deg));
+  filter: blur(1px);
+  opacity: 0.5;
+  animation: float 15s infinite ease-in-out, breathing-bg 5.5s ease-in-out infinite alternate;
+}
+
+@keyframes breathing-bg {
+  0% { transform: scale(1) rotate(var(--rotate, 0deg)); }
+  50% { transform: scale(1.08) rotate(var(--rotate, 0deg)); }
+  100% { transform: scale(1) rotate(var(--rotate, 0deg)); }
+}
+
+
+.triangle:nth-child(2) {
+  --rotate: 45deg;
+  animation-delay: -3s;
+  border-bottom-color: rgba(100, 125, 238, 0.15);
+}
+
+.triangle:nth-child(3) {
+  --rotate: -30deg;
+  animation-delay: -7s;
+  border-bottom-color: rgba(255, 135, 178, 0.15);
+}
+
+/* Grupos de puntos */
+.dots-group {
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  opacity: 0.6;
+  animation: pulse 8s infinite alternate ease-in-out, breathing-bg 6s ease-in-out infinite alternate;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background-color: rgba(127, 83, 172, 0.4);
+  border-radius: 50%;
+}
+
+.dots-group:nth-child(even) .dot {
+  background-color: rgba(100, 125, 238, 0.4);
+}
+
+/* Formas adicionales */
+.shape {
+  position: absolute;
+  opacity: 0.2;
+  animation: float 18s infinite ease-in-out;
+}
+
+.circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(127, 83, 172, 0.2) 0%, rgba(127, 83, 172, 0) 70%);
+}
+
+.ring {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid rgba(100, 125, 238, 0.15);
+}
+
+/* Líneas decorativas */
+.line {
+  position: absolute;
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(127, 83, 172, 0) 0%, rgba(127, 83, 172, 0.3) 50%, rgba(127, 83, 172, 0) 100%);
+  animation: pulse 10s infinite alternate ease-in-out;
+}
+
+/* Animaciones */
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(var(--rotate, 0deg));
+  }
+  50% {
+    transform: translate(15px, 15px) rotate(calc(var(--rotate) + 5deg));
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}

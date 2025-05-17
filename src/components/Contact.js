@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { FaEnvelope, FaPhoneAlt } from 'react-icons/fa';
+import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaLinkedinIn, FaGithub, FaTwitter, FaFacebookF } from 'react-icons/fa';
 import '../styles/Contact.css';
 
 const Contact = ({ id }) => {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,9 +47,9 @@ const Contact = ({ id }) => {
         body: JSON.stringify(form),
       });
       if (response.ok) {
-        setResponseMessage('¡Gracias por tu mensaje!');
+        setResponseMessage('¡Gracias por tu mensaje! Te contactaré pronto.');
         setSubmitted(true);
-        setForm({ name: '', email: '', message: '' });
+        setForm({ name: '', email: '', phone: '', message: '' });
       } else {
         const data = await response.json();
         setResponseError(data.error || 'Hubo un error al enviar el mensaje.');
@@ -63,44 +63,131 @@ const Contact = ({ id }) => {
 
   return (
     <section id={id} className="contact-section">
-      <h2 className="section-title">Contact Me</h2>
-      <div className="contact-info">
-        <div className="contact-item"><FaEnvelope /> kelvin.calcano@example.com</div>
-        <div className="contact-item"><FaPhoneAlt /> +1 809 123 4567</div>
+      <div className="contact-container">
+        <div className="contact-header">
+          <h2 className="section-title">Contacta <span className="highlight">Conmigo</span></h2>
+          <p className="contact-subtitle">¿Tienes algún proyecto en mente o quieres hablar sobre oportunidades de QA Automation? Estoy aquí para ayudarte</p>
+        </div>
+        
+        <div className="contact-content">
+          <div className="contact-info-column">
+            <div className="contact-image-container">
+              <img 
+                src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1000&q=80" 
+                alt="Contact" 
+                className="contact-image"
+              />
+            </div>
+            
+            <div className="contact-info-card">
+              <h3>Información de Contacto</h3>
+              <p>No dudes en contactarme directamente o llenar el formulario y te responderé a la brevedad</p>
+              
+              <div className="contact-details">
+                <div className="contact-item">
+                  <div className="contact-icon"><FaPhoneAlt /></div>
+                  <div>
+                    <h4>Llámame</h4>
+                    <p>+1 809 123 4567</p>
+                  </div>
+                </div>
+                
+                <div className="contact-item">
+                  <div className="contact-icon"><FaEnvelope /></div>
+                  <div>
+                    <h4>Email</h4>
+                    <p>kelvin.calcano@example.com</p>
+                  </div>
+                </div>
+                
+                <div className="contact-item">
+                  <div className="contact-icon"><FaMapMarkerAlt /></div>
+                  <div>
+                    <h4>Ubicación</h4>
+                    <p>Santo Domingo, República Dominicana</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="contact-social">
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaLinkedinIn /></a>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaGithub /></a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaTwitter /></a>
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaFacebookF /></a>
+              </div>
+            </div>
+          </div>
+          
+          <div className="contact-form-column">
+            <form className="contact-form" onSubmit={handleSubmit}>
+              <div className="form-header">
+                <h3>Envíame un mensaje</h3>
+                <p>Completá el formulario y te responderé a la brevedad</p>
+              </div>
+              
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="name">Nombre Completo</label>
+                  <input
+                    className="form-input"
+                    id="name"
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                  />
+                  {errors.name && <span className="error-message">{errors.name}</span>}
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="email">Email</label>
+                  <input
+                    className="form-input"
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                  />
+                  {errors.email && <span className="error-message">{errors.email}</span>}
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="phone">Teléfono (opcional)</label>
+                <input
+                  className="form-input"
+                  id="phone"
+                  type="tel"
+                  name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="message">Mensaje</label>
+                <textarea
+                  className="form-textarea"
+                  id="message"
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  rows="5"
+                />
+                {errors.message && <span className="error-message">{errors.message}</span>}
+              </div>
+              
+              <button className="submit-button" type="submit" disabled={loading}>
+                {loading ? 'Enviando...' : 'Enviar mensaje'}
+              </button>
+              
+              {responseMessage && <p className="success-message">{responseMessage}</p>}
+              {responseError && <p className="error-message">{responseError}</p>}
+            </form>
+          </div>
+        </div>
       </div>
-      <form className="contact-form" onSubmit={handleSubmit}>
-        <input
-          className="form-input"
-          type="text"
-          name="name"
-          placeholder="Your Name"
-          value={form.name}
-          onChange={handleChange}
-        />
-        {errors.name && <span className="error-message">{errors.name}</span>}
-        <input
-          className="form-input"
-          type="email"
-          name="email"
-          placeholder="Your Email"
-          value={form.email}
-          onChange={handleChange}
-        />
-        {errors.email && <span className="error-message">{errors.email}</span>}
-        <textarea
-          className="form-textarea"
-          name="message"
-          placeholder="Your Message"
-          value={form.message}
-          onChange={handleChange}
-        />
-        {errors.message && <span className="error-message">{errors.message}</span>}
-        <button className="submit-button" type="submit" disabled={loading}>
-          {loading ? 'Sending...' : 'Send Message'}
-        </button>
-      </form>
-      {responseMessage && <p className="success-message">{responseMessage}</p>}
-      {responseError && <p className="error-message">{responseError}</p>}
     </section>
   );
 };
