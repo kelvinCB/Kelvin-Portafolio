@@ -12,6 +12,38 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
+// Endpoint para donaciones con Stripe
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+app.post('/api/create-checkout-session', async (req, res) => {
+  const { amount } = req.body;
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Donación',
+              description: 'Gracias por tu apoyo',
+            },
+            unit_amount: Math.round(amount * 100), // Stripe espera centavos
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: 'http://localhost:3000?success=true',
+      cancel_url: 'http://localhost:3000?canceled=true',
+    });
+    res.json({ url: session.url });
+  } catch (error) {
+    console.error('Error creando sesión de Stripe:', error);
+    res.status(500).json({ error: 'No se pudo crear la sesión de pago.' });
+  }
+});
+
 // Endpoint para recibir mensajes de contacto
 app.post('/api/contact', async (req, res) => {
   const { name, email, message } = req.body;

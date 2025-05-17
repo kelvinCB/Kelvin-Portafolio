@@ -1,15 +1,24 @@
 /* Estilos para el componente AboutMe */
 .about-wrapper {
-  background: linear-gradient(135deg, #121f3d 0%, #0a1b2a 100%);
-  color: #fff;
-  padding: 3rem 1.5rem;
-  border-radius: 1.5rem;
-  margin: 2rem;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  background: rgba(36, 37, 62, 0.88);
+  border-radius: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(100, 100, 200, 0.17);
+  padding: 3.5rem 2rem 2.5rem 2rem;
+  margin: 2.5rem auto 2rem auto;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  animation: fadeInSection 0.8s;
 }
+
+@keyframes fadeInSection {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 
 .profile-img {
   width: 120px;

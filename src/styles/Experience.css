@@ -1,7 +1,21 @@
 /* Estilos para el componente Experience */
 .experience-section {
-  padding: 3rem 1.5rem;
+  background: rgba(36, 37, 62, 0.88);
+  border-radius: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(100, 100, 200, 0.17);
+  padding: 3.5rem 2rem 2.5rem 2rem;
+  margin: 2.5rem auto 2rem auto;
+  max-width: 700px;
+  backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  animation: fadeInSection 0.8s;
 }
+
+@keyframes fadeInSection {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 
 .experience-timeline {
   display: flex;
@@ -12,15 +26,21 @@
 }
 
 .experience-job {
-  background: rgba(18, 31, 61, 0.7);
-  border-radius: 1rem;
-  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.2);
-  padding: 1.5rem;
-  color: #fff;
+  background: rgba(24, 28, 54, 0.92);
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 24px 0 rgba(100, 100, 200, 0.12);
+  padding: 1.7rem 1.3rem 1.3rem 1.3rem;
+  color: #e1e1f5;
   display: flex;
   flex-direction: column;
-  border-left: 4px solid #98ca3f;
+  border-left: 4px solid #647dee;
+  margin-bottom: 0.5rem;
+  transition: box-shadow 0.2s;
 }
+.experience-job:hover {
+  box-shadow: 0 8px 32px 0 rgba(100,100,200,0.17);
+}
+
 
 .job-title {
   color: #98ca3f;

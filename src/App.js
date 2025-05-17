@@ -4,6 +4,7 @@ import Portfolio from './components/Portfolio';
 import Experience from './components/Experience';
 import Contact from './components/Contact';
 import WhatsAppButton from './components/WhatsAppButton';
+import DonateButton from './components/DonateButton';
 import './styles/App.css';
 
 function App() {
@@ -70,6 +71,7 @@ function App() {
         phoneNumber="18299698254" 
         message="Hola, vi tu portafolio y me gustaria hablar contigo" 
       />
+      <DonateButton />
     </div>
   );
 }
