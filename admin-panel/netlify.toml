@@ -1,0 +1,22 @@
+# Configuración de compilación
+[build]
+  command = "npm run build"
+  publish = "build"
+
+# Configuración de redirección para Single Page Applications
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Variables de entorno para desarrollo
+[context.development.environment]
+  REACT_APP_API_URL = "http://localhost:5000/api"
+
+# Variables de entorno para producción (reemplazar con la URL de producción)
+[context.production.environment]
+  REACT_APP_API_URL = "/.netlify/functions/api"
+
+# Configuración para funciones serverless de Netlify
+[functions]
+  directory = "netlify/functions"
