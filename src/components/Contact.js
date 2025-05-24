@@ -5,7 +5,7 @@ import '../styles/Contact.css';
 const Contact = ({ id }) => {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '', honeypot: '' });
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
+  const [, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
   const [responseError, setResponseError] = useState('');
