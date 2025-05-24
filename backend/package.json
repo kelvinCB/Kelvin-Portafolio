@@ -8,15 +8,14 @@
     "dev": "nodemon index.js",
     "create-admin": "node scripts/createAdminUser.js",
     "backup": "node -e \"require('./config/database').backupDatabase()\"",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "npm rebuild bcrypt --build-from-source"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Kelvin Calcano",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.3.1",
