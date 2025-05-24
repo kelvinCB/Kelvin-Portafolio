@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Guía de Mantenimiento y Actualización de la Aplicación</title>
+    <style>
+        body {
+            font-family: 'Calibri', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 1in;
+        }
+        h1 {
+            color: #2C3E50;
+            font-size: 24pt;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #2980B9;
+            font-size: 18pt;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 25px;
+        }
+        h3 {
+            color: #3498DB;
+            font-size: 14pt;
+            margin-top: 20px;
+        }
+        code {
+            font-family: 'Consolas', monospace;
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 90%;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 90%;
+        }
+        a {
+            color: #3498DB;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Guía de Mantenimiento y Actualización de la Aplicación</h1>
+    
+    <h2>Índice</h2>
+    <ol>
+        <li><a href="#config">Configuración del Entorno Local</a></li>
+        <li><a href="#desarrollo">Desarrollo y Pruebas Locales</a></li>
+        <li><a href="#backend">Actualización del Backend</a></li>
+        <li><a href="#frontend">Actualización del Frontend</a></li>
+        <li><a href="#deploy">Despliegue en Producción</a></li>
+        <li><a href="#mantenimiento">Mantenimiento Continuo</a></li>
+        <li><a href="#problemas">Solución de Problemas Comunes</a></li>
+    </ol>
+    
+    <hr>
+    
+    <h2 id="config">1. Configuración del Entorno Local</h2>
+    
+    <p>Estructura del proyecto:</p>
+    <pre>
+portfolio-ejemplo/          # Carpeta raíz (frontend principal)
+├── src/
+├── public/
+├── package.json
+├── admin-panel/           # Panel de administración
+│   ├── src/
+│   ├── public/
+│   └── package.json
+└── backend/               # Servidor backend
+    ├── routes/
+    ├── models/
+    └── package.json
+    </pre>
+
+    <h3>Backend (Node.js/Express)</h3>
+    
+    <ol>
+        <li>
+            <strong>Instalar dependencias</strong>:
+            <pre>cd backend
+npm install</pre>
+        </li>
+        <li>
+            <strong>Configurar variables de entorno</strong>:
+            <p>Asegúrate de tener un archivo <code>.env</code> en la carpeta <code>backend</code> con la siguiente estructura:</p>
+            <pre>PORT=5000
+NODE_ENV=development
+MONGODB_URI=mongodb+srv://username:password@clusterportafolio.xxxxx.mongodb.net/portfolio-contactos
+JWT_SECRET=tu_secreto_jwt
+ENCRYPTION_KEY=tu_clave_encriptacion
+EMAIL_USER=tu_email@gmail.com
+EMAIL_PASS=tu_password_app
+STRIPE_SECRET_KEY=sk_test_xxx
+FRONTEND_URL=http://localhost:3000
+SUCCESS_URL=http://localhost:3000?success=true
+CANCEL_URL=http://localhost:3000?canceled=true
+ADMIN_USERNAME=admin
+ADMIN_EMAIL=admin@example.com</pre>
+        </li>
+        <li>
+            <strong>Iniciar el servidor en modo desarrollo</strong>:
+            <pre>cd backend
+npm run dev</pre>
+            <p>Esto iniciará el servidor con Nodemon para actualización automática.</p>
+        </li>
+    </ol>
+
+    <h3>Frontend Principal (React)</h3>
+    
+    <ol>
+        <li>
+            <strong>Instalar dependencias</strong>:
+            <pre># Asegúrate de estar en la carpeta raíz del proyecto (portfolio-ejemplo)
+# Si estabas en la carpeta backend, sal de ella primero:
+cd .. 
+npm install</pre>
+        </li>
+        <li>
+            <strong>Configurar variables de entorno</strong>:
+            <p>Crea un archivo <code>.env</code> en la raíz del proyecto:</p>
+            <pre>REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_CONTACT_PHONE=18299698254
+REACT_APP_DEFAULT_WHATSAPP_MESSAGE="Hola, vi tu portafolio y me gustaria hablar contigo"</pre>
+        </li>
+        <li>
+            <strong>Iniciar el servidor de desarrollo</strong>:
+            <pre>npm start</pre>
+            <p>Esto abrirá la aplicación en http://localhost:3000</p>
+        </li>
+    </ol>
+
+    <h3>Panel de Administración (React)</h3>
+    
+    <ol>
+        <li>
+            <strong>Instalar dependencias</strong>:
+            <pre>cd admin-panel
+npm install</pre>
+        </li>
+        <li>
+            <strong>Configurar variables de entorno</strong>:
+            <p>Crea un archivo <code>.env</code> en la carpeta <code>admin-panel</code>:</p>
+            <pre>REACT_APP_API_URL=http://localhost:5000/api</pre>
+        </li>
+        <li>
+            <strong>Iniciar el servidor de desarrollo</strong>:
+            <pre>cd admin-panel
+npm start</pre>
+            <p>Esto abrirá el panel de administración en http://localhost:3001</p>
+        </li>
+    </ol>
+
+    <hr>
+    
+    <h2 id="desarrollo">2. Desarrollo y Pruebas Locales</h2>
+    
+    <h3>Flujo de Trabajo Recomendado</h3>
+    
+    <ol>
+        <li>
+            <strong>Crear una rama de desarrollo</strong>:
+            <pre>git checkout -b feature/nombre-de-la-caracteristica</pre>
+        </li>
+        <li>
+            <strong>Realizar cambios</strong> en el código según sea necesario.
+        </li>
+        <li>
+            <strong>Probar los cambios localmente</strong>:
+            <ul>
+                <li>Backend: <code>npm run dev</code> (en la carpeta backend)</li>
+                <li>Frontend: <code>npm start</code> (en la raíz del proyecto)</li>
+                <li>Admin Panel: <code>npm start</code> (en la carpeta admin-panel)</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Commit de los cambios</strong>:
+            <pre>git add .
+git commit -m "Add feature: description of changes"</pre>
+            <p>Recuerda: Los mensajes de commit deben estar en inglés.</p>
+        </li>
+        <li>
+            <strong>Pruebas finales</strong> asegurándote de que todo funciona correctamente.
+        </li>
+    </ol>
+
+    <h3>Pruebas Importantes</h3>
+    
+    <ul>
+        <li><strong>Formulario de contacto</strong>: Verifica que los mensajes se envían correctamente y se almacenan en la base de datos.</li>
+        <li><strong>Panel de administración</strong>: Comprueba que puedes iniciar sesión y gestionar los mensajes.</li>
+        <li><strong>Responsividad</strong>: Prueba la aplicación en diferentes tamaños de pantalla.</li>
+        <li><strong>Botón de WhatsApp</strong>: Verifica que funciona y redirige correctamente.</li>
+        <li><strong>Donaciones</strong>: Si está implementado, verifica el flujo de Stripe.</li>
+    </ul>
+
+    <hr>
+    
+    <h2 id="backend">3. Actualización del Backend</h2>
+    
+    <h3>Actualización de Dependencias</h3>
+    
+    <ol>
+        <li>
+            <strong>Verificar actualizaciones disponibles</strong>:
+            <pre>cd backend
+npm outdated</pre>
+        </li>
+        <li>
+            <strong>Actualizar dependencias</strong>:
+            <pre>npm update</pre>
+            <p>Para actualizaciones mayores:</p>
+            <pre>npm install package-name@latest</pre>
+        </li>
+        <li>
+            <strong>Probar después de actualizaciones</strong> para asegurar que todo sigue funcionando.
+        </li>
+    </ol>
+
+    <h3>Modificación de Rutas o Controladores</h3>
+    
+    <ol>
+        <li>
+            <strong>Seguir la estructura existente</strong> para mantener la consistencia:
+            <ul>
+                <li>Controladores en <code>/controllers</code></li>
+                <li>Rutas en <code>/routes</code></li>
+                <li>Modelos en <code>/models</code></li>
+            </ul>
+        </li>
+        <li>
+            <strong>Actualizar la documentación</strong> si se añaden nuevos endpoints o se modifican los existentes.
+        </li>
+        <li>
+            <strong>Probar exhaustivamente</strong> cualquier cambio en la API.
+        </li>
+    </ol>
+
+    <hr>
+    
+    <h2 id="frontend">4. Actualización del Frontend</h2>
+    
+    <h3>Actualización de Dependencias</h3>
+    
+    <ol>
+        <li>
+            <strong>Verificar actualizaciones disponibles</strong>:
+            <pre>npm outdated</pre>
+            <p>Y en el panel admin:</p>
+            <pre>cd admin-panel
+npm outdated</pre>
+        </li>
+        <li>
+            <strong>Actualizar dependencias</strong> en ambos proyectos.
+        </li>
+    </ol>
+
+    <h3>Modificación de Componentes</h3>
+    
+    <ol>
+        <li>
+            <strong>Seguir la estructura de carpetas</strong> existente:
+            <ul>
+                <li>Componentes en <code>/src/components</code></li>
+                <li>Estilos en <code>/src/styles</code></li>
+                <li>Servicios en <code>/src/services</code></li>
+            </ul>
+        </li>
+        <li>
+            <strong>Mantener consistencia</strong> en el diseño y la experiencia de usuario.
+        </li>
+        <li>
+            <strong>Probar en distintos navegadores</strong> para asegurar compatibilidad.
+        </li>
+    </ol>
+
+    <hr>
+    
+    <h2 id="deploy">5. Despliegue en Producción</h2>
+    
+    <h3>Backend (Render)</h3>
+    
+    <ol>
+        <li>
+            <strong>Preparar cambios para producción</strong>:
+            <ul>
+                <li>Asegúrate de que el archivo <code>.env.production</code> en la carpeta <code>backend</code> tiene las variables correctas.</li>
+                <li>Verificar que <code>bcryptjs</code> está siendo utilizado en lugar de <code>bcrypt</code>.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Commit y push al repositorio</strong>:
+            <pre>git add .
+git commit -m "Update backend: description of changes"
+git push origin main</pre>
+        </li>
+        <li>
+            <strong>Verificar el despliegue automático</strong> en el dashboard de Render:
+            <ul>
+                <li>Si el despliegue automático está configurado, Render iniciará la compilación automáticamente.</li>
+                <li>Si no, inicia manualmente un despliegue desde el dashboard.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Monitorear logs</strong> en Render para detectar posibles errores.
+        </li>
+        <li>
+            <strong>Implementar UptimeRobot</strong> para mantener el servicio activo:
+            <ul>
+                <li>Crea una cuenta en UptimeRobot.com</li>
+                <li>Configura un monitor HTTP(S) para tu URL de backend</li>
+                <li>Establece un intervalo de 5 minutos</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>Frontend Principal (Netlify)</h3>
+    
+    <ol>
+        <li>
+            <strong>Preparar cambios para producción</strong>:
+            <ul>
+                <li>Verifica el archivo <code>netlify.toml</code> en la raíz.</li>
+                <li>Asegúrate de que las variables de entorno en Netlify apuntan al backend en producción.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Commit y push al repositorio</strong>:
+            <pre>git add .
+git commit -m "Update frontend: description of changes"
+git push origin main</pre>
+        </li>
+        <li>
+            <strong>Verificar el despliegue</strong> en el dashboard de Netlify.
+        </li>
+        <li>
+            <strong>Probar la aplicación desplegada</strong> para asegurar que todo funciona correctamente.
+        </li>
+    </ol>
+
+    <h3>Panel de Administración (Netlify)</h3>
+    
+    <ol>
+        <li>
+            <strong>Actualizar variables de entorno</strong> en el dashboard de Netlify para el sitio del panel admin.
+        </li>
+        <li>
+            <strong>Verificar que el despliegue se ha completado</strong> y probar el inicio de sesión.
+        </li>
+    </ol>
+
+    <hr>
+    
+    <h2 id="mantenimiento">6. Mantenimiento Continuo</h2>
+    
+    <h3>Copias de Seguridad</h3>
+    
+    <ol>
+        <li>
+            <strong>Base de datos MongoDB</strong>:
+            <ul>
+                <li>Configura copias de seguridad automatizadas en MongoDB Atlas.</li>
+                <li>Descarga copias manuales periódicamente como respaldo adicional.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Código fuente</strong>:
+            <ul>
+                <li>Mantén siempre el repositorio actualizado.</li>
+                <li>Considera crear releases estables con tags:
+                    <pre>git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin v1.0.0</pre>
+                </li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>Monitoreo</h3>
+    
+    <ol>
+        <li>
+            <strong>Configurar alertas en Render</strong> para notificaciones de errores.
+        </li>
+        <li>
+            <strong>Implementar UptimeRobot</strong> para monitorear la disponibilidad.
+        </li>
+        <li>
+            <strong>Revisar periódicamente los logs</strong> en Render y Netlify.
+        </li>
+    </ol>
+
+    <hr>
+    
+    <h2 id="problemas">7. Solución de Problemas Comunes</h2>
+    
+    <h3>Problemas en el Backend</h3>
+    
+    <ol>
+        <li>
+            <strong>El servidor no arranca</strong>:
+            <ul>
+                <li>Verifica las variables de entorno.</li>
+                <li>Comprueba los logs de error.</li>
+                <li>Asegúrate de que los puertos no están siendo utilizados por otra aplicación.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Error de conexión a MongoDB</strong>:
+            <ul>
+                <li>Verifica la cadena de conexión.</li>
+                <li>Asegúrate de que la IP desde la que te conectas está permitida en MongoDB Atlas.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Problemas con bcrypt en Render</strong>:
+            <ul>
+                <li>Asegúrate de usar <code>bcryptjs</code> en lugar de <code>bcrypt</code>.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>Problemas en el Frontend</h3>
+    
+    <ol>
+        <li>
+            <strong>Error de CORS</strong>:
+            <ul>
+                <li>Verifica que el backend permite solicitudes desde la URL del frontend.</li>
+                <li>En desarrollo: <code>http://localhost:3000</code></li>
+                <li>En producción: URL de Netlify</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Error de conexión al backend</strong>:
+            <ul>
+                <li>Comprueba que la variable <code>REACT_APP_API_URL</code> apunta a la URL correcta.</li>
+                <li>Verifica que el backend está funcionando.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Errores de ESLint en Netlify</strong>:
+            <ul>
+                <li>Corrige las advertencias de ESLint antes de desplegar.</li>
+                <li>Añade <code>CI=false</code> a las variables de entorno en Netlify si quieres ignorar las advertencias.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <hr>
+    
+    <h2>Recursos Adicionales</h2>
+    
+    <ul>
+        <li><a href="https://docs.netlify.com/">Documentación de Netlify</a></li>
+        <li><a href="https://render.com/docs">Documentación de Render</a></li>
+        <li><a href="https://docs.atlas.mongodb.com/">Documentación de MongoDB Atlas</a></li>
+        <li><a href="https://expressjs.com/es/">Documentación de Express</a></li>
+        <li><a href="https://es.reactjs.org/docs/getting-started.html">Documentación de React</a></li>
+    </ul>
+    
+</body>
+</html>

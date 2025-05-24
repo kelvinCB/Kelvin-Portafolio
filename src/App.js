@@ -30,7 +30,7 @@ function App() {
   React.useEffect(() => {
     const handleScroll = () => {
       const sectionIds = ['about', 'portfolio', 'experience', 'contact'];
-      const offset = 130; // OJO: ajusté esto por el tamaño del header, no cambiar
+      const offset = 130; // OJO: ajusté esto por el tamaño del header, no cambia
       let current = 'about';
       for (let i = 0; i < sectionIds.length; i++) {
         const el = document.getElementById(sectionIds[i]);
