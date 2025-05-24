@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import {
   Box,
   Drawer,
@@ -82,7 +82,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 const Layout = ({ children }) => {
-  const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser, logout } = useAuth();

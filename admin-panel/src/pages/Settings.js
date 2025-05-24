@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Paper,
   Typography,
   Switch,
-  FormControlLabel,
-  FormGroup,
   Divider,
   Button,
   Alert,
@@ -17,7 +14,6 @@ import {
   TextField,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   ListItemSecondaryAction,
   MenuItem,

@@ -16,7 +16,6 @@ import {
   IconButton
 } from '@mui/material';
 import {
-  Person as PersonIcon,
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
   Save as SaveIcon,

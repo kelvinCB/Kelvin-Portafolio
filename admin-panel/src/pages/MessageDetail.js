@@ -130,7 +130,7 @@ const MessageDetail = () => {
     if (message && !message.read) {
       markReadMutation.mutate({ id: message._id, read: true });
     }
-  }, [message]);
+  }, [message, markReadMutation]);
   
   // Crear mensajes predefinidos para WhatsApp
   const getWhatsAppLink = () => {
