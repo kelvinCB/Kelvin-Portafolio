@@ -7,7 +7,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-logo">
-          KC<span>Dev</span>
+          Kelvin<span>QA</span>
         </div>
         
 

@@ -25,9 +25,10 @@ const experiences = [
 
 const Experience = ({ id }) => (
   <section id={id} className="experience-section">
-    <h2 className="section-title">
-      <FaBriefcase style={{ marginRight: '10px' }} /> Experience
-    </h2>
+    <div className="experience-header">
+      <h2 className="section-title">My <span className="highlight">Experience</span></h2>
+      <p className="experience-subtitle">My professional journey in quality assurance and automation</p>
+    </div>
     <div className="experience-timeline">
       {experiences.map((job, idx) => (
         <div key={idx} className="experience-job">

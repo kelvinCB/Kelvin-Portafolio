@@ -197,7 +197,7 @@
 }
 
 .contact-form {
-  padding: 2rem;
+  padding: 2rem 3.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;

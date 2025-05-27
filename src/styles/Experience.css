@@ -1,14 +1,25 @@
 /* Styles for the Experience component */
 .experience-section {
-  background: rgba(36, 37, 62, 0.88);
-  border-radius: 2rem;
-  box-shadow: 0 8px 32px 0 rgba(100, 100, 200, 0.17);
-  padding: 3.5rem 2rem 2.5rem 2rem;
-  margin: 2.5rem auto 2rem auto;
-  max-width: 700px;
-  backdrop-filter: blur(10px);
-  border: 1.5px solid rgba(255,255,255,0.08);
+  width: 100%;
+  padding: 5rem 1rem;
+  position: relative;
   animation: fadeInSection 0.8s;
+}
+
+.experience-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.experience-subtitle {
+  color: rgba(225, 225, 245, 0.7);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
 @keyframes fadeInSection {

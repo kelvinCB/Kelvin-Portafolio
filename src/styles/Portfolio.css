@@ -1,7 +1,7 @@
 /* Styles for the Portfolio component */
 .portfolio-section {
   width: 100%;
-  padding: 5rem 1rem;
+  padding: 3rem 1rem 4rem;
   position: relative;
   animation: fadeIn 1s;
 }
@@ -19,7 +19,7 @@
 
 .portfolio-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
 }
 
 .section-title {
@@ -48,7 +48,7 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
 

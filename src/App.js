@@ -52,7 +52,7 @@ function App() {
     <div className="main-container" ref={topRef}>
       <header className="app-header">
         <div className="logo" onClick={scrollToTop} style={{ cursor: 'pointer' }}>
-  <span className="logo-blue">KC</span><span className="logo-purple">Dev</span>
+  <span className="logo-blue">Kelvin</span><span className="logo-purple">QA</span>
 </div>
         <button className="mobile-menu-button" onClick={toggleMobileMenu}>
           ☰

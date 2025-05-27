@@ -42,27 +42,27 @@ const AboutMe = ({ id }) => {
       </div>
       
       <div className="skills-highlights">
-        <div className="skill-card">
-          <div className="skill-icon"><FaCode /></div>
-          <h3>Automation Scripts</h3>
-          <p>Development of effective scripts for automated testing</p>
+          <div className="skill-card">
+            <div className="skill-icon"><FaCode /></div>
+            <h3>Automation Scripts</h3>
+            <p>Development of effective scripts for automated testing</p>
+          </div>
+          <div className="skill-card">
+            <div className="skill-icon"><FaBug /></div>
+            <h3>Bug Detection</h3>
+            <p>Proactive identification of bugs and quality issues</p>
+          </div>
+          <div className="skill-card">
+            <div className="skill-icon"><FaMobile /></div>
+            <h3>Mobile Testing</h3>
+            <p>Thorough testing on iOS and Android applications</p>
+          </div>
+          <div className="skill-card">
+            <div className="skill-icon"><FaTools /></div>
+            <h3>CI/CD Pipeline</h3>
+            <p>Test integration in continuous integration pipelines</p>
+          </div>
         </div>
-        <div className="skill-card">
-          <div className="skill-icon"><FaBug /></div>
-          <h3>Bug Detection</h3>
-          <p>Proactive identification of bugs and quality issues</p>
-        </div>
-        <div className="skill-card">
-          <div className="skill-icon"><FaMobile /></div>
-          <h3>Mobile Testing</h3>
-          <p>Thorough testing on iOS and Android applications</p>
-        </div>
-        <div className="skill-card">
-          <div className="skill-icon"><FaTools /></div>
-          <h3>CI/CD Pipeline</h3>
-          <p>Test integration in continuous integration pipelines</p>
-        </div>
-      </div>
     </section>
   );
 };
