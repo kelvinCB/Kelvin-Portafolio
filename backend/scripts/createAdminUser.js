@@ -1,16 +1,16 @@
-// Script para crear el primer usuario administrador
+// Script to create the first admin user
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
 const User = require('../models/User');
 
-// Cargar variables de entorno
+// Load environment variables
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-// Función para crear usuario administrador
+// Function to create admin user
 const createAdminUser = async () => {
   try {
-    // Conectar a MongoDB
+    // Connect to MongoDB
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-contactos', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -18,7 +18,7 @@ const createAdminUser = async () => {
     
     console.log('Conectado a MongoDB');
     
-    // Verificar si ya existe algún usuario admin
+    // Check if an admin user already exists
     const adminExists = await User.findOne({ role: 'admin' });
     
     if (adminExists) {
@@ -27,16 +27,16 @@ const createAdminUser = async () => {
       process.exit(0);
     }
     
-    // Credenciales para el admin inicial
+    // Credentials for the initial admin
     const adminData = {
       username: process.env.ADMIN_USERNAME || 'admin',
       email: process.env.ADMIN_EMAIL || 'admin@example.com',
-      password: process.env.ADMIN_PASSWORD || 'admin123456', // Cambiar después del primer inicio de sesión
+      password: process.env.ADMIN_PASSWORD || 'admin123456', // Change after first login
       role: 'admin',
       active: true
     };
     
-    // Crear el usuario admin
+    // Create the admin user
     const admin = new User(adminData);
     await admin.save();
     
@@ -53,5 +53,5 @@ const createAdminUser = async () => {
   }
 };
 
-// Ejecutar la función
+// Execute the function
 createAdminUser();

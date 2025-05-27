@@ -1,21 +1,21 @@
-// Script para eliminar el usuario administrador
+// Script to delete the admin user
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
 const User = require('../models/User');
 
-// Cargar variables de entorno
+// Load environment variables
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-// Función para eliminar usuario administrador
+// Function to delete admin user
 const deleteAdminUser = async () => {
   try {
-    // Conectar a MongoDB
+    // Connect to MongoDB
     await mongoose.connect(process.env.MONGODB_URI, {});
     
     console.log('Conectado a MongoDB');
     
-    // Buscar y eliminar el usuario admin por defecto
+    // Find and delete the default admin user
     const result = await User.deleteOne({ email: 'admin@example.com' });
     
     if (result.deletedCount > 0) {
@@ -24,7 +24,7 @@ const deleteAdminUser = async () => {
       console.log('No se encontró el usuario administrador para eliminar');
     }
     
-    // Verificar si quedan usuarios admin
+    // Check if there are any admin users left
     const adminCount = await User.countDocuments({ role: 'admin' });
     console.log(`Usuarios administradores restantes: ${adminCount}`);
     
@@ -35,5 +35,5 @@ const deleteAdminUser = async () => {
   }
 };
 
-// Ejecutar la función
+// Execute the function
 deleteAdminUser();

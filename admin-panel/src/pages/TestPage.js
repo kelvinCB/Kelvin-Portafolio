@@ -17,7 +17,7 @@ const TestPage = () => {
       setResult({
         success: false,
         error: error.message,
-        details: 'Error inesperado ejecutando la prueba'
+        details: 'Unexpected error executing the test'
       });
     } finally {
       setLoading(false);
@@ -27,15 +27,15 @@ const TestPage = () => {
   return (
     <Box sx={{ p: 3, maxWidth: 800, mx: 'auto' }}>
       <Typography variant="h4" gutterBottom>
-        Prueba de Conexión a la API
+        API Connection Test
       </Typography>
 
       <Paper sx={{ p: 3, mb: 3 }}>
         <Typography variant="h6" gutterBottom>
-          Datos de conexión
+          Connection data
         </Typography>
         <Typography variant="body1">
-          URL de la API: {process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}
+          API URL: {process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}
         </Typography>
         
         <Box sx={{ mt: 2 }}>
@@ -47,7 +47,7 @@ const TestPage = () => {
             margin="normal"
           />
           <TextField
-            label="Contraseña"
+            label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
@@ -63,14 +63,14 @@ const TestPage = () => {
           disabled={loading}
           sx={{ mt: 3 }}
         >
-          {loading ? <CircularProgress size={24} /> : 'Probar Conexión'}
+          {loading ? <CircularProgress size={24} /> : 'Test Connection'}
         </Button>
       </Paper>
 
       {result && (
         <Paper sx={{ p: 3, bgcolor: result.success ? '#e8f5e9' : '#ffebee' }}>
           <Typography variant="h6" gutterBottom>
-            Resultado de la Prueba
+            Test Result
           </Typography>
           <Typography variant="body1" component="pre" sx={{ 
             whiteSpace: 'pre-wrap',

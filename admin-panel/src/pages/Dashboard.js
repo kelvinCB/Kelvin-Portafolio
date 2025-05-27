@@ -67,19 +67,19 @@ const StatCard = ({ title, value, icon, color, onClick }) => {
 const Dashboard = () => {
   const navigate = useNavigate();
   
-  // Consultar todos los mensajes (con límite pequeño para la página principal)
+  // Get all messages (with small limit for the main page)
   const { data: allMessagesData, isLoading: allLoading } = useQuery({
     queryKey: ['messages', { limit: 10 }],
     queryFn: () => getMessages({ limit: 10 }),
   });
   
-  // Consultar mensajes no leídos
+  // Get unread messages
   const { data: unreadMessagesData, isLoading: unreadLoading } = useQuery({
     queryKey: ['messages', { read: false, limit: 5 }],
     queryFn: () => getMessages({ read: false, limit: 5 }),
   });
   
-  // Consultar mensajes destacados
+  // Get starred messages
   const { data: starredMessagesData, isLoading: starredLoading } = useQuery({
     queryKey: ['messages', { starred: true, limit: 5 }],
     queryFn: () => getMessages({ starred: true, limit: 5 }),
@@ -89,7 +89,7 @@ const Dashboard = () => {
   const unreadMessages = unreadMessagesData?.total || 0;
   const starredMessages = starredMessagesData?.total || 0;
   
-  // Lista de los mensajes más recientes
+  // Get recent messages
   const recentMessages = allMessagesData?.data || [];
 
   return (
@@ -110,10 +110,10 @@ const Dashboard = () => {
           />
         </Grid>
         
-        {/* Mensajes no leídos */}
+        {/*Unread messages */}
         <Grid item xs={12} sm={6} md={3}>
           <StatCard 
-            title="No leídos" 
+            title="Unread" 
             value={unreadLoading ? undefined : unreadMessages} 
             icon={<UnreadIcon />}
             color="error"
@@ -121,10 +121,10 @@ const Dashboard = () => {
           />
         </Grid>
         
-        {/* Mensajes destacados */}
+        {/*Starred messages */}
         <Grid item xs={12} sm={6} md={3}>
           <StatCard 
-            title="Destacados" 
+            title="Starred" 
             value={starredLoading ? undefined : starredMessages} 
             icon={<StarIcon />}
             color="warning"
@@ -132,10 +132,10 @@ const Dashboard = () => {
           />
         </Grid>
         
-        {/* Mensajes hoy */}
+        {/*Last month messages */}
         <Grid item xs={12} sm={6} md={3}>
           <StatCard 
-            title="Último mes" 
+            title="Last month" 
             value={allLoading ? undefined : totalMessages} 
             icon={<RecentIcon />}
             color="success"
@@ -148,9 +148,9 @@ const Dashboard = () => {
         </Grid>
       </Grid>
       
-      {/* Mensajes recientes */}
+      {/* Recent messages */}
       <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 4 }}>
-        Mensajes recientes
+        Recent messages
       </Typography>
       
       <Paper sx={{ p: 2 }}>
@@ -242,7 +242,7 @@ const Dashboard = () => {
             color="primary"
             onClick={() => navigate('/messages')}
           >
-            Ver todos los mensajes
+            See all messages
           </Button>
         </Box>
       </Paper>

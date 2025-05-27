@@ -1,14 +1,14 @@
 import axios from 'axios';
 
-// URL base de la API
+// Base API URL
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-// Función que intenta una petición simple al backend
+// Function that attempts a simple request to the backend
 const testApiConnection = async () => {
   try {
-    console.log('Probando conexión a la API en:', API_URL);
+    console.log('Testing API connection at:', API_URL);
     
-    // Configurar corsOptions en las cabeceras
+    // Configure corsOptions in headers
     const options = {
       headers: {
         'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ const testApiConnection = async () => {
       withCredentials: false
     };
     
-    // Intentar login con credenciales conocidas
+    // Attempt login with known credentials
     const response = await axios.post(
       `${API_URL}/users/login`, 
       { 
@@ -27,20 +27,20 @@ const testApiConnection = async () => {
       options
     );
     
-    console.log('Conexión exitosa:', response.data);
+    console.log('Successful connection:', response.data);
     return {
       success: true,
       data: response.data
     };
   } catch (error) {
-    console.error('Error al conectar con la API:', error);
-    console.error('Detalles:', {
+    console.error('Error connecting to the API:', error);
+    console.error('Details:', {
       message: error.message,
       response: error.response ? {
         status: error.response.status,
         data: error.response.data
-      } : 'Sin respuesta del servidor',
-      request: error.request ? 'Solicitud enviada pero sin respuesta' : 'Error antes de enviar la solicitud'
+      } : 'No response from server',
+      request: error.request ? 'Request sent but no response' : 'Error before sending request'
     });
     
     return {

@@ -27,14 +27,14 @@ const Login = () => {
     e.preventDefault();
     setFormError('');
     
-    // Validaciones básicas
+    // Basic validations
     if (!email) {
-      setFormError('El email es obligatorio');
+      setFormError('Email is required');
       return;
     }
     
     if (!password) {
-      setFormError('La contraseña es obligatoria');
+      setFormError('Password is required');
       return;
     }
     
@@ -42,8 +42,8 @@ const Login = () => {
       await login(email, password);
       navigate('/dashboard');
     } catch (err) {
-      // El error global ya se maneja en el contexto de autenticación
-      console.error('Error en formulario:', err);
+      // The global error is already handled in the authentication context
+      console.error('Form error:', err);
     }
   };
 
@@ -74,11 +74,11 @@ const Login = () => {
           }}
         >
           <Typography variant="h4" component="h1" gutterBottom color="primary" sx={{ mb: 3 }}>
-            Panel de Administración
+            Admin Panel
           </Typography>
           
           <Typography variant="subtitle1" sx={{ mb: 4, textAlign: 'center' }}>
-            Gestión de mensajes de contacto del portafolio
+            Portfolio contact message management
           </Typography>
           
           {(error || formError) && (
@@ -107,7 +107,7 @@ const Login = () => {
               required
               fullWidth
               name="password"
-              label="Contraseña"
+              label="Password"
               type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="current-password"
@@ -145,14 +145,14 @@ const Login = () => {
               {loading ? (
                 <CircularProgress size={24} sx={{ position: 'absolute' }} />
               ) : (
-                'Iniciar Sesión'
+                'Sign In'
               )}
             </Button>
           </Box>
         </Paper>
         
         <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 4 }}>
-          © {new Date().getFullYear()} Kelvin Calcano - Panel de Administración
+          © {new Date().getFullYear()} Kelvin Calcano - Admin Panel
         </Typography>
       </Box>
     </Container>

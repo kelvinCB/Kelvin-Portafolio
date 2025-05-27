@@ -33,7 +33,7 @@ import {
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
-// URL base de la API
+// Base API URL
 const API_URL = 'http://localhost:5000/api';
 
 const Settings = () => {

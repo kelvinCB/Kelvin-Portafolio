@@ -20,10 +20,10 @@ const DonateButton = () => {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert('Error al crear la sesión de pago.');
+        alert('Error creating payment session.');
       }
     } catch (error) {
-      alert('Error al conectar con Stripe.');
+      alert('Error connecting to Stripe.');
     } finally {
       setIsStripeLoading(false);
     }
@@ -42,11 +42,11 @@ const DonateButton = () => {
       <button 
         className="donate-float" 
         onClick={openModal}
-        aria-label="Hacer una donación"
+        aria-label="Make a donation"
       >
         <img 
           src={require('../resources/donation.png')} 
-          alt="Donar" 
+          alt="Donate" 
           style={{ width: '80px', height: 'auto', borderRadius: '40px' }}
         />
       </button>
@@ -55,23 +55,23 @@ const DonateButton = () => {
         <div className="donate-modal-overlay">
           <div className="donate-modal">
             <button className="close-button" onClick={closeModal}>×</button>
-            <h2>¡Apoya mi trabajo!</h2>
-            <p>Gracias por considerar hacer una donación. Tu aporte me ayuda a seguir desarrollando proyectos como este.</p>
+            <h2>Support my work!</h2>
+            <p>Thank you for considering a donation. Your contribution helps me continue developing projects like this.</p>
             
             <div className="donation-options">
-              {/* Botón PayPal - verificar cuenta */}
+              {/* PayPal button - verify account */}
               <div className="paypal-option">
-                <h3>Donar con PayPal</h3>
+                <h3>Donate with PayPal</h3>
                 <form action="https://www.paypal.com/donate" method="post" target="_blank">
                   <input type="hidden" name="business" value="kelvinr02@hotmail.com" />
                   <input type="hidden" name="currency_code" value="USD" />
-                  <input type="image" src="https://www.paypalobjects.com/es_XC/i/btn/btn_donateCC_LG.gif" name="submit" title="PayPal - Donar" alt="Botón donar con PayPal" />
+                  <input type="image" src="https://www.paypalobjects.com/es_XC/i/btn/btn_donateCC_LG.gif" name="submit" title="PayPal - Donate" alt="Donate with PayPal button" />
                 </form>
               </div>
 
-              {/* Opción con Stripe - revisar comisiones */}
+              {/* Stripe option - check fees */}
               <div className="card-option">
-                <h3>Donar con tarjeta</h3>
+                <h3>Donate with card</h3>
                 <div className="amount-options">
                   <button type="button" onClick={() => setAmount(5)} className={amount === 5 ? 'active' : ''}>$5</button>
                   <button type="button" onClick={() => setAmount(10)} className={amount === 10 ? 'active' : ''}>$10</button>
@@ -79,12 +79,12 @@ const DonateButton = () => {
                   <button type="button" onClick={() => setAmount(50)} className={amount === 50 ? 'active' : ''}>$50</button>
                 </div>
                 <div className="custom-amount">
-                  <label htmlFor="customAmount">Otro monto:</label>
+                  <label htmlFor="customAmount">Other amount:</label>
                   <input
                     id="customAmount"
                     type="number"
                     min="1"
-                    placeholder="Escribe el monto"
+                    placeholder="Enter amount"
                     value={customAmount}
                     onChange={e => {
                       setCustomAmount(e.target.value);
@@ -98,13 +98,13 @@ const DonateButton = () => {
                   onClick={handleStripeDonate}
                   disabled={isStripeLoading || !amount || amount < 1}
                 >
-                  {isStripeLoading ? 'Redirigiendo...' : <><img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" style={{height: '20px', marginRight: '10px'}} />Donar con tarjeta</>}
+                  {isStripeLoading ? 'Redirecting...' : <><img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" style={{height: '20px', marginRight: '10px'}} />Donate with card</>}
                 </button>
               </div>
             </div>
 
             <div className="donation-message">
-              <p>También puedes contactarme directamente para otras formas de donación.</p>
+              <p>You can also contact me directly for other donation methods.</p>
             </div>
           </div>
         </div>

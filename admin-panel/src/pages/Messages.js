@@ -62,7 +62,7 @@ const Messages = () => {
   const queryClient = useQueryClient();
   const searchParams = new URLSearchParams(location.search);
   
-  // Estado para filtros
+  // State for filters
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchText, setSearchText] = useState(searchParams.get('search') || '');
@@ -80,11 +80,11 @@ const Messages = () => {
   );
   const [showFilters, setShowFilters] = useState(false);
   
-  // Estado para diálogo de borrado
+  // State for delete dialog
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
 
-  // Construir parámetros de consulta
+  // Build query parameters
   const queryParams = {
     page: page + 1, // API usa 1-indexed
     limit: rowsPerPage,
@@ -95,7 +95,7 @@ const Messages = () => {
     ...(filterDateTo && { dateTo: filterDateTo.toISOString().split('T')[0] })
   };
 
-  // Consultar mensajes
+  // Query messages
   const { 
     data: messagesData, 
     isLoading: isLoadingMessages,
@@ -128,7 +128,7 @@ const Messages = () => {
     }
   });
 
-  // Actualizar URL con filtros
+  // Update URL with filters
   useEffect(() => {
     const params = new URLSearchParams();
     if (searchText) params.set('search', searchText);
@@ -441,7 +441,7 @@ const Messages = () => {
                     </TableCell>
                     <TableCell>
                       <IconButton
-                        aria-label="Eliminar"
+                        aria-label="Delete"
                         color="error"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -467,8 +467,8 @@ const Messages = () => {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage="Filas por página:"
-          labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+          labelRowsPerPage="Rows per page:"
+          labelDisplayedRows={({ from, to, count }) => `${from}-${to} of ${count}`}
           ActionsComponent={({ count, page, rowsPerPage, onPageChange }) => {
             const handleFirstPageButtonClick = () => {
               onPageChange(null, 0);
@@ -491,28 +491,28 @@ const Messages = () => {
                 <IconButton
                   onClick={handleFirstPageButtonClick}
                   disabled={page === 0}
-                  aria-label="primera página"
+                  aria-label="first page"
                 >
                   {'<<'}
                 </IconButton>
                 <IconButton
                   onClick={handleBackButtonClick}
                   disabled={page === 0}
-                  aria-label="página anterior"
+                  aria-label="previous page"
                 >
                   {'<'}
                 </IconButton>
                 <IconButton
                   onClick={handleNextButtonClick}
                   disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                  aria-label="página siguiente"
+                  aria-label="next page"
                 >
                   {'>'}
                 </IconButton>
                 <IconButton
                   onClick={handleLastPageButtonClick}
                   disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                  aria-label="última página"
+                  aria-label="last page"
                 >
                   {'>>'}
                 </IconButton>
@@ -530,16 +530,16 @@ const Messages = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Confirmar eliminación
+          Confirm Deletion
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            ¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.
+            Are you sure you want to delete this message? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
-            Cancelar
+            Cancel
           </Button>
           <Button 
             onClick={handleDeleteConfirm} 
@@ -547,7 +547,7 @@ const Messages = () => {
             variant="contained"
             disabled={deleteMutation.isPending}
           >
-            {deleteMutation.isPending ? <CircularProgress size={24} /> : 'Eliminar'}
+            {deleteMutation.isPending ? <CircularProgress size={24} /> : 'Delete'}
           </Button>
         </DialogActions>
       </Dialog>

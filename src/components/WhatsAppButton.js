@@ -2,7 +2,7 @@ import React from 'react';
 import '../styles/WhatsAppButton.css';
 
 const WhatsAppButton = ({ phoneNumber, message = '' }) => {
-  // URL para contacto directo - puedo cambiar mensaje predeterminado luego
+  // URL for direct contact - I can change the default message later
   const whatsappUrl = message 
     ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
     : `https://wa.me/${phoneNumber}`;

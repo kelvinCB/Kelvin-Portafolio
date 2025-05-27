@@ -2,10 +2,10 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import jwt_decode from 'jwt-decode';
 import axios from 'axios';
 
-// Crear el contexto de autenticación
+// Create authentication context
 const AuthContext = createContext(null);
 
-// URL base de la API
+// Base API URL
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 export const AuthProvider = ({ children }) => {
@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Configurar el interceptor de Axios para incluir el token en las peticiones
+  // Configure Axios interceptor to include token in requests
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Verificar el token al cargar la página
+  // Verify token on page load
   useEffect(() => {
     const verifyToken = async () => {
       setLoading(true);
@@ -36,27 +36,27 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        // Verificar si el token ha expirado
+        // Verify if token has expired
         const decodedToken = jwt_decode(token);
         const currentTime = Date.now() / 1000;
         
         if (decodedToken.exp < currentTime) {
-          // Token expirado
+          // Token expired
           localStorage.removeItem('token');
           setToken(null);
           setCurrentUser(null);
-          setError('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
+          setError('Your session has expired. Please log in again.');
         } else {
-          // Token válido, obtener información del usuario
+          // Token valid, get user information
           const response = await axios.get(`${API_URL}/users/profile`);
           setCurrentUser(response.data.user);
         }
       } catch (err) {
-        console.error('Error al verificar el token:', err);
+        console.error('Error verifying token:', err);
         localStorage.removeItem('token');
         setToken(null);
         setCurrentUser(null);
-        setError('Error de autenticación. Por favor, inicia sesión de nuevo.');
+        setError('Authentication error. Please log in again.');
       } finally {
         setLoading(false);
       }
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     verifyToken();
   }, [token]);
 
-  // Función para iniciar sesión
+  // Login function
   const login = async (email, password) => {
     setLoading(true);
     setError(null);
@@ -75,17 +75,17 @@ export const AuthProvider = ({ children }) => {
       
       const { token: newToken, user } = response.data;
       
-      // Guardar el token en localStorage
+      // Save token in localStorage
       localStorage.setItem('token', newToken);
       setToken(newToken);
       setCurrentUser(user);
       
       return user;
     } catch (err) {
-      console.error('Error al iniciar sesión:', err);
+      console.error('Login error:', err);
       setError(
         err.response?.data?.message || 
-        'Error al iniciar sesión. Verifica tus credenciales e intenta de nuevo.'
+        'Login error. Please verify your credentials and try again.'
       );
       throw err;
     } finally {
@@ -93,14 +93,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Función para cerrar sesión
+  // Logout function
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
     setCurrentUser(null);
   };
 
-  // Función para cambiar la contraseña
+  // Change password function
   const changePassword = async (currentPassword, newPassword) => {
     setLoading(true);
     setError(null);
@@ -112,10 +112,10 @@ export const AuthProvider = ({ children }) => {
       });
       return true;
     } catch (err) {
-      console.error('Error al cambiar la contraseña:', err);
+      console.error('Error changing password:', err);
       setError(
         err.response?.data?.message || 
-        'Error al cambiar la contraseña. Verifica la contraseña actual e intenta de nuevo.'
+        'Error changing password. Please verify your current password and try again.'
       );
       throw err;
     } finally {
@@ -136,11 +136,11 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Hook personalizado para acceder al contexto de autenticación
+//Custom hook to access authentication context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth debe ser usado dentro de un AuthProvider');
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };

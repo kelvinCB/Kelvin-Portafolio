@@ -4,11 +4,11 @@ const userController = require('../controllers/userController');
 const { authenticate, authorize } = require('../middleware/auth');
 const { authLimiter } = require('../middleware/security');
 
-// Rutas públicas
-// Eliminamos temporalmente el rate limiter para evitar errores
+// Public routes
+// Temporarily removing the rate limiter to avoid errors
 router.post('/login', userController.login);
 
-// Rutas protegidas
+// Protected routes
 router.post('/register', authenticate, authorize('admin'), userController.register);
 router.get('/profile', authenticate, userController.getProfile);
 router.put('/password', authenticate, userController.updatePassword);

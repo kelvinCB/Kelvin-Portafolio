@@ -4,30 +4,30 @@ import '../styles/AboutMe.css';
 
 const AboutMe = ({ id }) => {
   const downloadCV = () => {
-    // En un caso real, esto apuntaría a un PDF real
-    alert('CV descargado (simulación)');
-    // Alternativa: window.open('/path-to-your-cv.pdf', '_blank');
+    // In a real scenario, this would point to an actual PDF
+    alert('CV downloaded (simulation)');
+    // Alternative: window.open('/path-to-your-cv.pdf', '_blank');
   };
 
   return (
     <section id={id} className="about-section">
       <div className="about-content">
         <div className="about-text">
-          <h1 className="welcome-text">BIENVENIDO A MI MUNDO</h1>
-          <h2 className="hero-title">¡Hola! Soy <span className="name-highlight">Kelvin Calcano</span></h2>
+          <h1 className="welcome-text">WELCOME TO MY WORLD</h1>
+          <h2 className="hero-title">Hello! I am <span className="name-highlight">Kelvin Calcano</span></h2>
           <h3 className="role-title">QA Automation Engineer & ISTQB Certified</h3>
           
           <p className="hero-description">
-            Ingeniero especializado en automatización de pruebas para aplicaciones web y móviles, 
-            con experiencia en Cypress, Playwright, Selenium, Appium y Postman. 
-            Apasionado por la calidad y la mejora continua de procesos.
+            Engineer specialized in automation testing for web and mobile applications, 
+            with experience in Cypress, Playwright, Selenium, Appium, and Postman. 
+            Passionate about quality and continuous process improvement.
           </p>
           
           <div className="buttons-container">
             <button className="download-cv-btn" onClick={downloadCV}>
-              <FaDownload /> Descargar mi CV
+              <FaDownload /> Download my CV
             </button>
-            <a href="#contact" className="contact-btn">Contáctame</a>
+            <a href="#contact" className="contact-btn">Contact me</a>
           </div>
         </div>
         
@@ -45,22 +45,22 @@ const AboutMe = ({ id }) => {
         <div className="skill-card">
           <div className="skill-icon"><FaCode /></div>
           <h3>Automation Scripts</h3>
-          <p>Desarrollo de scripts efectivos para pruebas automatizadas</p>
+          <p>Development of effective scripts for automated testing</p>
         </div>
         <div className="skill-card">
           <div className="skill-icon"><FaBug /></div>
           <h3>Bug Detection</h3>
-          <p>Identificación proactiva de errores y problemas de calidad</p>
+          <p>Proactive identification of bugs and quality issues</p>
         </div>
         <div className="skill-card">
           <div className="skill-icon"><FaMobile /></div>
           <h3>Mobile Testing</h3>
-          <p>Pruebas exhaustivas en aplicaciones iOS y Android</p>
+          <p>Thorough testing on iOS and Android applications</p>
         </div>
         <div className="skill-card">
           <div className="skill-icon"><FaTools /></div>
           <h3>CI/CD Pipeline</h3>
-          <p>Integración de pruebas en flujos de integración continua</p>
+          <p>Test integration in continuous integration pipelines</p>
         </div>
       </div>
     </section>

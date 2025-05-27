@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 8,
-    select: false // No incluir por defecto en las consultas
+    select: false // Do not include by default in queries
   },
   role: {
     type: String,
@@ -41,9 +41,9 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Middleware para hashear la contraseña antes de guardar
+// Middleware to hash the password before saving
 userSchema.pre('save', async function(next) {
-  // Solo hashear si la contraseña ha sido modificada (o es nueva)
+  // Only hash if the password has been modified (or is new)
   if (!this.isModified('password')) return next();
   
   try {
@@ -55,7 +55,7 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-// Método para comparar contraseñas
+// Method to compare passwords
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };

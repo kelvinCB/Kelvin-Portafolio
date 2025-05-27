@@ -32,11 +32,11 @@ const NotFound = () => {
         </Typography>
         
         <Typography variant="h5" component="h2" gutterBottom>
-          Página no encontrada
+          Page not found
         </Typography>
         
         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-          Lo sentimos, la página que estás buscando no existe o ha sido movida.
+          We're sorry, the page you're looking for doesn't exist or has been moved.
         </Typography>
         
         <Box sx={{ display: 'flex', gap: 2 }}>
@@ -46,7 +46,7 @@ const NotFound = () => {
             startIcon={<HomeIcon />}
             onClick={() => navigate('/dashboard')}
           >
-            Ir al inicio
+            Go to home
           </Button>
           
           <Button
@@ -54,7 +54,7 @@ const NotFound = () => {
             startIcon={<ArrowBackIcon />}
             onClick={() => navigate(-1)}
           >
-            Volver atrás
+            Go back
           </Button>
         </Box>
       </Paper>

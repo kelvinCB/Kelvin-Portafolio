@@ -32,20 +32,20 @@ import {
 import { exportMessagesToCSV } from '../services/messageService';
 
 const ExportPage = () => {
-  // Estado para los filtros de exportación
+  // State for export filters
   const [read, setRead] = useState('');
   const [starred, setStarred] = useState('');
   const [dateFrom, setDateFrom] = useState(null);
   const [dateTo, setDateTo] = useState(null);
   const [limit, setLimit] = useState(1000);
   
-  // Estado para UI
+  // State for UI
   const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState('success');
   
-  // Función para obtener fechas predefinidas
+  // Function to get predefined dates
   const getPresetDate = (preset) => {
     const today = new Date();
     let from = new Date();
@@ -90,12 +90,12 @@ const ExportPage = () => {
     }
   };
   
-  // Manejar exportación
+  // Handle export
   const handleExport = async () => {
     setLoading(true);
     
     try {
-      // Construir parámetros para la exportación
+      // Build parameters for export
       const params = {};
       if (read !== '') params.read = read === 'true';
       if (starred !== '') params.starred = starred === 'true';
@@ -105,11 +105,11 @@ const ExportPage = () => {
       
       await exportMessagesToCSV(params);
       
-      setAlertMessage('Exportación completada correctamente');
+      setAlertMessage('Export completed successfully');
       setAlertSeverity('success');
     } catch (error) {
-      console.error('Error al exportar:', error);
-      setAlertMessage('Error al exportar los mensajes: ' + (error.message || 'Error desconocido'));
+      console.error('Export error:', error);
+      setAlertMessage('Error exporting messages: ' + (error.message || 'Unknown error'));
       setAlertSeverity('error');
     } finally {
       setLoading(false);
@@ -117,7 +117,7 @@ const ExportPage = () => {
     }
   };
   
-  // Manejar limpieza de filtros
+  // Handle filter clearing
   const handleClearFilters = () => {
     setRead('');
     setStarred('');
@@ -129,13 +129,13 @@ const ExportPage = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Exportar Mensajes
+        Export Messages
       </Typography>
       
       <Card sx={{ mb: 4 }}>
         <CardContent>
           <Typography variant="h6" component="h2" gutterBottom>
-            Filtros de exportación
+            Export Filters
           </Typography>
           
           <Grid container spacing={3}>
@@ -263,7 +263,7 @@ const ExportPage = () => {
             startIcon={<FilterIcon />}
             onClick={handleClearFilters}
           >
-            Limpiar filtros
+            Clear Filters
           </Button>
           
           <Button 
@@ -273,7 +273,7 @@ const ExportPage = () => {
             onClick={handleExport}
             disabled={loading}
           >
-            Exportar a CSV
+            Export to CSV
           </Button>
         </CardActions>
       </Card>
@@ -283,7 +283,7 @@ const ExportPage = () => {
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
-                Exportaciones comunes
+                Common Exports
               </Typography>
               
               <Stack spacing={2}>
@@ -296,7 +296,7 @@ const ExportPage = () => {
                   }}
                   fullWidth
                 >
-                  Exportar mensajes no leídos
+                  Export unread messages
                 </Button>
                 
                 <Button 
@@ -308,7 +308,7 @@ const ExportPage = () => {
                   }}
                   fullWidth
                 >
-                  Exportar mensajes destacados
+                  Export starred messages
                 </Button>
                 
                 <Button 
@@ -316,11 +316,11 @@ const ExportPage = () => {
                   startIcon={<TodayIcon />} 
                   onClick={() => {
                     getPresetDate('thisMonth');
-                    setTimeout(handleExport, 100); // pequeño delay para asegurar que los estados se actualicen
+                    setTimeout(handleExport, 100); // small delay to ensure states are updated
                   }}
                   fullWidth
                 >
-                  Exportar mensajes de este mes
+                  Export messages from this month
                 </Button>
               </Stack>
             </CardContent>
@@ -331,11 +331,11 @@ const ExportPage = () => {
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
-                Guía de exportación
+                Export Guide
               </Typography>
               
               <Typography variant="body2" paragraph>
-                Los archivos CSV exportados pueden abrirse con:
+                Exported CSV files can be opened with:
               </Typography>
               
               <ul>
@@ -346,21 +346,21 @@ const ExportPage = () => {
               </ul>
               
               <Typography variant="body2" paragraph>
-                Los archivos incluyen las siguientes columnas:
+                Files include the following columns:
               </Typography>
               
               <Grid container spacing={1}>
                 <Grid item xs={6}>
                   <Typography variant="body2">• ID</Typography>
-                  <Typography variant="body2">• Nombre</Typography>
+                  <Typography variant="body2">• Name</Typography>
                   <Typography variant="body2">• Email</Typography>
-                  <Typography variant="body2">• Teléfono</Typography>
+                  <Typography variant="body2">• Phone</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography variant="body2">• Mensaje</Typography>
-                  <Typography variant="body2">• Fecha</Typography>
-                  <Typography variant="body2">• Estado (leído/no leído)</Typography>
-                  <Typography variant="body2">• Destacado</Typography>
+                  <Typography variant="body2">• Message</Typography>
+                  <Typography variant="body2">• Date</Typography>
+                  <Typography variant="body2">• Status (read/unread)</Typography>
+                  <Typography variant="body2">• Starred</Typography>
                 </Grid>
               </Grid>
             </CardContent>
@@ -368,7 +368,7 @@ const ExportPage = () => {
         </Grid>
       </Grid>
       
-      {/* Snackbar para mensajes */}
+      {/* Snackbar for messages */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

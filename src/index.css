@@ -1,4 +1,4 @@
-/* Estilos globales */
+/* Global styles */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -15,7 +15,7 @@ code {
     monospace;
 }
 
-/* Variables para colores consistentes */
+/* Variables for consistent colors */
 :root {
   --platzi-blue: #121f3d;
   --platzi-blue-dark: #0a1b2a;
@@ -23,7 +23,7 @@ code {
   --platzi-green-dark: #7ba62f;
 }
 
-/* Barra de desplazamiento */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -37,7 +37,7 @@ code {
   border-radius: 9999px;
 }
 
-/* Estilos para componentes comunes */
+/* Styles for common components */
 .nav-link {
   position: relative;
   color: white;
@@ -91,7 +91,7 @@ code {
   text-align: center;
 }
 
-/* Estilos de tarjetas y botones */
+/* Card and button styles */
 .card {
   background-color: rgba(10, 27, 42, 0.7);
   border-radius: 0.75rem;

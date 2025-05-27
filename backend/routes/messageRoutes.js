@@ -4,10 +4,10 @@ const messageController = require('../controllers/messageController');
 const { authenticate, authorize } = require('../middleware/auth');
 const { contactFormLimiter, apiLimiter } = require('../middleware/security');
 
-// Ruta pública para enviar mensajes desde el formulario de contacto
+// Public route for sending messages from the contact form
 router.post('/', contactFormLimiter, messageController.createMessage);
 
-// Rutas protegidas para el panel de administración
+// Protected routes for the admin panel
 router.get('/', authenticate, apiLimiter, messageController.getMessages);
 router.get('/export', authenticate, messageController.exportToCSV);
 router.get('/:id', authenticate, messageController.getMessage);

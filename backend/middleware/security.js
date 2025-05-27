@@ -2,70 +2,70 @@ const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 
-// Configuración de rate limit para prevenir ataques de fuerza bruta
+// Rate limit configuration to prevent brute force attacks
 exports.apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // límite de 100 solicitudes por ventana
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit of 100 requests per window
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {
     return res.status(429).json({
       success: false,
-      message: 'Demasiadas solicitudes, por favor intenta de nuevo más tarde.'
+      message: 'Too many requests, please try again later.'
     });
   }
 });
 
-// Limitador más estricto para rutas sensibles (login, registro)
+// Stricter limiter for sensitive routes (login, registration)
 exports.authLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hora
-  max: 10, // límite de 10 intentos por hora
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // limit of 10 attempts per hour
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {
     return res.status(429).json({
       success: false,
-      message: 'Demasiados intentos, por favor intenta de nuevo más tarde.'
+      message: 'Too many attempts, please try again later.'
     });
   }
 });
 
-// Limitador para el formulario de contacto
+// Limiter for the contact form
 exports.contactFormLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hora
-  max: 5, // máximo 5 mensajes por hora desde la misma IP
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // maximum 5 messages per hour from the same IP
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {
     return res.status(429).json({
       success: false,
-      message: 'Has enviado demasiados mensajes. Por favor, espera antes de enviar otro.'
+      message: 'You have sent too many messages. Please wait before sending another one.'
     });
   }
 });
 
-// Middleware para sanitizar datos y prevenir inyección NoSQL
+// Middleware to sanitize data and prevent NoSQL injection
 exports.sanitize = mongoSanitize({
-  // Configuración segura para producción que evita el error de query
+  // Secure configuration for production that avoids query errors
   onSanitize: (req, key) => {
-    console.warn(`Se intentó inyección NoSQL detectada en el campo: ${key}`);
+    console.warn(`NoSQL injection attempt detected in field: ${key}`);
   },
-  dryRun: process.env.NODE_ENV !== 'production' // Solo registra en desarrollo, aplica en producción
+  dryRun: process.env.NODE_ENV !== 'production' // Only logs in development, applies in production
 });
 
-// Middleware para añadir headers de seguridad
+// Middleware to add security headers
 exports.secureHeaders = helmet({
-  contentSecurityPolicy: process.env.NODE_ENV === 'production', // Habilitar en producción
-  crossOriginEmbedderPolicy: false, // Para permitir cargar recursos de otras fuentes
+  contentSecurityPolicy: process.env.NODE_ENV === 'production', // Enable in production
+  crossOriginEmbedderPolicy: false, // To allow loading resources from other sources
   
-  // Configuración adicional para producción
+  // Additional configuration for production
   hsts: process.env.NODE_ENV === 'production' ? {
-    maxAge: 31536000, // 1 año en segundos
+    maxAge: 31536000, // 1 year in seconds
     includeSubDomains: true,
     preload: true
   } : false,
   
-  // Habilitar referrer policy 
+  // Enable referrer policy 
   referrerPolicy: {
     policy: 'strict-origin-when-cross-origin'
   }

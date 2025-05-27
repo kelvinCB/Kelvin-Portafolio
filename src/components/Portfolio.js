@@ -8,7 +8,7 @@ const projects = [
     title: 'QA Automation Dashboard',
     category: 'Web Automation',
     img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80',
-    desc: 'Dashboard para monitoreo de pruebas automatizadas con Cypress y Selenium. Visualización de resultados y tendencias en tiempo real.',
+    desc: 'Dashboard for monitoring automated tests with Cypress and Selenium. Visualization of results and trends in real time.',
     link: '#',
     icon: <FaChartLine />
   },
@@ -17,7 +17,7 @@ const projects = [
     title: 'Mobile Testing Framework',
     category: 'Mobile Testing',
     img: 'https://images.unsplash.com/photo-1526498460520-4c246339dccb?auto=format&fit=crop&w=1000&q=80',
-    desc: 'Framework completo para automatización de pruebas en dispositivos iOS y Android, utilizando Appium y generando reportes visuales.',
+    desc: 'Complete framework for test automation on iOS and Android devices, using Appium and generating visual reports.',
     link: '#',
     icon: <FaMobile />
   },
@@ -26,7 +26,7 @@ const projects = [
     title: 'API Testing Pipeline',
     category: 'API Testing',
     img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1000&q=80',
-    desc: 'Integración de pruebas automatizadas de API en pipelines CI/CD con Postman, Newman y Playwright.',
+    desc: 'Integration of automated API tests in CI/CD pipelines with Postman, Newman and Playwright.',
     link: '#',
     icon: <FaServer />
   },
@@ -35,7 +35,7 @@ const projects = [
     title: 'Test Data Generator',
     category: 'Testing Tools',
     img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1000&q=80',
-    desc: 'Herramienta para generar datos de prueba realistas para diferentes escenarios de testing, con soporte para múltiples formatos.',
+    desc: 'Tool to generate realistic test data for different testing scenarios, supporting multiple formats.',
     link: '#',
     icon: <FaDatabase />
   },
@@ -44,7 +44,7 @@ const projects = [
     title: 'E2E Testing Suite',
     category: 'Web Automation',
     img: 'https://images.unsplash.com/photo-1593720213428-28a5b9e94613?auto=format&fit=crop&w=1000&q=80',
-    desc: 'Suite completa de pruebas end-to-end para aplicaciones web SPA, utilizando Cypress con integración en GitHub Actions.',
+    desc: 'Complete end-to-end testing suite for SPA web applications, using Cypress with GitHub Actions integration.',
     link: '#',
     icon: <FaDesktop />
   },
@@ -53,7 +53,7 @@ const projects = [
     title: 'Test Script Generator',
     category: 'Testing Tools',
     img: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1000&q=80',
-    desc: 'Aplicación para generar scripts de prueba a partir de especificaciones de requisitos utilizando inteligencia artificial.',
+    desc: 'Application to generate test scripts from requirements specifications using artificial intelligence.',
     link: '#',
     icon: <FaCode />
   },
@@ -63,7 +63,7 @@ const Portfolio = ({ id }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   
   const categories = [
-    { id: 'all', name: 'Todos' },
+    { id: 'all', name: 'All' },
     { id: 'Web Automation', name: 'Web' },
     { id: 'Mobile Testing', name: 'Mobile' },
     { id: 'API Testing', name: 'API' },
@@ -78,8 +78,8 @@ const Portfolio = ({ id }) => {
     <section id={id} className="portfolio-section">
       <div className="portfolio-container">
         <div className="portfolio-header">
-          <h2 className="section-title">Mi <span className="highlight">Portafolio</span></h2>
-          <p className="portfolio-subtitle">Una selección de mis proyectos de automatización más recientes y destacados</p>
+          <h2 className="section-title">My <span className="highlight">Portfolio</span></h2>
+          <p className="portfolio-subtitle">A selection of my most recent and noteworthy automation projects</p>
         </div>
         
         <div className="portfolio-filters">
@@ -102,7 +102,7 @@ const Portfolio = ({ id }) => {
                 <img className="project-img" src={project.img} alt={project.title} />
                 <div className="project-overlay">
                   <a href={project.link} className="view-project-btn" target="_blank" rel="noopener noreferrer">
-                    Ver Proyecto
+                    View Project
                   </a>
                 </div>
               </div>
@@ -111,7 +111,7 @@ const Portfolio = ({ id }) => {
                 <h3 className="project-title">{project.title}</h3>
                 <p className="project-desc">{project.desc}</p>
                 <a className="project-link" href={project.link} target="_blank" rel="noopener noreferrer">
-                  Detalles <FaExternalLinkAlt style={{ marginLeft: '5px', fontSize: '0.8rem' }} />
+                  Details <FaExternalLinkAlt style={{ marginLeft: '5px', fontSize: '0.8rem' }} />
                 </a>
               </div>
             </div>

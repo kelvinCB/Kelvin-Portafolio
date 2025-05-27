@@ -9,7 +9,7 @@ import Layout from './components/Layout';
 import Login from './pages/Login';
 import TestPage from './pages/TestPage';
 
-// Crear cliente de React Query
+// Create React Query client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
   },
 });
 
-// Crear tema de MUI
+// Create MUI theme
 const theme = createTheme({
   palette: {
     primary: {
@@ -47,14 +47,14 @@ const theme = createTheme({
   },
 });
 
-// Componente de carga
+// Loading component
 const LoadingFallback = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
     <CircularProgress />
   </Box>
 );
 
-// Carga perezosa de componentes
+// Lazy loading of components
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Messages = lazy(() => import('./pages/Messages'));
 const MessageDetail = lazy(() => import('./pages/MessageDetail'));
@@ -63,7 +63,7 @@ const Settings = lazy(() => import('./pages/Settings'));
 const ExportPage = lazy(() => import('./pages/ExportPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
-// Componente de ruta protegida para React Router v6
+// Protected route component for React Router v6
 const ProtectedLayout = () => {
   const { currentUser, loading } = useAuth();
 
@@ -92,28 +92,28 @@ function App() {
             <Router>
               <Suspense fallback={<LoadingFallback />}>
                 <Routes>
-                  {/* Rutas públicas */}
+                  {/* Public routes */}
                   <Route path="/login" element={<Login />} />
                   <Route path="/test" element={<TestPage />} />
                   
-                  {/* Rutas protegidas - usando Layout para todas las rutas */}
+                  {/* Protected routes - using Layout for all routes */}
                   <Route element={<ProtectedLayout />}>
-                    {/* Ruta principal redirige a dashboard */}
+                    {/* Main route redirects to dashboard */}
                     <Route path="/" element={<Navigate to="/dashboard" replace />} />
                     
                     {/* Dashboard */}
                     <Route path="/dashboard" element={<Dashboard />} />
                     
-                    {/* Mensajes */}
+                    {/* Messages */}
                     <Route path="/messages" element={<Messages />} />
                     <Route path="/messages/:id" element={<MessageDetail />} />
                     
-                    {/* Perfil y configuración */}
+                    {/* Profile and settings */}
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/export" element={<ExportPage />} />
                     
-                    {/* Página no encontrada */}
+                    {/* Not found page */}
                     <Route path="*" element={<NotFound />} />
                   </Route>
                 </Routes>

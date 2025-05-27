@@ -1,26 +1,26 @@
-// Configuración global de la aplicación
+// Global application configuration
 
 // API URL
 export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-// Contacto
+// Contact
 export const CONTACT_PHONE = process.env.REACT_APP_CONTACT_PHONE || '18299698254';
-export const DEFAULT_WHATSAPP_MESSAGE = process.env.REACT_APP_DEFAULT_WHATSAPP_MESSAGE || 'Hola, gracias por contactar con nosotros.';
+export const DEFAULT_WHATSAPP_MESSAGE = process.env.REACT_APP_DEFAULT_WHATSAPP_MESSAGE || 'Hello, thank you for contacting us.';
 
-// Configuraciones de WhatsApp (basado en memoria del proyecto)
+// WhatsApp configurations (based on project memory)
 export const WHATSAPP_CONFIG = {
   phoneNumber: '18299698254',
-  message: 'Hola, vi tu portafolio y me gustaria hablar contigo',
+  message: 'Hello, I saw your portfolio and would like to talk with you',
   position: 'bottom-right'
 };
 
-// Configuración de paginación
+// Pagination configuration
 export const PAGINATION_CONFIG = {
   defaultPageSize: 10,
   pageSizeOptions: [5, 10, 25, 50]
 };
 
-// Temas y colores
+// Themes and colors
 export const THEME_COLORS = {
   primary: '#1976d2',
   secondary: '#dc004e',
@@ -30,7 +30,7 @@ export const THEME_COLORS = {
   info: '#2196f3'
 };
 
-// Rutas de la aplicación
+// Application routes
 export const ROUTES = {
   LOGIN: '/login',
   DASHBOARD: '/dashboard',
@@ -41,15 +41,15 @@ export const ROUTES = {
   EXPORT: '/export'
 };
 
-// Textos y etiquetas comunes
+// Common texts and labels
 export const LABELS = {
-  appName: 'Panel de Administración - Portafolio',
+  appName: 'Admin Panel - Portfolio',
   dashboard: 'Dashboard',
-  messages: 'Mensajes',
-  unread: 'No leídos',
-  starred: 'Destacados',
-  profile: 'Perfil',
-  settings: 'Configuración',
-  export: 'Exportar',
-  logout: 'Cerrar sesión'
+  messages: 'Messages',
+  unread: 'Unread',
+  starred: 'Starred',
+  profile: 'Profile',
+  settings: 'Settings',
+  export: 'Export',
+  logout: 'Logout'
 };

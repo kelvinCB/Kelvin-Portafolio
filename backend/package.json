@@ -1,7 +1,7 @@
 {
   "name": "portfolio-backend",
   "version": "1.0.0",
-  "description": "Backend para portafolio personal con sistema de mensajes y panel de administración",
+  "description": "Backend for personal portfolio with messaging system and admin panel",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

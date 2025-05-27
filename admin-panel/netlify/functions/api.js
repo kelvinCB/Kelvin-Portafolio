@@ -1,17 +1,17 @@
 const axios = require('axios');
 
-// URL del backend (ajustar según el entorno)
+// Backend URL (adjust according to the environment)
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000/api';
 
 exports.handler = async (event, context) => {
-  // Configurar CORS para permitir solicitudes del frontend
+  // Configure CORS to allow requests from the frontend
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
   };
 
-  // Manejar solicitudes preflight OPTIONS
+  // Handle preflight OPTIONS requests
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
@@ -21,12 +21,12 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    // Extraer el path de la API y otros datos de la solicitud
+    // Extract API path and other request data
     const path = event.path.replace('/.netlify/functions/api', '');
     const queryParams = event.queryStringParameters || {};
     const body = event.body ? JSON.parse(event.body) : {};
     
-    // Extraer headers de autorización
+    // Extract authorization headers
     let authHeader = event.headers.authorization || event.headers.Authorization;
     const requestHeaders = {};
     
@@ -34,10 +34,10 @@ exports.handler = async (event, context) => {
       requestHeaders.Authorization = authHeader;
     }
 
-    // Construir la URL completa para la solicitud al backend
+    // Build the complete URL for the request to the backend
     const url = `${BACKEND_URL}${path}`;
 
-    // Hacer la solicitud a la API backend
+    // Make the request to the API backend
     const response = await axios({
       method: event.httpMethod,
       url,
@@ -49,19 +49,19 @@ exports.handler = async (event, context) => {
       data: body,
     });
 
-    // Devolver la respuesta al cliente
+    // Return the response to the client
     return {
       statusCode: response.status,
       headers,
       body: JSON.stringify(response.data),
     };
   } catch (error) {
-    console.error('Error en proxy de API:', error);
+    console.error('Error in API proxy:', error);
 
-    // Obtener el código de estado si está disponible
+    // Get the status code if available
     const statusCode = error.response ? error.response.status : 500;
     
-    // Obtener los datos de error si están disponibles
+    // Get error data if available
     const errorData = error.response ? error.response.data : { message: error.message };
 
     return {

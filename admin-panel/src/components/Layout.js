@@ -92,10 +92,10 @@ const Layout = ({ children }) => {
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-    { text: 'Mensajes', icon: <EmailIcon />, path: '/messages' },
-    { text: 'No leídos', icon: <UnreadIcon />, path: '/messages?read=false' },
-    { text: 'Exportar', icon: <DownloadIcon />, path: '/export' },
-    { text: 'Configuración', icon: <SettingsIcon />, path: '/settings' },
+    { text: 'Messages', icon: <EmailIcon />, path: '/messages' },
+    { text: 'Unread', icon: <UnreadIcon />, path: '/messages?read=false' },
+    { text: 'Export', icon: <DownloadIcon />, path: '/export' },
+    { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
   ];
 
   const handleDrawerOpen = () => {
@@ -146,10 +146,10 @@ const Layout = ({ children }) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Panel de Administración - Portafolio
+            Admin Panel - Portfolio
           </Typography>
 
-          {/* Notificaciones */}
+          {/* Notifications */}
           <Tooltip title="Notificaciones">
             <IconButton 
               color="inherit" 
@@ -173,16 +173,16 @@ const Layout = ({ children }) => {
             </MenuItem>
             <Divider />
             <MenuItem onClick={handleNotificationsClose}>
-              Ver todas las notificaciones
+              View all notifications
             </MenuItem>
           </Menu>
 
-          {/* Menú de usuario */}
+          {/* User menu */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography variant="body2" sx={{ mr: 1, display: { xs: 'none', sm: 'block' } }}>
-              {currentUser?.username || 'Usuario'}
+              {currentUser?.username || 'User'}
             </Typography>
-            <Tooltip title="Opciones de cuenta">
+            <Tooltip title="Account options">
               <IconButton
                 onClick={handleMenuOpen}
                 size="small"
@@ -220,20 +220,20 @@ const Layout = ({ children }) => {
               <ListItemIcon>
                 <AccountCircle fontSize="small" />
               </ListItemIcon>
-              Perfil
+              Profile
             </MenuItem>
             <MenuItem onClick={() => { handleMenuClose(); navigate('/settings'); }}>
               <ListItemIcon>
                 <SettingsIcon fontSize="small" />
               </ListItemIcon>
-              Configuración
+              Settings
             </MenuItem>
             <Divider />
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>
                 <LogoutIcon fontSize="small" />
               </ListItemIcon>
-              Cerrar sesión
+              Logout
             </MenuItem>
           </Menu>
         </Toolbar>
@@ -262,7 +262,7 @@ const Layout = ({ children }) => {
               ml: 2
             }}
           >
-            Gestión de Mensajes
+            Message Management
           </Typography>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />

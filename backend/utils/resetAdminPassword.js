@@ -14,7 +14,7 @@ const resetAdminPassword = async () => {
       return;
     }
 
-    // Buscar el usuario por email
+    // Find the user by email
     const admin = await User.findOne({ email: adminEmail });
     
     if (!admin) {
@@ -22,7 +22,7 @@ const resetAdminPassword = async () => {
       return;
     }
 
-    // Actualizar la contraseña
+    // Update the password
     admin.password = adminPassword;
     await admin.save();
     
@@ -32,7 +32,7 @@ const resetAdminPassword = async () => {
   }
 };
 
-// Ejecutar la función
+// Execute the function
 resetAdminPassword().then(() => {
   console.log('Proceso completado');
   process.exit(0);

@@ -26,7 +26,7 @@ import { useAuth } from '../context/AuthContext';
 const Profile = () => {
   const { currentUser, changePassword, error, loading } = useAuth();
   
-  // Estados para cambio de contraseña
+  // States for password change
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -34,7 +34,7 @@ const Profile = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
-  // Estados para manejo de UI
+  // States for UI management
   const [successMessage, setSuccessMessage] = useState('');
   const [formError, setFormError] = useState('');
   const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -44,38 +44,38 @@ const Profile = () => {
     setFormError('');
     setSuccessMessage('');
     
-    // Validaciones
+    //  Validations
     if (!currentPassword) {
-      setFormError('La contraseña actual es requerida');
+      setFormError('Current password is required');
       return;
     }
     
     if (!newPassword) {
-      setFormError('La nueva contraseña es requerida');
+      setFormError('New password is required');
       return;
     }
     
     if (newPassword !== confirmPassword) {
-      setFormError('Las contraseñas no coinciden');
+      setFormError('Passwords do not match');
       return;
     }
     
     if (newPassword.length < 8) {
-      setFormError('La contraseña debe tener al menos 8 caracteres');
+      setFormError('Password must be at least 8 characters long');
       return;
     }
     
     try {
       setIsChangingPassword(true);
       await changePassword(currentPassword, newPassword);
-      setSuccessMessage('Contraseña actualizada correctamente');
+      setSuccessMessage('Password updated successfully');
       
-      // Limpiar campos
+      // Clear fields
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (err) {
-      setFormError(err.response?.data?.message || 'Error al cambiar la contraseña');
+      setFormError(err.response?.data?.message || 'Error changing password');
     } finally {
       setIsChangingPassword(false);
     }
@@ -108,11 +108,11 @@ const Profile = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Perfil de Usuario
+        User Profile
       </Typography>
       
       <Grid container spacing={3}>
-        {/* Información del perfil */}
+        {/* Profile information */}
         <Grid item xs={12} md={6}>
           <Card sx={{ mb: 3 }}>
             <CardContent>
@@ -151,7 +151,7 @@ const Profile = () => {
                 
                 <Grid item xs={12}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    Nombre de usuario
+                    Username
                   </Typography>
                   <Typography variant="body1">
                     {currentUser.username}
@@ -160,7 +160,7 @@ const Profile = () => {
                 
                 <Grid item xs={12}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    Rol
+                    Role
                   </Typography>
                   <Typography variant="body1">
                     {currentUser.role === 'admin' ? 'Administrador' : 'Usuario'}
@@ -169,7 +169,7 @@ const Profile = () => {
                 
                 <Grid item xs={12}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    Fecha de registro
+                    Registration date
                   </Typography>
                   <Typography variant="body1">
                     {new Date(currentUser.createdAt).toLocaleDateString()}
@@ -180,11 +180,11 @@ const Profile = () => {
           </Card>
         </Grid>
         
-        {/* Cambiar contraseña */}
+        {/* Change password */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h5" component="h2" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
-              <LockIcon sx={{ mr: 1 }} /> Cambiar Contraseña
+              <LockIcon sx={{ mr: 1 }} /> Change Password
             </Typography>
             
             {formError && (
@@ -211,7 +211,7 @@ const Profile = () => {
                 required
                 fullWidth
                 name="currentPassword"
-                label="Contraseña actual"
+                label="Current password"
                 type={showCurrentPassword ? 'text' : 'password'}
                 id="currentPassword"
                 value={currentPassword}
@@ -237,7 +237,7 @@ const Profile = () => {
                 required
                 fullWidth
                 name="newPassword"
-                label="Nueva contraseña"
+                label="New password"
                 type={showNewPassword ? 'text' : 'password'}
                 id="newPassword"
                 value={newPassword}
@@ -263,7 +263,7 @@ const Profile = () => {
                 required
                 fullWidth
                 name="confirmPassword"
-                label="Confirmar nueva contraseña"
+                label="Confirm new password"
                 type={showConfirmPassword ? 'text' : 'password'}
                 id="confirmPassword"
                 value={confirmPassword}
@@ -293,7 +293,7 @@ const Profile = () => {
                 disabled={isChangingPassword || loading}
                 sx={{ mt: 2 }}
               >
-                {isChangingPassword ? <CircularProgress size={24} /> : 'Cambiar Contraseña'}
+                {isChangingPassword ? <CircularProgress size={24} /> : 'Change Password'}
               </Button>
             </Box>
           </Paper>

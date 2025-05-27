@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto-js');
 
-// Función para encriptar datos sensibles
+// Function to encrypt sensitive data
 function encrypt(text) {
   if (!text) return text;
-  const SECRET_KEY = process.env.ENCRYPTION_KEY || 'mi_clave_secreta_temporal';
+  const SECRET_KEY = process.env.ENCRYPTION_KEY || 'my_temporary_secret_key';
   return crypto.AES.encrypt(text, SECRET_KEY).toString();
 }
 
-// Función para desencriptar datos
+// Function to decrypt data
 function decrypt(ciphertext) {
   if (!ciphertext) return ciphertext;
-  const SECRET_KEY = process.env.ENCRYPTION_KEY || 'mi_clave_secreta_temporal';
+  const SECRET_KEY = process.env.ENCRYPTION_KEY || 'my_temporary_secret_key';
   const bytes = crypto.AES.decrypt(ciphertext, SECRET_KEY);
   return bytes.toString(crypto.enc.Utf8);
 }
@@ -62,7 +62,7 @@ const messageSchema = new mongoose.Schema({
   toObject: { getters: true }
 });
 
-// Índices para búsqueda y paginación eficiente
+// Indexes for efficient search and pagination
 messageSchema.index({ createdAt: -1 });
 messageSchema.index({ read: 1 });
 messageSchema.index({ starred: 1 });

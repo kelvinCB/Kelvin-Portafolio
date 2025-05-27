@@ -6,20 +6,20 @@ const experiences = [
   {
     title: 'QA Automation Engineer',
     company: 'Interfell',
-    period: '2022 - Actualidad',
-    desc: 'Automatización de pruebas para aplicaciones web y móviles usando Cypress, Playwright, Selenium, Appium y Postman. Enfoque en calidad y mejora continua.',
+    period: '2022 - Present',
+    desc: 'Test automation for web and mobile applications using Cypress, Playwright, Selenium, Appium, and Postman. Focused on quality and continuous improvement.',
   },
   {
     title: 'QA Automation Engineer',
     company: 'CENIT',
     period: '2021 - 2022',
-    desc: 'Diseño y ejecución de pruebas automatizadas para proyectos de software, asegurando la calidad en cada entrega.',
+    desc: 'Design and execution of automated tests for software projects, ensuring quality in every delivery.',
   },
   {
     title: 'QA Tester',
     company: 'Interfell',
     period: '2020 - 2021',
-    desc: 'Ejecución de pruebas funcionales y reporte de bugs en aplicaciones web y móviles.',
+    desc: 'Execution of functional tests and bug reporting in web and mobile applications.',
   },
 ];
 

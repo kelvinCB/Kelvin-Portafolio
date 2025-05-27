@@ -26,11 +26,11 @@ function App() {
     });
   };
 
-  // Mi implementación del scrollspy - revisar si hay delay en móviles
+  // My scrollspy implementation - check if there's any delay on mobile
   React.useEffect(() => {
     const handleScroll = () => {
       const sectionIds = ['about', 'portfolio', 'experience', 'contact'];
-      const offset = 130; // OJO: ajusté esto por el tamaño del header, no cambia
+      const offset = 130; // NOTE: adjusted this for the header size, don't change
       let current = 'about';
       for (let i = 0; i < sectionIds.length; i++) {
         const el = document.getElementById(sectionIds[i]);
@@ -44,7 +44,7 @@ function App() {
       setActiveSection(current);
     };
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // inicializa al cargar la página
+    handleScroll(); // initialize when page loads
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -96,7 +96,7 @@ function App() {
       <Footer />
       <WhatsAppButton 
         phoneNumber="18299698254" 
-        message="Hola, vi tu portafolio y me gustaria hablar contigo" 
+        message="Hello, I saw your portfolio and would like to talk with you" 
       />
       <DonateButton />
     </div>

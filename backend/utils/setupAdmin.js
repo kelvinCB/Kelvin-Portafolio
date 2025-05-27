@@ -2,11 +2,11 @@ const User = require('../models/User');
 require('dotenv').config();
 
 /**
- * Crea un usuario administrador inicial si no existe
+ * Create an admin user if it doesn't exist
  */
 const setupAdmin = async () => {
   try {
-    // Comprueba si existe un usuario administrador con el email definido en el archivo .env
+    // Check if there is an admin user with the email defined in the .env file
     const adminEmail = process.env.ADMIN_EMAIL;
     const adminUsername = process.env.ADMIN_USERNAME || 'admin';
     const adminPassword = process.env.ADMIN_PASSWORD;
@@ -16,7 +16,7 @@ const setupAdmin = async () => {
       return;
     }
 
-    // Verifica si ya existe
+    // Verify if it already exists
     const existingAdmin = await User.findOne({ email: adminEmail });
     
     if (existingAdmin) {
@@ -24,7 +24,7 @@ const setupAdmin = async () => {
       return;
     }
 
-    // Crea el usuario administrador
+    // Create the admin user
     const admin = new User({
       username: adminUsername,
       email: adminEmail,

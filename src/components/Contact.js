@@ -16,19 +16,19 @@ const Contact = ({ id }) => {
 
   const validate = () => {
     const newErrors = {};
-    if (!form.name.trim()) newErrors.name = 'El nombre es obligatorio.';
+    if (!form.name.trim()) newErrors.name = 'Name is required.';
     if (!form.email.trim()) {
-      newErrors.email = 'El email es obligatorio.';
+      newErrors.email = 'Email is required.';
     } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
-      newErrors.email = 'El email no tiene un formato válido.';
+      newErrors.email = 'Email format is not valid.';
     }
-    if (!form.message.trim()) newErrors.message = 'El mensaje es obligatorio.';
-    // Validación de teléfono (opcional pero si se llena debe ser válido)
+    if (!form.message.trim()) newErrors.message = 'Message is required.';
+    // Phone validation (optional but if filled it must be valid)
     if (form.phone && form.phone.trim() !== '') {
       const phoneSanitized = form.phone.trim();
       const phoneDigits = phoneSanitized.replace(/\D/g, '');
       if (!/^[+]?\d[\d\s-]{6,}$/.test(phoneSanitized) || phoneDigits.length < 7 || phoneDigits.length > 15) {
-        newErrors.phone = 'El teléfono no es válido.';
+        newErrors.phone = 'Phone number is not valid.';
       }
     }
 
@@ -56,15 +56,15 @@ const Contact = ({ id }) => {
         body: JSON.stringify(form),
       });
       if (response.ok) {
-        setResponseMessage('¡Gracias por tu mensaje! Te contactaré pronto.');
+        setResponseMessage('Thank you for your message! I will contact you soon.');
         setSubmitted(true);
         setForm({ name: '', email: '', phone: '', message: '' });
       } else {
         const data = await response.json();
-        setResponseError(data.error || 'Hubo un error al enviar el mensaje.');
+        setResponseError(data.error || 'There was an error sending the message.');
       }
     } catch (error) {
-      setResponseError('No se pudo conectar con el servidor.');
+      setResponseError('Could not connect to the server.');
     } finally {
       setLoading(false);
     }
@@ -74,8 +74,8 @@ const Contact = ({ id }) => {
     <section id={id} className="contact-section">
       <div className="contact-container">
         <div className="contact-header">
-          <h2 className="section-title">Contacta <span className="highlight">Conmigo</span></h2>
-          <p className="contact-subtitle">¿Tienes algún proyecto en mente o quieres hablar sobre oportunidades de QA Automation? Estoy aquí para ayudarte</p>
+          <h2 className="section-title">Contact <span className="highlight">Me</span></h2>
+          <p className="contact-subtitle">Do you have a project in mind or want to talk about QA Automation opportunities? I'm here to help</p>
         </div>
         
         <div className="contact-content">
@@ -89,14 +89,14 @@ const Contact = ({ id }) => {
             </div>
             
             <div className="contact-info-card">
-              <h3>Información de Contacto</h3>
-              <p>No dudes en contactarme directamente o llenar el formulario y te responderé a la brevedad</p>
+              <h3>Contact Information</h3>
+              <p>Feel free to contact me directly or fill out the form and I'll get back to you shortly</p>
               
               <div className="contact-details">
                 <div className="contact-item">
                   <div className="contact-icon"><FaPhoneAlt /></div>
                   <div>
-                    <h4>Llámame</h4>
+                    <h4>Call Me</h4>
                     <p>+1 829 969 8254</p>
                   </div>
                 </div>
@@ -112,9 +112,9 @@ const Contact = ({ id }) => {
                 <div className="contact-item">
                   <div className="contact-icon"><FaMapMarkerAlt /></div>
                   <div>
-                    <h4>Ubicación</h4>
-                    <p>Santo Domingo, República Dominicana</p>
-                    <p>Remoto</p>
+                    <h4>Location</h4>
+                    <p>Santo Domingo, Dominican Republic</p>
+                    <p>Remote</p>
                   </div>
                 </div>
               </div>
@@ -130,7 +130,7 @@ const Contact = ({ id }) => {
           
           <div className="contact-form-column">
             <form className="contact-form" onSubmit={handleSubmit} autoComplete="off">
-                {/* Campo oculto para evitar bots - funciona mejor que captcha */}
+                {/* Hidden field to prevent bots - works better than captcha */}
                 <input
                   type="text"
                   name="honeypot"
@@ -141,13 +141,13 @@ const Contact = ({ id }) => {
                   autoComplete="off"
                 />
               <div className="form-header">
-                <h3>Envíame un mensaje</h3>
-                <p>Completá el formulario y te responderé a la brevedad</p>
+                <h3>Send Me a Message</h3>
+                <p>Complete the form and I'll get back to you shortly</p>
               </div>
               
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="name">Nombre Completo</label>
+                  <label htmlFor="name">Full Name</label>
                   <input
                     className="form-input"
                     id="name"
@@ -174,7 +174,7 @@ const Contact = ({ id }) => {
               </div>
               
               <div className="form-group">
-                <label htmlFor="phone">Teléfono (opcional)</label>
+                <label htmlFor="phone">Phone (optional)</label>
                 <input
                   className="form-input"
                   id="phone"
@@ -187,7 +187,7 @@ const Contact = ({ id }) => {
               </div>
               
               <div className="form-group">
-                <label htmlFor="message">Mensaje</label>
+                <label htmlFor="message">Message</label>
                 <textarea
                   className="form-textarea"
                   id="message"
@@ -200,7 +200,7 @@ const Contact = ({ id }) => {
               </div>
               
               <button className="submit-button" type="submit" disabled={loading}>
-                {loading ? 'Enviando...' : 'Enviar mensaje'}
+                {loading ? 'Sending...' : 'Send message'}
               </button>
               
               {responseMessage && <p className="success-message">{responseMessage}</p>}

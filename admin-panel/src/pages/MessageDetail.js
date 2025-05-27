@@ -365,16 +365,16 @@ const MessageDetail = () => {
       
       {/* Diálogo para añadir etiqueta */}
       <Dialog open={tagDialogOpen} onClose={() => setTagDialogOpen(false)}>
-        <DialogTitle>Añadir etiqueta</DialogTitle>
+        <DialogTitle>Add tag</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Introduce una nueva etiqueta para este mensaje. Las etiquetas te ayudan a organizar tus mensajes.
+            Introduce una nueva tag para este mensaje. Las tags te ayudan a organizar tus mensajes.
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="tag"
-            label="Etiqueta"
+            label="Tag"
             type="text"
             fullWidth
             variant="outlined"
@@ -394,7 +394,7 @@ const MessageDetail = () => {
             color="primary"
             disabled={!tagInput.trim() || updateTagsMutation.isPending}
           >
-            {updateTagsMutation.isPending ? <CircularProgress size={24} /> : 'Añadir'}
+            {updateTagsMutation.isPending ? <CircularProgress size={24} /> : 'Add'}
           </Button>
         </DialogActions>
       </Dialog>
@@ -404,10 +404,10 @@ const MessageDetail = () => {
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
       >
-        <DialogTitle>Confirmar eliminación</DialogTitle>
+        <DialogTitle>Confirm deletion</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.
+            Are you sure you want to delete this message? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -418,7 +418,7 @@ const MessageDetail = () => {
             variant="contained"
             disabled={deleteMutation.isPending}
           >
-            {deleteMutation.isPending ? <CircularProgress size={24} /> : 'Eliminar'}
+            {deleteMutation.isPending ? <CircularProgress size={24} /> : 'Delete'}
           </Button>
         </DialogActions>
       </Dialog>
