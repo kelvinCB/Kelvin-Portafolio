@@ -51,10 +51,22 @@ const Contact = ({ id }) => {
       // Updated URL construction for simplified backend
       let fetchUrl;
       if (process.env.NODE_ENV === 'production') {
-        const baseApiUrl = process.env.REACT_APP_API_URL; // Should be https://kelvin-portfolio-ipc3.onrender.com
-        // For the new simplified backend, the endpoint is just /contact (no /api prefix)
-        fetchUrl = `${baseApiUrl.replace(/\/$/, '')}/contact`;
-        console.log('Production API URL:', baseApiUrl);
+        let baseApiUrl = process.env.REACT_APP_API_URL || ''; // Should be https://kelvin-portfolio-ipc3.onrender.com
+        
+        // Remove any trailing slash
+        baseApiUrl = baseApiUrl.replace(/\/$/, '');
+        
+        // If baseApiUrl ends with /api, remove it to match our new simplified backend
+        if (baseApiUrl.endsWith('/api')) {
+          baseApiUrl = baseApiUrl.slice(0, -4); // Remove the /api part
+          console.log('Removed /api from baseApiUrl:', baseApiUrl);
+        }
+        
+        // Construct the final URL for the contact endpoint
+        fetchUrl = `${baseApiUrl}/contact`;
+        
+        console.log('Production API URL (original):', process.env.REACT_APP_API_URL);
+        console.log('Production API URL (normalized):', baseApiUrl);
         console.log('Constructed fetch URL:', fetchUrl);
       } else {
         // For development still use the proxy with /api prefix
