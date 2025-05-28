@@ -58,7 +58,7 @@ const Contact = ({ id }) => {
       if (response.ok) {
         setResponseMessage('Thank you for your message! I will contact you soon.');
         setSubmitted(true);
-        setForm({ name: '', email: '', phone: '', message: '' });
+        setForm({ name: '', email: '', phone: '', message: '', honeypot: '' });
       } else {
         const data = await response.json();
         setResponseError(data.error || 'There was an error sending the message.');

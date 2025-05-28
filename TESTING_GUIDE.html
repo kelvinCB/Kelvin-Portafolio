@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía para Ejecutar Pruebas Unitarias (Jest)</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #0056b3; /* Darker blue for better contrast */
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 0.4em;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        p {
+            margin-bottom: 1.2em;
+        }
+        strong {
+            color: #343a40;
+        }
+        ul {
+            margin-bottom: 1.2em;
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 0.6em;
+        }
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            background-color: #e9ecef;
+            padding: 0.2em 0.4em;
+            margin: 0 0.1em;
+            font-size: 87%;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 1em;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-bottom: 1.2em;
+            font-size: 0.95em;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            font-size: 100%;
+            color: inherit;
+            border: none;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #ced4da;
+            margin: 2.5em 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2em;
+            font-size: 0.95em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 0.8em 1em;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #007bff;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tbody tr:hover {
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guía para Ejecutar Pruebas Unitarias (Jest)</h1>
+<p>Esta guía te ayudará a ejecutar las pruebas unitarias en los proyectos de frontend y backend.</p>
+<h2>Parte Frontend (React - portfolio-ejemplo)</h2>
+<p>El frontend utiliza <code>react-scripts</code> (parte de Create React App) para gestionar las pruebas con Jest.</p>
+<p><strong>1. Navegar al Directorio Correcto:</strong></p>
+<p>Abre tu terminal y asegúrate de estar en el directorio raíz del frontend:</p>
+<pre><code class="language-sh">cd C:\Users\kelvi\CascadeProjects\portfolio-ejemplo</code></pre>
+<p><strong>2. Ejecutar Todas las Pruebas (Modo Observación - Watch Mode):</strong></p>
+<p>Este es el comando principal. Por defecto, Jest se ejecutará en "modo observación", lo que significa que se volverá a ejecutar automáticamente cuando detecte cambios en los archivos.</p>
+<pre><code class="language-sh">npm test</code></pre>
+<p>Una vez en modo observación, tendrás varias opciones interactivas:</p>
+<ul>
+<li>Pulsar <code>a</code>: Para ejecutar todas las pruebas.</li>
+<li>Pulsar <code>f</code>: Para ejecutar solo las pruebas que fallaron en la última ejecución.</li>
+<li>Pulsar <code>p</code>: Para filtrar pruebas por el nombre de un archivo (expresión regular). Por ejemplo, para correr solo <code>WhatsAppButton.test.js</code>, escribe <code>WhatsAppButton.test.js</code>.</li>
+<li>Pulsar <code>t</code>: Para filtrar pruebas por el nombre de un test específico (expresión regular) dentro de una suite.</li>
+<li>Pulsar <code>q</code>: Para salir del modo observación.</li>
+<li>Pulsar <code>Enter</code>: Para volver a ejecutar las pruebas con los filtros actuales.</li>
+</ul>
+<p><strong>3. Ejecutar Todas las Pruebas (Una Sola Vez, Sin Modo Observación):</strong></p>
+<p>Si quieres ejecutar todas las pruebas una vez y ver el resultado sin que Jest se quede observando cambios:</p>
+<pre><code class="language-sh">npm test -- --watchAll=false</code></pre>
+<p>(El doble <code>--</code> es para pasar el argumento <code>--watchAll=false</code> directamente a Jest en lugar de a npm).<br>
+Alternativamente, a menudo los sistemas de Integración Continua usan:</p>
+<pre><code class="language-sh">CI=true npm test</code></pre>
+<p><strong>4. Ejecutar un Archivo de Pruebas Específico (Una Sola Vez):</strong></p>
+<pre><code class="language-sh">npm test -- src/components/WhatsAppButton.test.js --watchAll=false</code></pre>
+<p>Reemplaza <code>src/components/WhatsAppButton.test.js</code> con la ruta al archivo que quieras probar.</p>
+<h2>Parte Backend (Node.js/Express - portfolio-ejemplo/backend)</h2>
+<p>El backend tiene su propia configuración de Jest.</p>
+<p><strong>1. Navegar al Directorio Correcto:</strong></p>
+<p>Abre tu terminal y asegúrate de estar en el directorio del backend:</p>
+<pre><code class="language-sh">cd C:\Users\kelvi\CascadeProjects\portfolio-ejemplo\backend</code></pre>
+<p><strong>2. Ejecutar Todas las Pruebas:</strong></p>
+<pre><code class="language-sh">npm test</code></pre>
+<p>Esto ejecutará todos los archivos <code>*.test.js</code> en el proyecto backend y mostrará los resultados.</p>
+<p><strong>3. Ejecutar un Archivo de Pruebas Específico:</strong></p>
+<p>Para ejecutar solo un archivo de pruebas (por ejemplo, <code>auth.test.js</code> dentro del directorio <code>middleware</code>):</p>
+<pre><code class="language-sh">npm test -- middleware/auth.test.js</code></pre>
+<p>O si quieres ser más específico desde la raíz del backend:</p>
+<pre><code class="language-sh">npm test -- ./middleware/auth.test.js</code></pre>
+<p>(El doble <code>--</code> es importante para pasar el nombre del archivo como argumento a Jest).</p>
+<p><strong>4. Ejecutar Solo Pruebas que Fallaron (Después de una ejecución fallida):</strong></p>
+<p>Jest tiene una opción para esto, aunque su comportamiento puede variar si estás en modo observación o no.<br>
+Si no estás en modo observación, puedes intentar:</p>
+<pre><code class="language-sh">npm test -- --onlyFailures</code></pre>
+<p>(Requiere que Jest haya guardado un caché de fallos de una ejecución previa).<br>
+En el modo observación del frontend, la tecla <code>f</code> cumple esta función.</p>
+<hr>
+<p><strong>Nota Importante:</strong></p>
+<p>El comando <code>jest</code> por sí solo (como <code>jest -all</code>) probablemente no funcionará directamente en tu terminal si Jest no está instalado globalmente. Siempre es mejor usar <code>npm test</code> para que se utilice la versión de Jest especificada en el <code>package.json</code> de cada proyecto.</p>
+<hr>
+<h2>Listado de Test Suites y Archivos de Prueba</h2>
+<table>
+<thead>
+<tr>
+<th>Test Suite / Archivo</th>
+<th>Ubicación</th>
+<th>Tipo</th>
+<th>Escenarios de Prueba (Resumen)</th>
+</tr>
+</thead>
+<tbody>
+                <tr>
+                    <td>auth.test.js</td>
+                    <td>backend/middleware/auth.test.js</td>
+                    <td>Backend</td>
+                    <td>- <code>authenticate</code>: token (válido/inválido/ausente/formato), usuario (activo/inactivo/no encontrado). (6) <br> - <code>authorize</code>: rol (requerido/no), auth (sí/no). (6)</td>
+                </tr>
+                <tr>
+                    <td>security.test.js</td>
+                    <td>backend/middleware/security.test.js</td>
+                    <td>Backend</td>
+                    <td>- <code>secureHeaders</code>: config Helmet (prod/dev). (2) <br> - <code>sanitize</code>: config MongoSanitize (prod/dev), callback <code>onSanitize</code>. (3)</td>
+                </tr>
+                <tr>
+                    <td>WhatsAppButton.test.js</td>
+                    <td>src/components/WhatsAppButton.test.js</td>
+                    <td>Frontend</td>
+                    <td>Renderizado, <code>href</code> (teléfono, mensaje), atributos (<code>target</code>, <code>rel</code>, <code>aria-label</code>), imagen (<code>src</code>, <code>alt</code>), <code>className</code>. (7)</td>
+                </tr>
+                <tr>
+                    <td>App.test.js</td>
+                    <td>src/App.test.js</td>
+                    <td>Frontend</td>
+                    <td>Renderizado de logo en header (texto, clases, tags). (1)</td>
+                </tr>
+                <tr>
+                    <td>Navigation.test.js</td>
+                    <td>src/components/Navigation.test.js</td>
+                    <td>Frontend</td>
+                    <td>Logo (render, click), enlaces nav (render, click, activo), menú móvil (render, toggle, clase <code>menu-open</code>). (7)</td>
+                </tr>
+                <tr>
+                    <td>Footer.test.js</td>
+                    <td>src/components/Footer.test.js</td>
+                    <td>Frontend</td>
+                    <td>Renderizado footer, logo, enlaces sociales (hrefs), copyright (año, nombre). (4)</td>
+                </tr>
+                <tr>
+                    <td>Portfolio.test.js</td>
+                    <td>src/components/Portfolio.test.js</td>
+                    <td>Frontend</td>
+                    <td>Renderizado (sección, título), filtros (botones, default, por categoría), detalles proyecto (título, categoría, descripción, enlaces). (5)</td>
+                </tr>
+                <tr>
+                    <td>Contact.test.js</td>
+                    <td>src/components/Contact.test.js</td>
+                    <td>Frontend</td>
+                    <td>Renderizado (campos, info contacto), validación (vacíos, email, teléfono), envío (éxito, error fetch), enlaces sociales. (6)</td>
+                </tr>
+                <tr>
+                    <td>AboutMe.test.js</td>
+                    <td>src/components/AboutMe.test.js</td>
+                    <td>Frontend</td>
+                    <td>Renderizado (títulos, desc, img), botones (descarga CV, contacto), tarjetas de habilidades. (4)</td>
+                </tr>
+                <tr>
+                    <td>BackgroundElements.test.js</td>
+                    <td>src/components/BackgroundElements.test.js</td>
+                    <td>Frontend</td>
+                    <td>Renderizado (contenedor, triángulos, grupos de puntos, formas decorativas, líneas). (5)</td>
+                </tr>
+                <tr>
+                    <td>DonateButton.test.js</td>
+                    <td>src/components/DonateButton.test.js</td>
+                    <td>Frontend</td>
+                    <td>Botón flotante, modal (estado, interacción), contenido (PayPal, Stripe), lógica Stripe (montos, submit, errores). (16)</td>
+                </tr>
+                <tr>
+                    <td>Experience.test.js</td>
+                    <td>src/components/Experience.test.js</td>
+                    <td>Frontend</td>
+                    <td>Renderizado (sección, título, subtítulo), número de trabajos, detalles de cada trabajo (título, empresa, periodo, descripción), resaltado título. (5)</td>
+                </tr>
+            </tbody>
+</table>
+<p><strong>Notas:</strong></p>
+<ul>
+<li>Los archivos <code>auth.test.js</code> y <code>security.test.js</code> cubren middleware del backend.</li>
+<li>Los archivos en <code>src/components</code> y <code>src/</code> cubren componentes React (frontend).</li>
+<li>Puedes ejecutar un test suite específico usando <code>npm test -- &lt;ruta/al/archivo.test.js&gt; --watchAll=false</code>.</li>
+</ul>
+    </div>
+</body>
+</html>
