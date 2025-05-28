@@ -53,7 +53,14 @@ const Contact = ({ id }) => {
         const baseApiUrl = process.env.REACT_APP_API_URL; // Should be https://kelvin-portfolio-ipc3.onrender.com
         // Remove any trailing slash from baseApiUrl and append the endpoint
         fetchUrl = `${baseApiUrl.replace(/\/$/, '')}/contact`;
+        console.log('Production API URL:', baseApiUrl);
+        console.log('Constructed fetch URL:', fetchUrl);
+      } else {
+        console.log('Development mode - Using proxy URL:', fetchUrl);
       }
+      console.log('Sending request to:', fetchUrl);
+      console.log('Request payload:', JSON.stringify(form, null, 2));
+      
       const response = await fetch(fetchUrl, {
         method: 'POST',
         headers: {
@@ -61,16 +68,34 @@ const Contact = ({ id }) => {
         },
         body: JSON.stringify(form),
       });
+      
+      console.log('Response status:', response.status);
+      console.log('Response headers:', JSON.stringify([...response.headers.entries()]));
       if (response.ok) {
         setResponseMessage('Thank you for your message! I will contact you soon.');
         setSubmitted(true);
         setForm({ name: '', email: '', phone: '', message: '', honeypot: '' });
       } else {
-        const data = await response.json();
+        const data = await response.json().catch(e => {
+          console.error('Error parsing JSON response:', e);
+          return { error: 'Invalid response from server' };
+        });
+        console.log('Error response data:', data);
+        console.log('Error response details:', {
+          status: response.status,
+          statusText: response.statusText,
+          data: data
+        });
         setResponseError(data.error || 'There was an error sending the message.');
       }
     } catch (error) {
-      setResponseError('Could not connect to the server.');
+      console.error('Error during form submission:', error);
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+      setResponseError('Could not connect to the server: ' + error.message);
     } finally {
       setLoading(false);
     }
