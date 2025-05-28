@@ -59,6 +59,9 @@ npm test
 ```
 Esto ejecutará todos los archivos `*.test.js` en el proyecto backend y mostrará los resultados.
 
+**Nota sobre Pruebas de API y Base de Datos:**
+Para las pruebas de API que interactúan con la base de datos, se utiliza una base de datos de prueba separada configurada mediante la variable de entorno `MONGODB_URI_TEST` en el archivo `.env`. Esto asegura que las pruebas no afecten a la base de datos de producción.
+
 **3. Ejecutar un Archivo de Pruebas Específico:**
 Para ejecutar solo un archivo de pruebas (por ejemplo, `auth.test.js` dentro del directorio `middleware`):
 ```sh
@@ -93,6 +96,7 @@ El comando `jest` por sí solo (como `jest -all`) probablemente no funcionará d
 |-------------------------------|-------------------------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | auth.test.js                  | backend/middleware/auth.test.js            | Backend   | - `authenticate`: token (válido/inválido/ausente/formato), usuario (activo/inactivo/no encontrado). (6) <br> - `authorize`: rol (requerido/no), auth (sí/no). (6) |
 | security.test.js              | backend/middleware/security.test.js        | Backend   | - `secureHeaders`: config Helmet (prod/dev). (2) <br> - `sanitize`: config MongoSanitize (prod/dev), callback `onSanitize`. (3)                                  |
+| contact.api.test.js           | backend/tests/api/contact.api.test.js      | Backend   | Pruebas de API para el endpoint `/api/contact`: envío correcto del formulario (validación de datos, respuesta HTTP 200, guardado en BD). (1)                     |
 | WhatsAppButton.test.js        | src/components/WhatsAppButton.test.js      | Frontend  | Renderizado, `href` (teléfono, mensaje), atributos (`target`, `rel`, `aria-label`), imagen (`src`, `alt`), `className`. (7)                                    |
 | App.test.js                   | src/App.test.js                           | Frontend  | Renderizado de logo en header (texto, clases, tags). (1)                                                                                                     |
 | Navigation.test.js            | src/components/Navigation.test.js          | Frontend  | Logo (render, click), enlaces nav (render, click, activo), menú móvil (render, toggle, clase `menu-open`). (7)                                                 |
@@ -106,6 +110,8 @@ El comando `jest` por sí solo (como `jest -all`) probablemente no funcionará d
 
 **Notas:**
 - Los archivos `auth.test.js` y `security.test.js` cubren middleware del backend.
+- El archivo `contact.api.test.js` prueba la API del formulario de contacto.
 - Los archivos en `src/components` y `src/` cubren componentes React (frontend).
 - Puedes ejecutar un test suite específico usando `npm test -- <ruta/al/archivo.test.js> --watchAll=false`.
+- Para las pruebas de API, asegúrate de que `MONGODB_URI_TEST` esté configurado en el archivo `.env`.
 

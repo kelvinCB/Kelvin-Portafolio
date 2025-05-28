@@ -6,12 +6,18 @@ const { exec } = require('child_process');
 // Configuración de la conexión a MongoDB
 exports.connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-contactos', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const dbURI = process.env.NODE_ENV === 'test' 
+                  ? process.env.MONGODB_URI_TEST 
+                  : process.env.MONGODB_URI;
 
-    console.log(`MongoDB conectado: ${conn.connection.host}`);
+    if (!dbURI) {
+      console.error('Error: MONGODB_URI (or MONGODB_URI_TEST for test environment) is not defined.');
+      process.exit(1);
+    }
+
+    const conn = await mongoose.connect(dbURI);
+
+    console.log(`MongoDB conectado a: ${conn.connection.name} en host: ${conn.connection.host}`);
     return conn;
   } catch (error) {
     console.error(`Error al conectar a MongoDB: ${error.message}`);

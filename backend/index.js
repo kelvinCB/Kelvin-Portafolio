@@ -12,19 +12,21 @@ const { connectDB, scheduleBackups } = require('./config/database');
 const { apiLimiter, sanitize, secureHeaders } = require('./middleware/security');
 const setupAdmin = require('./utils/setupAdmin');
 
-// Rutas
+// Routes
 const userRoutes = require('./routes/userRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 
-// Inicializar app
+// Initialize app
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middlewares de seguridad y formateo
 app.use(cors());
 app.use(express.json());
-app.use(sanitize); // Protección contra inyección NoSQL - Configuración segura
-app.use(secureHeaders); // Headers de seguridad
+if (process.env.NODE_ENV !== 'test') {
+  app.use(sanitize); // Protection against NoSQL injection - Secure configuration
+}
+app.use(secureHeaders); // Security headers
 
 // Endpoint para donaciones con Stripe
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -58,55 +60,57 @@ app.post('/api/create-checkout-session', async (req, res) => {
   }
 });
 
-// Conexión a MongoDB
+// MongoDB connection
 connectDB()
   .then(() => {
-    // Programar backups diarios
-    scheduleBackups();
+    // Schedule daily backups only if not in test environment
+    if (process.env.NODE_ENV !== 'test') {
+      scheduleBackups();
+    }
 
-    // Crear directorio de exportaciones si no existe
+    // Create export directory if it doesn't exist
     const exportDir = path.join(__dirname, 'exports');
     if (!fs.existsSync(exportDir)) {
       fs.mkdirSync(exportDir, { recursive: true });
     }
 
-    // Crear directorio de backups si no existe
+    // Create backup directory if it doesn't exist
     const backupDir = path.join(__dirname, 'backups');
     if (!fs.existsSync(backupDir)) {
       fs.mkdirSync(backupDir, { recursive: true });
     }
     
-    // Configurar usuario administrador inicial
+    // Setup initial admin user
     setupAdmin();
   })
   .catch(err => {
     console.error('Error al inicializar MongoDB:', err);
   });
 
-// Rutas de API
+// API routes
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 
-// Mantener el endpoint original para compatibilidad (redirige a la nueva ruta)
+// Maintain the original endpoint for compatibility (redirects to the new route)
 app.post('/api/contact', async (req, res) => {
   console.log('BODY RECIBIDO:', req.body);
   const { name, email, phone, message, honeypot, captcha } = req.body;
 
-  // Protección anti-spam: honeypot
+  // Anti-spam protection: honeypot
   if (honeypot && honeypot.trim() !== "") {
     return res.status(400).json({ message: 'Detección de spam.' });
   }
 
-  // Validación básica de campos
+  // Basic field validation
   if (!name || !name.trim()) return res.status(400).json({ message: 'El nombre es obligatorio.' });
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) return res.status(400).json({ message: 'El email no es válido.' });
   if (!message || !message.trim()) return res.status(400).json({ message: 'El mensaje es obligatorio.' });
 
-  // Validación de teléfono (solo si se proporciona)
+  // Phone validation (only if provided)
   let phoneValid = false;
   let phoneSanitized = '';
   if (phone && phone.trim() !== "") {
-    // Permite +, dígitos y espacios, mínimo 7 dígitos reales
+    // Allows +, digits and spaces, minimum 7 real digits
     const phoneDigits = phone.replace(/\D/g, '');
     phoneSanitized = phone.trim();
     if (/^[+]?\d[\d\s-]{6,}$/.test(phoneSanitized) && phoneDigits.length >= 7 && phoneDigits.length <= 15) {
@@ -120,34 +124,34 @@ app.post('/api/contact', async (req, res) => {
     console.log('No se recibió teléfono o está vacío.');
   }
 
-  // Configura tu cuenta de correo (puede ser Gmail, Outlook, etc.)
-  // Si usas Gmail, activa "Acceso de apps menos seguras" o usa una App Password
+  // Configure your email account (can be Gmail, Outlook, etc.)
+  // If you use Gmail, enable "Less secure app access" or use an App Password
   const transporter = nodemailer.createTransport({
-    // --- Configuración para Gmail + App Password ---
+    // --- Configuration for Gmail + App Password ---
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER, // Tu correo de Gmail
-      pass: process.env.EMAIL_PASS,  // Tu App Password de Gmail
+      user: process.env.EMAIL_USER, // Your Gmail account
+      pass: process.env.EMAIL_PASS,  // Your App Password for Gmail
     },
-    // --- Fin configuración Gmail + App Password ---
+    // --- End Gmail + App Password configuration ---
 
     /*
-    // --- Configuración alternativa: Gmail con OAuth2 ---
-    // Para más información y pasos: https://nodemailer.com/usage/using-gmail/
-    // Descomenta y completa los datos si quieres usar OAuth2 en el futuro
+    // --- Alternative configuration: Gmail with OAuth2 ---
+    // For more information and steps: https://nodemailer.com/usage/using-gmail/
+    // Uncomment and complete the data if you want to use OAuth2 in the future
     auth: {
       type: 'OAuth2',
       user: 'kelvinc0219@gmail.com',
       clientId: 'TU_CLIENT_ID',
       clientSecret: 'TU_CLIENT_SECRET',
       refreshToken: 'TU_REFRESH_TOKEN',
-      accessToken: 'TU_ACCESS_TOKEN', // Opcional
+      accessToken: 'TU_ACCESS_TOKEN', // Optional
     },
-    // --- Fin configuración Gmail OAuth2 ---
+    // --- End Gmail OAuth2 configuration ---
     */
   });
 
-  // Plantilla HTML bonita para el correo
+  // HTML template for the email
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; padding: 20px; background: #fafafa; border-radius: 8px;">
       <h2 style="color: #0078d7;">¡Nuevo mensaje de contacto!</h2>
@@ -159,18 +163,18 @@ app.post('/api/contact', async (req, res) => {
         ${message}
       </div>
       <hr>
-      <small style="color: #888;">Este mensaje fue enviado desde el formulario de tu portafolio.</small>
+      <small style="color: #888;">This message was sent from the contact form of your portfolio.</small>
     </div>
   `;
   console.log('¿Se incluirá teléfono en el email?', phoneValid ? phoneSanitized : 'NO');
 
   try {
-    // 1. Guardar en base de datos (llama al controlador de mensajes)
-    // Obtenemos la IP y User-Agent para el registro
+    // 1. Save in database (calls the message controller)
+    // Get IP and User-Agent for registration
     const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const userAgent = req.headers['user-agent'];
     
-    // Crear el mensaje en MongoDB
+    // Create message in MongoDB
     const Message = require('./models/Message');
     const newMessage = new Message({
       name,
@@ -182,12 +186,13 @@ app.post('/api/contact', async (req, res) => {
     });
     
     await newMessage.save();
+    console.log('Mensaje guardado con ID:', newMessage._id);
     
-    // 2. Enviar por correo
+    // 2. Send by email
     await transporter.sendMail({
-      from: '"Portafolio Web" <kelvinc0219@gmail.com>', // se usa mi propio correo para evitar el spam y se puede ver el destinatario en el body
+      from: '"Portafolio Web" <kelvinc0219@gmail.com>', // Use my own email to avoid spam and the recipient can be seen in the body
       to: 'kelvinc0219@gmail.com',
-      subject: '💼 Nuevo mensaje de contacto desde tu portafolio',
+      subject: '💼 New contact message from your portfolio',
       html: htmlContent,
     });
     
@@ -198,18 +203,18 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// Servir el panel de administración en producción
+// Serve admin panel in production
 if (process.env.NODE_ENV === 'production') {
-  // Servir archivos estáticos del frontend
+  // Serve static frontend files
   app.use(express.static(path.join(__dirname, '../build')));
   
-  // Para cualquier ruta no definida, servir el index.html
+  // For any undefined route, serve the index.html
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));
   });
 }
 
-// Manejador global de errores
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('Error no controlado:', err);
   res.status(500).json({
@@ -219,8 +224,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Iniciar el servidor
-app.listen(PORT, () => {
+// Export test app
+const server = app.listen(PORT, () => {
   console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
   console.log(`Modo: ${process.env.NODE_ENV || 'development'}`);
 });
+
+module.exports = { app, server };
