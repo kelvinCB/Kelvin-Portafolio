@@ -34,9 +34,14 @@ function readRequestBody(req) {
 // Create HTTP server
 const server = http.createServer(async (req, res) => {
   // Set CORS headers for all responses
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  const origin = req.headers.origin || 'https://kelvin-portafolio.netlify.app';
+  console.log('Request origin:', origin);
+  
+  // Set CORS headers - use the exact origin
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   
   // Handle preflight OPTIONS requests
   if (req.method === 'OPTIONS') {
