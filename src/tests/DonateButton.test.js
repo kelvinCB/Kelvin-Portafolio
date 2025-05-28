@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import DonateButton from './DonateButton';
+import DonateButton from '../components/DonateButton';
 
 // Mockear window.alert
 global.alert = jest.fn();

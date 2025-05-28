@@ -90,6 +90,46 @@ El comando `jest` por sí solo (como `jest -all`) probablemente no funcionará d
 
 ---
 
+## End-to-End (E2E) Tests (Playwright)
+
+El proyecto utiliza Playwright para las pruebas End-to-End, que simulan interacciones reales del usuario en el navegador.
+
+**1. Navegar al Directorio Correcto:**
+Abre tu terminal y asegúrate de estar en el directorio raíz del proyecto (donde está `playwright.config.js`):
+```sh
+cd C:\Users\kelvi\CascadeProjects\portfolio-ejemplo
+```
+
+**2. Ejecutar Todas las Pruebas E2E:**
+Este comando ejecutará todas las pruebas E2E definidas en la configuración de Playwright (por defecto, en todos los navegadores configurados y en modo headless).
+```sh
+npx playwright test
+```
+
+**3. Ejecutar Pruebas E2E en un Navegador Específico y en Modo Headed (con UI):**
+Para ver la ejecución en el navegador (por ejemplo, Chromium):
+```sh
+npx playwright test --headed --project=chromium
+```
+
+**4. Ejecutar un Archivo de Pruebas E2E Específico:**
+Para ejecutar solo las pruebas de un archivo (por ejemplo, `contact-form.spec.js`):
+```sh
+npx playwright test tests/contact-form.spec.js
+```
+O con un navegador específico y modo headed:
+```sh
+npx playwright test tests/contact-form.spec.js --headed --project=chromium
+```
+
+**5. Abrir el Reporte HTML de Playwright:**
+Después de ejecutar las pruebas, puedes ver un reporte detallado:
+```sh
+npx playwright show-report
+```
+
+---
+
 ## Listado de Test Suites y Archivos de Prueba
 
 | Test Suite / Archivo           | Ubicación                                 | Tipo      | Escenarios de Prueba (Resumen)                                                                                                                               |
@@ -107,6 +147,7 @@ El comando `jest` por sí solo (como `jest -all`) probablemente no funcionará d
 | BackgroundElements.test.js    | src/components/BackgroundElements.test.js  | Frontend  | Renderizado (contenedor, triángulos, grupos de puntos, formas decorativas, líneas). (5)                                                                      |
 | DonateButton.test.js          | src/components/DonateButton.test.js        | Frontend  | Botón flotante, modal (estado, interacción), contenido (PayPal, Stripe), lógica Stripe (montos, submit, errores). (16)                                         |
 | Experience.test.js            | src/components/Experience.test.js          | Frontend  | Renderizado (sección, título, subtítulo), número de trabajos, detalles de cada trabajo (título, empresa, periodo, descripción), resaltado título. (5)             |
+| contact-form.spec.js        | tests/contact-form.spec.js                | E2E       | - Visualización del formulario de contacto y navegación. (1) <br> - Envío exitoso del formulario con datos válidos y verificación del mensaje de éxito. (1) <br> - Verificación de errores de validación: nombre vacío, email vacío, formato de email inválido, mensaje vacío. (4) |
 
 **Notas:**
 - Los archivos `auth.test.js` y `security.test.js` cubren middleware del backend.

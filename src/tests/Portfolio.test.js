@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Portfolio from './Portfolio';
+import Portfolio from '../components/Portfolio';
 
 describe('Portfolio', () => {
   it('renders the portfolio section and title', () => {

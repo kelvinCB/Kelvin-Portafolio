@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Navigation from './Navigation';
+import Navigation from '../components/Navigation';
 
 describe('Navigation', () => {
   const mockSetActiveSection = jest.fn();

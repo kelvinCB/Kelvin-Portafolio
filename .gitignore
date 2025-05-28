@@ -73,3 +73,10 @@ yarn-error.log*
 
 # Personal files
 **/.personal
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

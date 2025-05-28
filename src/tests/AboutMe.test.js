@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import AboutMe from './AboutMe';
+import AboutMe from '../components/AboutMe';
 
 describe('AboutMe Component', () => {
   it('renders main titles, description, and profile image', () => {
