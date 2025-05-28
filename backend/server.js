@@ -5,6 +5,12 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
 
+// Explicitly allow the Netlify origin
+const ALLOWED_ORIGINS = [
+  'https://kelvin-portafolio.netlify.app',
+  'http://localhost:3000'
+];
+
 // Simple function to parse JSON safely
 function parseJSON(str) {
   try {
@@ -31,29 +37,45 @@ function readRequestBody(req) {
   });
 }
 
+// CORS handler function
+function setCorsHeaders(req, res) {
+  const requestOrigin = req.headers.origin;
+  console.log('Request from origin:', requestOrigin);
+  
+  // Set CORS headers
+  if (requestOrigin && ALLOWED_ORIGINS.includes(requestOrigin)) {
+    res.setHeader('Access-Control-Allow-Origin', requestOrigin);
+  } else {
+    // Fallback to the first allowed origin if origin not in allowed list
+    res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGINS[0]);
+  }
+  
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
+  
+  // For preflight requests
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    res.end();
+    return true; // Return true to indicate the response has been sent
+  }
+  return false; // Return false to indicate the response has not been sent
+}
+
 // Create HTTP server
 const server = http.createServer(async (req, res) => {
-  // Set CORS headers for all responses
-  const origin = req.headers.origin || 'https://kelvin-portafolio.netlify.app';
-  console.log('Request origin:', origin);
+  // Log all requests
+  console.log(`${req.method} ${req.url} from ${req.headers.origin || 'unknown'}`);
   
-  // Set CORS headers - use the exact origin
-  res.setHeader('Access-Control-Allow-Origin', origin);
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  
-  // Handle preflight OPTIONS requests
-  if (req.method === 'OPTIONS') {
-    res.statusCode = 204; // No content
-    res.end();
-    return;
+  // Handle CORS preflight requests first
+  if (setCorsHeaders(req, res)) {
+    return; // Response already sent for OPTIONS
   }
   
   // Health check endpoint
   if (req.method === 'GET' && req.url === '/api/health') {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
+    res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ status: 'ok', message: 'Contact API is running' }));
     return;
   }
@@ -63,11 +85,11 @@ const server = http.createServer(async (req, res) => {
     try {
       // Read request body
       const body = await readRequestBody(req);
+      console.log('Received body:', body);
       const data = parseJSON(body);
       
       if (!data) {
-        res.statusCode = 400;
-        res.setHeader('Content-Type', 'application/json');
+        res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Invalid JSON payload' }));
         return;
       }
@@ -77,22 +99,19 @@ const server = http.createServer(async (req, res) => {
       
       // Basic validation
       if (!name || !name.trim()) {
-        res.statusCode = 400;
-        res.setHeader('Content-Type', 'application/json');
+        res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Name is required.' }));
         return;
       }
       
       if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-        res.statusCode = 400;
-        res.setHeader('Content-Type', 'application/json');
+        res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Email format is not valid.' }));
         return;
       }
       
       if (!message || !message.trim()) {
-        res.statusCode = 400;
-        res.setHeader('Content-Type', 'application/json');
+        res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Message is required.' }));
         return;
       }
@@ -107,16 +126,14 @@ const server = http.createServer(async (req, res) => {
       });
       
       // Return success response
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ 
         success: true, 
         message: 'Message received successfully.'
       }));
     } catch (error) {
       console.error('Error processing contact form:', error);
-      res.statusCode = 500;
-      res.setHeader('Content-Type', 'application/json');
+      res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ 
         success: false, 
         message: 'An error occurred while processing your message.'
@@ -126,8 +143,7 @@ const server = http.createServer(async (req, res) => {
   }
   
   // Handle not found
-  res.statusCode = 404;
-  res.setHeader('Content-Type', 'application/json');
+  res.writeHead(404, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({ success: false, message: 'Not Found' }));
 });
 
@@ -135,4 +151,5 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`Ultra-minimal HTTP server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Allowed origins: ${ALLOWED_ORIGINS.join(', ')}`);
 });
