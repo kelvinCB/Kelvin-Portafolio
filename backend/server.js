@@ -1,155 +1,104 @@
-// Ultra-minimal Node.js HTTP server for contact form only
-// No dependencies on Express or routing libraries to avoid path-to-regexp errors
+// The simplest possible Node.js HTTP server with CORS support
 const http = require('http');
-require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
 
-// Explicitly allow the Netlify origin
-const ALLOWED_ORIGINS = [
-  'https://kelvin-portafolio.netlify.app',
-  'http://localhost:3000'
-];
-
-// Simple function to parse JSON safely
-function parseJSON(str) {
-  try {
-    return JSON.parse(str);
-  } catch (e) {
-    return null;
-  }
-}
-
-// Helper to read the request body
-function readRequestBody(req) {
-  return new Promise((resolve, reject) => {
-    const bodyParts = [];
-    req.on('data', (chunk) => {
-      bodyParts.push(chunk);
+// Read request body helper
+function readBody(req) {
+  return new Promise((resolve) => {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
     });
     req.on('end', () => {
-      const body = Buffer.concat(bodyParts).toString();
-      resolve(body);
-    });
-    req.on('error', (err) => {
-      reject(err);
+      try {
+        resolve(JSON.parse(body));
+      } catch (e) {
+        resolve({});
+      }
     });
   });
 }
 
-// CORS handler function
-function setCorsHeaders(req, res) {
-  const requestOrigin = req.headers.origin;
-  console.log('Request from origin:', requestOrigin);
+// Create server
+http.createServer(async (req, res) => {
+  // Log the request
+  console.log(`${req.method} ${req.url}`);
   
-  // Set CORS headers
-  if (requestOrigin && ALLOWED_ORIGINS.includes(requestOrigin)) {
-    res.setHeader('Access-Control-Allow-Origin', requestOrigin);
-  } else {
-    // Fallback to the first allowed origin if origin not in allowed list
-    res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGINS[0]);
-  }
+  // CORS Headers - Allow any origin to help with debugging
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET');
+  res.setHeader('Access-Control-Allow-Headers', '*');
   
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
-  
-  // For preflight requests
+  // Handle preflight
   if (req.method === 'OPTIONS') {
-    res.writeHead(204);
+    res.writeHead(200);
     res.end();
-    return true; // Return true to indicate the response has been sent
-  }
-  return false; // Return false to indicate the response has not been sent
-}
-
-// Create HTTP server
-const server = http.createServer(async (req, res) => {
-  // Log all requests
-  console.log(`${req.method} ${req.url} from ${req.headers.origin || 'unknown'}`);
-  
-  // Handle CORS preflight requests first
-  if (setCorsHeaders(req, res)) {
-    return; // Response already sent for OPTIONS
-  }
-  
-  // Health check endpoint
-  if (req.method === 'GET' && req.url === '/api/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', message: 'Contact API is running' }));
     return;
   }
-  
-  // Contact form endpoint
-  if (req.method === 'POST' && req.url === '/contact') {
+
+  // Only handle /contact endpoint
+  if (req.url === '/contact' && req.method === 'POST') {
     try {
-      // Read request body
-      const body = await readRequestBody(req);
-      console.log('Received body:', body);
-      const data = parseJSON(body);
+      const data = await readBody(req);
+      console.log('Received data:', data);
       
-      if (!data) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, message: 'Invalid JSON payload' }));
-        return;
-      }
-      
-      console.log('Contact request received:', data);
-      const { name, email, message, phone } = data;
-      
-      // Basic validation
-      if (!name || !name.trim()) {
+      // Validate inputs
+      if (!data.name) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Name is required.' }));
         return;
       }
       
-      if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      if (!data.email) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, message: 'Email format is not valid.' }));
+        res.end(JSON.stringify({ success: false, message: 'Email is required.' }));
         return;
       }
       
-      if (!message || !message.trim()) {
+      if (!data.message) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Message is required.' }));
         return;
       }
       
-      // Log the message
-      console.log('Message details:', {
-        name,
-        email,
-        phone: phone || 'Not provided',
-        message,
+      // Log the submission
+      console.log('Form submission received:', {
+        name: data.name,
+        email: data.email,
+        message: data.message,
         timestamp: new Date().toISOString()
       });
       
-      // Return success response
+      // Return success
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ 
-        success: true, 
+      res.end(JSON.stringify({
+        success: true,
         message: 'Message received successfully.'
       }));
-    } catch (error) {
-      console.error('Error processing contact form:', error);
+    } catch (err) {
+      console.error('Error:', err);
       res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ 
-        success: false, 
-        message: 'An error occurred while processing your message.'
+      res.end(JSON.stringify({
+        success: false,
+        message: 'Server error processing request.'
       }));
     }
     return;
   }
   
-  // Handle not found
+  // Health check endpoint
+  if (req.url === '/api/health' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok', message: 'Server is running' }));
+    return;
+  }
+  
+  // Not found for everything else
   res.writeHead(404, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ success: false, message: 'Not Found' }));
-});
-
-// Start the server
-server.listen(PORT, () => {
-  console.log(`Ultra-minimal HTTP server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`Allowed origins: ${ALLOWED_ORIGINS.join(', ')}`);
+  res.end(JSON.stringify({ success: false, message: 'Not found' }));
+  
+}).listen(PORT, () => {
+  console.log(`Super simple server running on port ${PORT}`);
+  console.log(`CORS is enabled for all origins (*)`);
 });
