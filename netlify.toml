@@ -3,7 +3,15 @@
   command = "npm run build"
   publish = "build"
 
-# Single Page Application redirect configuration
+# Proxy API requests to the backend to avoid CORS issues
+[[redirects]]
+  from = "/api/proxy/*"
+  to = "https://portfolio-backend-kelvin.onrender.com/:splat"
+  status = 200
+  force = true
+  headers = {Access-Control-Allow-Origin = "*"}
+
+# Single Page Application redirect configuration - KEEP THIS LAST
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -15,7 +23,8 @@
 
 # Environment variables for production
 [context.production.environment]
-  REACT_APP_API_URL = "https://portfolio-backend-kelvin.onrender.com/api"
+  # Using the proxy URL instead of direct backend URL
+  REACT_APP_API_URL = "/api/proxy"
   REACT_APP_CONTACT_PHONE = "18299698254"
   REACT_APP_DEFAULT_WHATSAPP_MESSAGE = "Hola, vi tu portafolio y me gustaria hablar contigo"
 
