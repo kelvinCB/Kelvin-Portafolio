@@ -14,26 +14,43 @@ const allowedOrigins = [
   'http://localhost:3000'  // For local development
 ];
 
+// Normalize origins by removing trailing slashes
+const normalizeOrigin = (origin) => {
+  if (!origin) return origin;
+  return origin.endsWith('/') ? origin.slice(0, -1) : origin;
+};
+
 // Configure CORS with specific origin and methods
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    // Check if the origin is in the allowed list
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+    // Normalize the origin by removing trailing slashes
+    const normalizedOrigin = normalizeOrigin(origin);
+    
+    // Check if the normalized origin is in the allowed list
+    if (allowedOrigins.includes(normalizedOrigin)) {
+      return callback(null, true);
     }
-    return callback(null, true);
+    
+    const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+    return callback(new Error(msg), false);
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+  credentials: true,
+  // Explicitly set the Access-Control-Allow-Origin header to match the request origin
+  // without adding a trailing slash
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+
+// Apply CORS middleware with the configured options
+app.use(cors(corsOptions));
 
 // Handle preflight requests
-app.options('*', cors());
+app.options('*', cors(corsOptions));
 
 // Parse JSON bodies
 app.use(express.json());
