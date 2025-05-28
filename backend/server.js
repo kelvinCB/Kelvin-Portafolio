@@ -7,9 +7,26 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Simple middleware setup
+// Enhanced CORS configuration
 app.use(express.json());
-app.use(cors());
+
+// Set up CORS with more detailed configuration
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow all origins for now to debug the issue
+    // In production, you would restrict this to specific domains
+    callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+// Handle preflight requests explicitly
+app.options('*', cors(corsOptions));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
