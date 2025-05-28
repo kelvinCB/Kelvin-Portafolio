@@ -48,7 +48,8 @@ const Contact = ({ id }) => {
     setErrors({});
     setLoading(true);
     try {
-      let fetchUrl = '/api/contact'; // Default for development (proxied)
+      // Updated URL construction for simplified backend
+      let fetchUrl;
       if (process.env.NODE_ENV === 'production') {
         const baseApiUrl = process.env.REACT_APP_API_URL; // Should be https://kelvin-portfolio-ipc3.onrender.com
         // For the new simplified backend, the endpoint is just /contact (no /api prefix)
@@ -56,6 +57,8 @@ const Contact = ({ id }) => {
         console.log('Production API URL:', baseApiUrl);
         console.log('Constructed fetch URL:', fetchUrl);
       } else {
+        // For development still use the proxy with /api prefix
+        fetchUrl = '/api/contact';
         console.log('Development mode - Using proxy URL:', fetchUrl);
       }
       console.log('Sending request to:', fetchUrl);
