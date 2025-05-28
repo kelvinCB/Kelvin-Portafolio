@@ -131,6 +131,43 @@ app.get('/api/messages', async (req, res) => {
   }
 });
 
+// Contact form endpoint
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, email, message, phone } = req.body;
+    
+    // Basic validation
+    if (!name || !name.trim()) return res.status(400).json({ message: 'Name is required.' });
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) return res.status(400).json({ message: 'Email format is not valid.' });
+    if (!message || !message.trim()) return res.status(400).json({ message: 'Message is required.' });
+    
+    // Save to database if Message model exists
+    try {
+      const Message = require('./models/Message');
+      const newMessage = new Message({
+        name,
+        email,
+        phone: phone || '',
+        message,
+        ipAddress: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        userAgent: req.headers['user-agent']
+      });
+      
+      await newMessage.save();
+      console.log('Message saved with ID:', newMessage._id);
+    } catch (dbError) {
+      console.error('Error saving message to database:', dbError);
+      // Continue even if DB save fails
+    }
+    
+    // Return success response
+    res.status(200).json({ message: 'Message received successfully.' });
+  } catch (error) {
+    console.error('Error processing contact form:', error);
+    res.status(500).json({ message: 'An error occurred while processing your message.' });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Simple backend server running on port ${PORT}`);

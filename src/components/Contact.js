@@ -48,8 +48,11 @@ const Contact = ({ id }) => {
     setErrors({});
     setLoading(true);
     try {
-      const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_URL : '';
-      const fetchUrl = `${apiUrl}/api/contact`;
+      let fetchUrl = '/api/contact'; // Default for development (proxied)
+      if (process.env.NODE_ENV === 'production') {
+        const baseApiUrl = process.env.REACT_APP_API_URL; // Should be https://kelvin-portfolio-ipc3.onrender.com
+        fetchUrl = `${baseApiUrl}/api/contact`;
+      }
       const response = await fetch(fetchUrl, {
         method: 'POST',
         headers: {
