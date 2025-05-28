@@ -1,15 +1,17 @@
 // backend/index.js
+console.log(`Current NODE_ENV: ${process.env.NODE_ENV}`);
 
 const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const expressMongoSanitize = require('express-mongo-sanitize');
 
 // Importación de utilidades y configuraciones
 require('dotenv').config();
 const { connectDB, scheduleBackups } = require('./config/database');
-const { apiLimiter, sanitize, secureHeaders } = require('./middleware/security');
+const { apiLimiter, secureHeaders } = require('./middleware/security');
 const setupAdmin = require('./utils/setupAdmin');
 
 // Routes
@@ -23,9 +25,7 @@ const PORT = process.env.PORT || 5000;
 // Middlewares de seguridad y formateo
 app.use(cors());
 app.use(express.json());
-if (process.env.NODE_ENV !== 'test') {
-  app.use(sanitize); // Protection against NoSQL injection - Secure configuration
-}
+
 app.use(secureHeaders); // Security headers
 
 // Endpoint para donaciones con Stripe
@@ -93,7 +93,8 @@ app.use('/api/messages', messageRoutes);
 
 // Maintain the original endpoint for compatibility (redirects to the new route)
 app.post('/api/contact', async (req, res) => {
-  console.log('BODY RECIBIDO:', req.body);
+  req.body = expressMongoSanitize.sanitize(req.body);
+  console.log('BODY RECIBIDO (después de sanitizar):', req.body);
   const { name, email, phone, message, honeypot, captcha } = req.body;
 
   // Anti-spam protection: honeypot

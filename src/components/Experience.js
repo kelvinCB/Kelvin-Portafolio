@@ -1,5 +1,4 @@
 import React from 'react';
-import { FaBriefcase } from 'react-icons/fa';
 import '../styles/Experience.css';
 
 const experiences = [
