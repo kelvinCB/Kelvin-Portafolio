@@ -51,7 +51,7 @@ const Contact = ({ id }) => {
       let fetchUrl = '/api/contact'; // Default for development (proxied)
       if (process.env.NODE_ENV === 'production') {
         const baseApiUrl = process.env.REACT_APP_API_URL; // Should be https://kelvin-portfolio-ipc3.onrender.com
-        // Remove any trailing slash from baseApiUrl and append the endpoint
+        // For the new simplified backend, the endpoint is just /contact (no /api prefix)
         fetchUrl = `${baseApiUrl.replace(/\/$/, '')}/contact`;
         console.log('Production API URL:', baseApiUrl);
         console.log('Constructed fetch URL:', fetchUrl);
