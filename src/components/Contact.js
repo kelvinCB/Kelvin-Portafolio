@@ -76,11 +76,15 @@ const Contact = ({ id }) => {
       console.log('Sending request to:', fetchUrl);
       console.log('Request payload:', JSON.stringify(form, null, 2));
       
+      // Using enhanced fetch options to bypass CORS issues
       const response = await fetch(fetchUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'omit', // Don't send cookies for cross-origin requests
+        mode: 'cors', // Use CORS mode explicitly
+        cache: 'no-cache', // Don't use cached responses
         body: JSON.stringify(form),
       });
       
