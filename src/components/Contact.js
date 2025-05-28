@@ -48,7 +48,9 @@ const Contact = ({ id }) => {
     setErrors({});
     setLoading(true);
     try {
-      const response = await fetch('/api/contact', {
+      const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_URL : '';
+      const fetchUrl = `${apiUrl}/api/contact`;
+      const response = await fetch(fetchUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

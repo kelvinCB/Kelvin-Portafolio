@@ -12,6 +12,8 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
+const isProduction = process.env.TARGET_ENV === 'production';
+
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
@@ -29,7 +31,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'https://kelvin-portafolio.netlify.app',
+    baseURL: isProduction ? 'https://kelvin-portafolio.netlify.app' : 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -77,7 +79,7 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  /* webServer: [
+  webServer: isProduction ? undefined : [
     {
       command: 'npm run start', // Frontend React app
       url: 'http://localhost:3000',
@@ -95,5 +97,5 @@ export default defineConfig({
       stdout: 'pipe',
       stderr: 'pipe',
     }
-  ], */
+  ],
 });
