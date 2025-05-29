@@ -6,6 +6,7 @@ const Contact = ({ id }) => {
   const initialFormState = { name: '', email: '', phone: '', message: '', honeypot: '' };
   const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState({});
+  /* eslint-disable-next-line no-unused-vars */
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
@@ -111,48 +112,46 @@ const Contact = ({ id }) => {
               />
             </div>
             
-            <div className="contact-info-card">
               <h3>Contact Information</h3>
-              <p>Feel free to contact me directly or fill out the form and I'll get back to you shortly</p>
-              
               <div className="contact-details">
                 <div className="contact-item">
-                  <div className="contact-icon"><FaPhoneAlt /></div>
-                  <div>
-                    <h4>Call Me</h4>
-                    <p>+1 829 969 8254</p>
-                  </div>
+                  <FaEnvelope className="contact-icon" />
+                  <a href="mailto:kelvinr02@hotmail.com">kelvinr02@hotmail.com</a>
                 </div>
-                
                 <div className="contact-item">
-                  <div className="contact-icon"><FaEnvelope /></div>
-                  <div>
-                    <h4>Email</h4>
-                    <p>kelvinr02@hotmail.com</p>
-                  </div>
+                  <FaPhoneAlt className="contact-icon" />
+                  <a href={`tel:+1 829 969 8254`}>+1 829 969 8254</a>
                 </div>
-                
                 <div className="contact-item">
-                  <div className="contact-icon"><FaMapMarkerAlt /></div>
-                  <div>
-                    <h4>Location</h4>
-                    <p>Santo Domingo, Dominican Republic</p>
-                    <p>Remote</p>
-                  </div>
+                  <FaMapMarkerAlt className="contact-icon" />
+                  <span>Santo Domingo, Dominican Republic</span>
                 </div>
               </div>
-              
-              <div className="contact-social">
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaLinkedinIn /></a>
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaGithub /></a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaTwitter /></a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaFacebookF /></a>
+
+              <div className="social-links">
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                  <FaLinkedinIn className="social-icon" />
+                </a>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                  <FaGithub className="social-icon" />
+                </a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+                  <FaTwitter className="social-icon" />
+                </a>
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                  <FaFacebookF className="social-icon" />
+                </a>
               </div>
+
+              <a href={`https://wa.me/+1 829 969 8254?text=${encodeURIComponent('Hello, I want to get in touch with you.')}`} 
+                className="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Make a donation">
+                <button className="donate-float" aria-label="Make a donation">Get in touch</button>
+              </a>
             </div>
           </div>
           
           <div className="contact-form-column">
-            <form className="contact-form" onSubmit={handleSubmit} autoComplete="off">
+            <form className={`contact-form ${submitted ? 'success' : ''}`} onSubmit={handleSubmit} autoComplete="off">
                 {/* Hidden field to prevent bots - works better than captcha */}
                 <input
                   type="text"
@@ -164,8 +163,12 @@ const Contact = ({ id }) => {
                   autoComplete="off"
                 />
               <div className="form-header">
-                <h3>Send Me a Message</h3>
-                <p>Complete the form and I'll get back to you shortly</p>
+                <h2 className="section-title">Send Me a Message</h2>
+                <p className="section-subtitle">
+                  {submitted 
+                    ? 'Thank you for your message! I will get back to you shortly.' 
+                    : 'Complete the form and I\'ll get back to you shortly'}
+                </p>
               </div>
               
               <div className="form-row">
