@@ -3,9 +3,10 @@ import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaLinkedinIn, FaGithub, FaTwitt
 import '../styles/Contact.css';
 
 const Contact = ({ id }) => {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '', honeypot: '' });
+  const initialFormState = { name: '', email: '', phone: '', message: '', honeypot: '' };
+  const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState({});
-  const [, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
   const [responseError, setResponseError] = useState('');
@@ -35,89 +36,61 @@ const Contact = ({ id }) => {
     return newErrors;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setResponseMessage('');
     setResponseError('');
     setSubmitted(false);
+    
+    // Validate the form
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
+    
     setErrors({});
     setLoading(true);
-    try {
-      // Updated URL construction for simplified backend
-      let fetchUrl;
-      if (process.env.NODE_ENV === 'production') {
-        let baseApiUrl = process.env.REACT_APP_API_URL || ''; // Should be https://kelvin-portfolio-ipc3.onrender.com
-        
-        // Remove any trailing slash
-        baseApiUrl = baseApiUrl.replace(/\/$/, '');
-        
-        // If baseApiUrl ends with /api, remove it to match our new simplified backend
-        if (baseApiUrl.endsWith('/api')) {
-          baseApiUrl = baseApiUrl.slice(0, -4); // Remove the /api part
-          console.log('Removed /api from baseApiUrl:', baseApiUrl);
-        }
-        
-        // Construct the final URL for the contact endpoint
-        fetchUrl = `${baseApiUrl}/contact`;
-        
-        console.log('Production API URL (original):', process.env.REACT_APP_API_URL);
-        console.log('Production API URL (normalized):', baseApiUrl);
-        console.log('Constructed fetch URL:', fetchUrl);
-      } else {
-        // For development still use the proxy with /api prefix
-        fetchUrl = '/api/contact';
-        console.log('Development mode - Using proxy URL:', fetchUrl);
-      }
-      console.log('Sending request to:', fetchUrl);
-      console.log('Request payload:', JSON.stringify(form, null, 2));
+    
+    // Direct backend URL
+    const directBackendUrl = 'https://portfolio-backend-kelvin.onrender.com/contact';
+    console.log('Using direct backend URL:', directBackendUrl);
+    console.log('Request payload:', JSON.stringify(form, null, 2));
+    
+    // Using XMLHttpRequest for maximum compatibility with CORS
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', directBackendUrl);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.withCredentials = false; // Important for CORS
+    
+    xhr.onload = function() {
+      setLoading(false);
       
-      // Using enhanced fetch options to bypass CORS issues
-      const response = await fetch(fetchUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'omit', // Don't send cookies for cross-origin requests
-        mode: 'cors', // Use CORS mode explicitly
-        cache: 'no-cache', // Don't use cached responses
-        body: JSON.stringify(form),
-      });
-      
-      console.log('Response status:', response.status);
-      console.log('Response headers:', JSON.stringify([...response.headers.entries()]));
-      if (response.ok) {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        // Success case
+        console.log('Form submitted successfully');
         setResponseMessage('Thank you for your message! I will contact you soon.');
         setSubmitted(true);
-        setForm({ name: '', email: '', phone: '', message: '', honeypot: '' });
+        setForm(initialFormState);
       } else {
-        const data = await response.json().catch(e => {
-          console.error('Error parsing JSON response:', e);
-          return { error: 'Invalid response from server' };
-        });
-        console.log('Error response data:', data);
-        console.log('Error response details:', {
-          status: response.status,
-          statusText: response.statusText,
-          data: data
-        });
-        setResponseError(data.error || 'There was an error sending the message.');
+        // Error case
+        console.error('Server error:', xhr.status, xhr.statusText);
+        try {
+          const errorData = JSON.parse(xhr.responseText);
+          setResponseError(errorData.message || 'Error submitting form. Please try again.');
+        } catch (e) {
+          setResponseError('Error submitting form. Please try again.');
+        }
       }
-    } catch (error) {
-      console.error('Error during form submission:', error);
-      console.error('Error details:', {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
-      });
-      setResponseError('Could not connect to the server: ' + error.message);
-    } finally {
+    };
+    
+    xhr.onerror = function() {
+      console.error('Network error occurred');
       setLoading(false);
-    }
+      setResponseError('Network error occurred. Please check your connection and try again.');
+    };
+    
+    xhr.send(JSON.stringify(form));
   };
 
   return (
