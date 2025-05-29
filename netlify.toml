@@ -2,6 +2,10 @@
 [build]
   command = "npm run build"
   publish = "build"
+  
+# Specify Node.js version
+[build.environment]
+  NODE_VERSION = "18.x"
 
 # Proxy API requests to the backend to avoid CORS issues
 [[redirects]]
