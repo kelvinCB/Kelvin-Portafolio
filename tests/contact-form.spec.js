@@ -6,7 +6,7 @@ test.describe('Contact Form', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     // Ensure the form title is visible by scrolling to it if necessary
-    const formTitleForScroll = page.locator('h3', { hasText: 'Send Me a Message' });
+    const formTitleForScroll = page.locator('h2', { hasText: 'Send Me a Message' });
     await formTitleForScroll.scrollIntoViewIfNeeded();
   });
 
@@ -14,7 +14,7 @@ test.describe('Contact Form', () => {
     // This test primarily checks visibility after initial page load and scroll (done in beforeEach)
     const contactSectionTitle = page.locator('h2', { hasText: 'Contact Me' });
     await expect(contactSectionTitle).toBeVisible();
-    const formTitle = page.locator('h3', { hasText: 'Send Me a Message' });
+    const formTitle = page.locator('h2', { hasText: 'Send Me a Message' });
     await expect(formTitle).toBeVisible();
   });
 
