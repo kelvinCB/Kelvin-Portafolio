@@ -37,8 +37,8 @@ http.createServer(async (req, res) => {
     return;
   }
 
-  // Only handle /contact endpoint
-  if (req.url === '/contact' && req.method === 'POST') {
+  // Handle contact endpoint with multiple possible paths
+  if ((req.url === '/contact' || req.url === '/api/contact') && req.method === 'POST') {
     try {
       const data = await readBody(req);
       console.log('Received data:', data);
