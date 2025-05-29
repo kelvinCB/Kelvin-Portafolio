@@ -54,7 +54,7 @@ const Contact = ({ id }) => {
     setLoading(true);
     
     // Direct backend URL
-    const directBackendUrl = 'https://portfolio-backend-kelvin.onrender.com/contact';
+    const directBackendUrl = '/api/proxy/contact'; // Use Netlify proxy
     console.log('Using direct backend URL:', directBackendUrl);
     console.log('Request payload:', JSON.stringify(form, null, 2));
     
