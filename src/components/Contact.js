@@ -223,7 +223,7 @@ const Contact = ({ id }) => {
                 {errors.message && <span className="error-message">{errors.message}</span>}
               </div>
               
-              <button className="submit-button" type="submit" disabled={loading}>
+              <button className="submit-button" type="submit" disabled={loading || submitted}>
                 {loading ? 'Sending...' : 'Send message'}
               </button>
               
