@@ -6,7 +6,6 @@ const Contact = ({ id }) => {
   const initialFormState = { name: '', email: '', phone: '', message: '', honeypot: '' };
   const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState({});
-  /* eslint-disable-next-line no-unused-vars */
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
@@ -42,55 +41,95 @@ const Contact = ({ id }) => {
     setResponseMessage('');
     setResponseError('');
     setSubmitted(false);
-    
-    // Validate the form
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    
     setErrors({});
     setLoading(true);
     
-    // Direct backend URL
-    const directBackendUrl = '/api/proxy/contact'; // Use Netlify proxy
-    console.log('Using direct backend URL:', directBackendUrl);
+    // Updated URL construction for simplified backend
+    let directBackendUrl;
+    if (process.env.NODE_ENV === 'production') {
+      let baseApiUrl = process.env.REACT_APP_API_URL || ''; // Should be https://kelvin-portfolio-ipc3.onrender.com
+      
+      // Remove any trailing slash
+      baseApiUrl = baseApiUrl.replace(/\/$/, '');
+      
+      // If baseApiUrl ends with /api, remove it to match our new simplified backend
+      if (baseApiUrl.endsWith('/api')) {
+        baseApiUrl = baseApiUrl.slice(0, -4); // Remove the /api part
+        console.log('Removed /api from baseApiUrl:', baseApiUrl);
+      }
+      
+      // Construct the final URL for the contact endpoint
+      directBackendUrl = `${baseApiUrl}/contact`;
+      
+      console.log('Production API URL (original):', process.env.REACT_APP_API_URL);
+      console.log('Production API URL (normalized):', baseApiUrl);
+      console.log('Constructed URL:', directBackendUrl);
+    } else {
+      // For development still use the proxy with /api prefix
+      directBackendUrl = '/api/contact';
+      console.log('Development mode - Using proxy URL:', directBackendUrl);
+    }
+    console.log('Sending request to:', directBackendUrl);
     console.log('Request payload:', JSON.stringify(form, null, 2));
     
-    // Using XMLHttpRequest for maximum compatibility with CORS
+    // Using XMLHttpRequest for CORS compatibility and test compatibility
     const xhr = new XMLHttpRequest();
     xhr.open('POST', directBackendUrl);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.withCredentials = false; // Important for CORS
     
+    // Define what happens on successful data submission
     xhr.onload = function() {
-      setLoading(false);
-      
-      if (xhr.status >= 200 && xhr.status < 300) {
-        // Success case
-        console.log('Form submitted successfully');
-        setResponseMessage('Thank you for your message! I will contact you soon.');
-        setSubmitted(true);
-        setForm(initialFormState);
-      } else {
-        // Error case
-        console.error('Server error:', xhr.status, xhr.statusText);
-        try {
-          const errorData = JSON.parse(xhr.responseText);
-          setResponseError(errorData.message || 'Error submitting form. Please try again.');
-        } catch (e) {
-          setResponseError('Error submitting form. Please try again.');
+      try {
+        const status = xhr.status;
+        console.log('Response status:', status);
+        
+        if (status >= 200 && status < 300) {
+          console.log('Form submitted successfully');
+          setResponseMessage('Thank you for your message! I will contact you soon.');
+          setSubmitted(true);
+          setForm(initialFormState);
+          
+          // Reset submitted state after 3 seconds to allow users to submit again
+          setTimeout(() => {
+            setSubmitted(false);
+          }, 3000);
+        } else {
+          let errorData = { error: 'There was an error sending the message.' };
+          try {
+            const responseData = JSON.parse(xhr.responseText);
+            if (responseData && responseData.error) {
+              errorData.error = responseData.error;
+            } else if (responseData && responseData.message) {
+              // Para compatibilidad con las pruebas que envían el error en message
+              errorData.error = responseData.message;
+            }
+          } catch (e) {
+            console.error('Error parsing JSON response:', e);
+          }
+          console.log('Error response data:', errorData);
+          setResponseError(errorData.error);
         }
+      } catch (error) {
+        console.error('Error in onload handler:', error);
+        setResponseError('An unexpected error occurred. Please try again later.');
+      } finally {
+        setLoading(false);
       }
     };
     
+    // Define what happens in case of error
     xhr.onerror = function() {
       console.error('Network error occurred');
-      setLoading(false);
       setResponseError('Network error occurred. Please check your connection and try again.');
+      setLoading(false);
     };
     
+    // Send the request
     xhr.send(JSON.stringify(form));
   };
 
@@ -111,45 +150,49 @@ const Contact = ({ id }) => {
                 className="contact-image"
               />
             </div>
-            <h3>Contact Information</h3>
-            <div className="contact-details">
-              <div className="contact-item">
-                <FaEnvelope className="contact-icon" />
-                <a href="mailto:kelvinr02@hotmail.com">kelvinr02@hotmail.com</a>
-                </div>
+            
+            <div className="contact-info-card">
+              <h3>Contact Information</h3>
+              <p>Feel free to contact me directly or fill out the form and I'll get back to you shortly</p>
+              
+              <div className="contact-details">
                 <div className="contact-item">
-                  <FaPhoneAlt className="contact-icon" />
-                  <a href={`tel:+1 829 969 8254`}>+1 829 969 8254</a>
+                  <div className="contact-icon"><FaPhoneAlt /></div>
+                  <div>
+                    <h4>Call Me</h4>
+                    <p>+1 829 969 8254</p>
+                  </div>
                 </div>
+                
                 <div className="contact-item">
-                  <FaMapMarkerAlt className="contact-icon" />
-                  <span>Santo Domingo, Dominican Republic</span>
+                  <div className="contact-icon"><FaEnvelope /></div>
+                  <div>
+                    <h4>Email</h4>
+                    <p>kelvinr02@hotmail.com</p>
+                  </div>
+                </div>
+                
+                <div className="contact-item">
+                  <div className="contact-icon"><FaMapMarkerAlt /></div>
+                  <div>
+                    <h4>Location</h4>
+                    <p>Santo Domingo, Dominican Republic</p>
+                    <p>Remote</p>
+                  </div>
                 </div>
               </div>
-
-              <div className="social-links">
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
-                  <FaLinkedinIn className="social-icon" />
-                </a>
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-                  <FaGithub className="social-icon" />
-                </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                  <FaTwitter className="social-icon" />
-                </a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-                  <FaFacebookF className="social-icon" />
-                </a>
+              
+              <div className="contact-social">
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaLinkedinIn /></a>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaGithub /></a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaTwitter /></a>
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaFacebookF /></a>
               </div>
-
-              <a href={`https://wa.me/+1 829 969 8254?text=${encodeURIComponent('Hello, I want to get in touch with you.')}`} 
-                className="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Make a donation">
-                <button className="donate-float" aria-label="Make a donation">Get in touch</button>
-              </a>
             </div>
-
+          </div>
+          
           <div className="contact-form-column">
-            <form className={`contact-form ${submitted ? 'success' : ''}`} onSubmit={handleSubmit} autoComplete="off">
+            <form className="contact-form" onSubmit={handleSubmit} autoComplete="off">
                 {/* Hidden field to prevent bots - works better than captcha */}
                 <input
                   type="text"
@@ -161,12 +204,8 @@ const Contact = ({ id }) => {
                   autoComplete="off"
                 />
               <div className="form-header">
-                <h2 className="section-title">Send Me a Message</h2>
-                <p className="section-subtitle">
-                  {submitted 
-                    ? 'Thank you for your message! I will get back to you shortly.' 
-                    : 'Complete the form and I\'ll get back to you shortly'}
-                </p>
+                <h3>Send Me a Message</h3>
+                <p>Complete the form and I'll get back to you shortly</p>
               </div>
               
               <div className="form-row">

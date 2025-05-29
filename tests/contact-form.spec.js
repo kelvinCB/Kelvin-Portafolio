@@ -5,16 +5,18 @@ test.describe('Contact Form', () => {
   // Common setup for tests that interact with the form
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await page.waitForLoadState('networkidle'); // Wait for network to be idle
     // Ensure the form title is visible by scrolling to it if necessary
-    const formTitleForScroll = page.locator('h2', { hasText: 'Send Me a Message' });
-    await formTitleForScroll.scrollIntoViewIfNeeded();
+    const formTitleForScroll = page.locator('h3', { hasText: 'Send Me a Message' }); // Changed h2 to h3
+    await formTitleForScroll.waitFor({ state: 'visible', timeout: 15000 }); // Explicit wait
+    await formTitleForScroll.scrollIntoViewIfNeeded({ timeout: 15000 }); // Scroll with timeout
   });
 
   test('should display the contact form and navigate to it', async ({ page }) => {
     // This test primarily checks visibility after initial page load and scroll (done in beforeEach)
     const contactSectionTitle = page.locator('h2', { hasText: 'Contact Me' });
     await expect(contactSectionTitle).toBeVisible();
-    const formTitle = page.locator('h2', { hasText: 'Send Me a Message' });
+    const formTitle = page.locator('h3', { hasText: 'Send Me a Message' }); // Changed h2 to h3
     await expect(formTitle).toBeVisible();
   });
 

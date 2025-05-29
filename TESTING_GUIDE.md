@@ -13,29 +13,25 @@ Abre tu terminal y asegúrate de estar en el directorio raíz del frontend:
 cd C:\Users\kelvi\CascadeProjects\portfolio-ejemplo
 ```
 
-**2. Ejecutar Todas las Pruebas (Modo Observación - Watch Mode):**
-Este es el comando principal. Por defecto, Jest se ejecutará en "modo observación", lo que significa que se volverá a ejecutar automáticamente cuando detecte cambios en los archivos.
+**2. Ejecutar Todas las Pruebas (Una Sola Vez, Sin Modo Observación):**
+Este es ahora el comportamiento principal del comando `npm test` para el frontend. Ejecutará todas las pruebas unitarias una vez y mostrará los resultados.
 ```sh
 npm test
 ```
+
+**3. Ejecutar Pruebas en Modo Observación (Watch Mode):**
+Si necesitas que Jest observe los cambios en los archivos y re-ejecute las pruebas automáticamente, puedes usar el siguiente comando. Ten en cuenta que esto anulará temporalmente el comportamiento configurado en `package.json` para `npm test` solo para esta ejecución:
+```sh
+npm test -- --watch
+```
+(El doble `--` es para pasar el argumento `--watch` directamente a Jest).
 Una vez en modo observación, tendrás varias opciones interactivas:
-*   Pulsar `a`: Para ejecutar todas las pruebas.
+*   Pulsar `a`: Para ejecutar todas las pruebas (si no se ejecutaron todas al inicio del watch mode).
 *   Pulsar `f`: Para ejecutar solo las pruebas que fallaron en la última ejecución.
-*   Pulsar `p`: Para filtrar pruebas por el nombre de un archivo (expresión regular). Por ejemplo, para correr solo `WhatsAppButton.test.js`, escribe `WhatsAppButton.test.js`.
-*   Pulsar `t`: Para filtrar pruebas por el nombre de un test específico (expresión regular) dentro de una suite.
+*   Pulsar `p`: Para filtrar pruebas por el nombre de un archivo (expresión regular).
+*   Pulsar `t`: Para filtrar pruebas por el nombre de un test específico (expresión regular).
 *   Pulsar `q`: Para salir del modo observación.
 *   Pulsar `Enter`: Para volver a ejecutar las pruebas con los filtros actuales.
-
-**3. Ejecutar Todas las Pruebas (Una Sola Vez, Sin Modo Observación):**
-Si quieres ejecutar todas las pruebas una vez y ver el resultado sin que Jest se quede observando cambios:
-```sh
-npm test -- --watchAll=false
-```
-(El doble `--` es para pasar el argumento `--watchAll=false` directamente a Jest en lugar de a npm).
-Alternativamente, a menudo los sistemas de Integración Continua usan:
-```sh
-CI=true npm test
-```
 
 **4. Ejecutar un Archivo de Pruebas Específico (Una Sola Vez):**
 ```sh
