@@ -111,12 +111,11 @@ const Contact = ({ id }) => {
                 className="contact-image"
               />
             </div>
-            
-              <h3>Contact Information</h3>
-              <div className="contact-details">
-                <div className="contact-item">
-                  <FaEnvelope className="contact-icon" />
-                  <a href="mailto:kelvinr02@hotmail.com">kelvinr02@hotmail.com</a>
+            <h3>Contact Information</h3>
+            <div className="contact-details">
+              <div className="contact-item">
+                <FaEnvelope className="contact-icon" />
+                <a href="mailto:kelvinr02@hotmail.com">kelvinr02@hotmail.com</a>
                 </div>
                 <div className="contact-item">
                   <FaPhoneAlt className="contact-icon" />
@@ -148,8 +147,7 @@ const Contact = ({ id }) => {
                 <button className="donate-float" aria-label="Make a donation">Get in touch</button>
               </a>
             </div>
-          </div>
-          
+
           <div className="contact-form-column">
             <form className={`contact-form ${submitted ? 'success' : ''}`} onSubmit={handleSubmit} autoComplete="off">
                 {/* Hidden field to prevent bots - works better than captcha */}
