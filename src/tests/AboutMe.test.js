@@ -5,11 +5,10 @@ import AboutMe from '../components/AboutMe';
 describe('AboutMe Component', () => {
   it('renders main titles, description, and profile image', () => {
     render(<AboutMe />);
-    expect(screen.getByText(/WELCOME TO MY WORLD/i)).toBeInTheDocument();
     expect(screen.getByText(/Hello! I am/i)).toBeInTheDocument();
     expect(screen.getByText(/QA Automation Engineer/i)).toBeInTheDocument();
     expect(screen.getByText(/Engineer specialized in automation/i)).toBeInTheDocument();
-    expect(screen.getByAltText(/Kelvin Calcano QA Automation/i)).toBeInTheDocument();
+    expect(screen.getByAltText(/Kelvin Calcaño QA Automation/i)).toBeInTheDocument();
   });
 
   it('renders Download CV button and simulates click', () => {

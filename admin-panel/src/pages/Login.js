@@ -152,7 +152,7 @@ const Login = () => {
         </Paper>
         
         <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 4 }}>
-          © {new Date().getFullYear()} Kelvin Calcano - Admin Panel
+          © {new Date().getFullYear()} Kelvin Calcaño - Admin Panel
         </Typography>
       </Box>
     </Container>

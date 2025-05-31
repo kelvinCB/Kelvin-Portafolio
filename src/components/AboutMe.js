@@ -13,9 +13,9 @@ const AboutMe = ({ id }) => {
     <section id={id} className="about-section">
       <div className="about-content">
         <div className="about-text">
-          <h1 className="welcome-text">WELCOME TO MY WORLD</h1>
-          <h2 className="hero-title">Hello! I am <span className="name-highlight">Kelvin Calcano</span></h2>
-          <h3 className="role-title">QA Automation Engineer & ISTQB Certified</h3>
+
+          <h2 className="hero-title">Hello! I am <span className="name-highlight">Kelvin Calcaño</span></h2>
+          <h3 className="role-title">Senior QA Automation Engineer</h3>
           
           <p className="hero-description">
             Engineer specialized in automation testing for web and mobile applications, 
@@ -36,7 +36,7 @@ const AboutMe = ({ id }) => {
           <img 
             className="profile-img" 
             src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80" 
-            alt="Kelvin Calcano QA Automation" 
+            alt="Kelvin Calcaño QA Automation" 
           />
         </div>
       </div>

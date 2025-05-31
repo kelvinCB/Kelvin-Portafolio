@@ -124,7 +124,9 @@ const Contact = ({ id }) => {
     
     // Define what happens in case of error
     xhr.onerror = function() {
-      console.error('Network error occurred');
+      if (process.env.NODE_ENV !== 'test') {
+        console.error('Network error occurred');
+      }
       setResponseError('Network error occurred. Please check your connection and try again.');
       setLoading(false);
     };
