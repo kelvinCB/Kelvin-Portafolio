@@ -6,8 +6,8 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <div className="footer-logo">
-          Kelvin<span>QA</span>
+        <div className="footer-logo" style={{ cursor: 'pointer' }}>
+          <span className="logo-blue">Kelvin</span><span className="logo-purple">QA</span>
         </div>
         
 

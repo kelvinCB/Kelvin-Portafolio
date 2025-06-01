@@ -19,6 +19,44 @@ test.describe('Navigation Bar E2E Tests', () => {
     await page.goto('/');
   });
 
+  test('should scroll to top when Kelvin QA logo in navbar is clicked', async ({ page }) => {
+    // First scroll down to a lower section of the page
+    await page.locator('nav a[href="#contact"]').click();
+    
+    // Verify we've scrolled down to the contact section
+    await expect(page.locator('#contact')).toBeInViewport();
+    await expect(page).toHaveURL(/#contact$/);
+    
+    // Now click the logo to go back to top
+    await page.locator('.logo').click();
+    
+    // Verify we're back at the top by checking for hero elements
+    const heroTitleLocator = page.locator('.hero-title');
+    const roleTitleLocator = page.locator('.role-title');
+    
+    await expect(heroTitleLocator).toBeInViewport();
+    await expect(heroTitleLocator).toBeVisible();
+    await expect(heroTitleLocator).toContainText('Hello! I am Kelvin Calcaño');
+    
+    await expect(roleTitleLocator).toBeVisible();
+    await expect(roleTitleLocator).toContainText('Senior QA Automation Engineer');
+    
+    // Pause for 1 second before taking screenshot
+    console.log('Waiting 1 second before taking screenshot for logo click navigation...');
+    await page.waitForTimeout(1000);
+    
+    // Take a screenshot and save it with the test case name
+    try {
+      const screenshotFileName = 'logo-click-navigation-to-top.png';
+      const screenshotPath = path.join(screenshotDir, screenshotFileName);
+      console.log(`Taking screenshot: ${screenshotPath}`);
+      await page.screenshot({ path: screenshotPath, fullPage: false });
+      console.log(`Screenshot saved successfully: ${screenshotFileName}`);
+    } catch (err) {
+      console.error(`Error taking screenshot for logo click navigation: ${err.message}`);
+    }
+  });
+
   test('should navigate to About Me section when About Me link is clicked', async ({ page }) => {
     // Find the navigation link by text/href
     const navLinkLocator = page.locator('nav a[href="#about"]');

@@ -21,15 +21,21 @@
 .footer-logo {
   font-size: 2rem;
   font-weight: 900;
-  color: #647dee;
   letter-spacing: 0.03em;
   text-shadow: 0 2px 8px rgba(100,100,200,0.13);
+  display: flex;
+  align-items: center;
 }
 
-.footer-logo span {
+.footer-logo .logo-blue {
+  color: #647dee;
+  font-weight: 900;
+}
+
+.footer-logo .logo-purple {
   color: #7f53ac;
+  font-weight: 900;
   margin-left: 3px;
-  font-weight: 700;
 }
 
 .social-links {
