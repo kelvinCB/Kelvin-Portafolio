@@ -46,6 +46,7 @@ jobs:
           MONGODB_URI: ${{ secrets.MONGODB_URI_TEST || 'mongodb://localhost:27017/testdb' }}
           JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test-secret' }}
           NODE_ENV: 'test'
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY_TEST || 'sk_test_dummykey' }}
 
   # Job for running frontend tests
   frontend-tests:
