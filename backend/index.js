@@ -225,13 +225,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Only start the server if we're not in a test environment
-let server = null;
-if (process.env.NODE_ENV !== 'test') {
-  server = app.listen(PORT, () => {
+// Start the server only when this file is run directly (e.g., `node index.js`)
+// This allows the server to be started for E2E tests, but not for Jest unit tests.
+if (require.main === module) {
+  app.listen(PORT, () => {
     console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
     console.log(`Modo: ${process.env.NODE_ENV || 'development'}`);
   });
 }
 
-module.exports = { app, server };
+// Export the app for testing purposes
+module.exports = { app };
