@@ -1,7 +1,10 @@
 # GitHub Actions CI Pipeline for MERN Portfolio
 # This workflow runs backend, frontend, and E2E tests.
 
-name: CI Pipeline - Run All Tests
+name: CI Pipeline
+
+permissions:
+  contents: read
 
 # Controls when the workflow will run
 on:
