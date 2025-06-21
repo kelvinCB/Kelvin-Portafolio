@@ -97,6 +97,10 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
 
+      - name: Install backend dependencies
+        run: npm install
+        working-directory: ./backend
+
       # 4. Install Playwright browsers and dependencies
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
