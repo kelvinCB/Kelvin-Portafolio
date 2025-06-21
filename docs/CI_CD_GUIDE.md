@@ -1,6 +1,6 @@
 # CI/CD Pipeline Documentation with GitHub Actions
 
-This document outlines the Continuous Integration (CI) pipeline implemented for this project using GitHub Actions. The goal of this pipeline is to automate the testing process to ensure code quality and stability.
+This document outlines the Continuous Integration (CI) pipeline implemented for this project using GitHub Actions. The goal of this pipeline is to automate the testing process to ensure code quality and stability, with a focus on reliable Playwright end-to-end (E2E) testing.
 
 ## 1. Overview
 
@@ -10,11 +10,12 @@ We chose **GitHub Actions** for its seamless integration with the GitHub reposit
 
 ## 2. Workflow Configuration
 
-The entire pipeline is defined in a single YAML file located at:
+The CI/CD pipeline is defined in two YAML files located at:
 
-- **`.github/workflows/ci.yml`**
+- **`.github/workflows/ci.yml`** - Main CI pipeline with unit tests and conditional E2E tests
+- **`.github/workflows/playwright.yml`** - Dedicated Playwright E2E test workflow
 
-This file is the "source of truth" for our CI process.
+These files are the "source of truth" for our CI process.
 
 ## 3. Pipeline Triggers
 
@@ -52,32 +53,102 @@ This job runs in parallel with the backend tests and is responsible for testing 
 
 ### Job 3: `e2e-tests`
 
-This job is crucial for testing the application from end to end. It only runs if **both `backend-tests` and `frontend-tests` complete successfully**.
+This job is crucial for testing the application from end to end. It only runs if **both `backend-tests` and `frontend-tests` complete successfully** AND one of these conditions is met:
+
+- The commit message contains the tag `[e2e]`
+- The push is to the `main` or `master` branch
+
+This conditional execution allows developers to control when the full E2E test suite runs.
 
 - **Environment:** Runs on an `ubuntu-latest` virtual machine.
+- **Port Configuration:**
+  - Frontend runs on port `3000`
+  - Backend runs on port `5000` (Using `BACKEND_PORT` environment variable)
+
 - **Steps:**
-    1.  Checks out the latest version of the repository code.
-    2.  Sets up Node.js (version 18.x).
-    3.  Installs all necessary npm dependencies.
-    4.  Installs the Playwright browsers and their system dependencies using `npx playwright install --with-deps`.
-    5.  Runs the end-to-end tests using `npx playwright test --headed --project=chromium`, respecting the preference for visual testing in Chromium.
+    1. Checks out the latest version of the repository code.
+    2. Sets up Node.js (version 18.x).
+    3. Installs frontend dependencies using `npm ci`.
+    4. Installs backend dependencies using `npm ci --no-optional` in the `./backend` directory.
+    5. Verifies critical dependencies like `bcryptjs` are installed correctly.
+    6. Installs the Playwright browsers and their system dependencies using `npx playwright install --with-deps`.
+    7. Runs the end-to-end tests using `npx playwright test --project=chromium` in headless mode.
 
 ## 5. Environment Variables & Secrets
 
-For the tests to run correctly in the automated GitHub Actions environment, certain sensitive variables (secrets) must be configured. These are stored securely in GitHub and are not exposed in the code.
+For the tests to run correctly in the automated GitHub Actions environment, certain environment variables and secrets must be configured. These are defined at the job level to ensure all processes (including backend server) have access to them.
 
 Navigate to your repository's **Settings > Secrets and variables > Actions** to configure the following:
 
-- **`MONGODB_URI_TEST`**: The connection string for a **test database**. It is highly recommended to use a separate database for testing to avoid interfering with development or production data.
-- **`JWT_SECRET_TEST`**: A long, random string used for signing JSON Web Tokens during tests.
+- **`MONGODB_URI_TEST`**: The connection string for a test database.
+- **`JWT_SECRET_TEST`**: A string used for signing JSON Web Tokens during tests.
+- **`STRIPE_SECRET_KEY_TEST`**: Test API key for Stripe integration.
+- **`ENCRYPTION_KEY_TEST`**: Key used for encryption in test environment.
+- **`EMAIL_USER_TEST`** & **`EMAIL_PASS_TEST`**: Credentials for email testing.
+- **`ADMIN_EMAIL_TEST`** & **`ADMIN_PASSWORD_TEST`**: Admin login credentials for tests.
 
-These secrets are injected into the jobs as environment variables, as defined in the `ci.yml` file.
+Additionally, the following non-secret environment variables are configured:
+
+- **`NODE_ENV`**: Set to 'test' for testing environments.
+- **`PORT`**: Set to 3000 for the frontend server.
+- **`BACKEND_PORT`**: Set to 5000 for the backend server.
+
+These variables are injected into the jobs as environment variables, as defined in both workflow files.
 
 ## 6. How to Use and Monitor
 
-1.  **Commit and Push:** Simply `git push` your changes to the `main` branch or open a pull request.
-2.  **Check Status:** Go to the **"Actions"** tab in your GitHub repository. You will see your workflow running.
-3.  **Review Results:** You can click on the workflow run to see the detailed progress of each job. A green checkmark (✅) indicates success, while a red cross (❌) indicates a failure. If a job fails, you can inspect the logs to diagnose the error.
+1. **Regular Development:**
+   ```bash
+   git commit -m "feat: add new feature"
+   git push origin branch-name
+   ```
+   This will run only backend and frontend unit tests (faster CI pipeline).
+
+2. **When You Need E2E Tests:**
+   ```bash
+   git commit -m "[e2e] feat: add new feature"
+   git push origin branch-name
+   ```
+   This will run the complete test suite including E2E tests.
+
+3. **Check Status:** Go to the **"Actions"** tab in your GitHub repository to monitor your workflows.
+
+## 7. Backend Server Configuration
+
+The backend server is configured to start only when directly executed, not when imported by tests:
+
+```javascript
+// backend/index.js
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
+    console.log(`Modo: ${process.env.NODE_ENV || 'development'}`);
+  });
+}
+```
+
+This pattern prevents the server from starting during Jest tests (avoiding open handle warnings), while still allowing it to start during Playwright E2E tests.
+
+## 8. Troubleshooting
+
+Common issues and solutions:
+
+1. **Port conflicts**:
+   - Frontend uses port 3000 (`PORT=3000`)
+   - Backend uses port 5000 (`BACKEND_PORT=5000`)
+   - Ensure these ports don't conflict with other services
+
+2. **Missing dependencies**:
+   - Ensure backend dependencies are installed with `npm ci` in the `./backend` directory
+   - Critical dependencies like `bcryptjs` must be available
+
+3. **Environment variables**:
+   - All environment variables must be defined at the job level in GitHub Actions
+   - This ensures they're available to all processes, including the backend server
+
+4. **Timeouts in Playwright**:
+   - Ensure backend server is listening on the correct port
+   - Configure appropriate timeouts in `playwright.config.js`
 
 ---
-*This documentation helps maintain a clear understanding of the project's automated testing strategy.*
+*This documentation helps maintain a clear understanding of the project's automated testing strategy and supports future developers in maintaining the CI/CD pipeline.*
