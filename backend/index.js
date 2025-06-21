@@ -225,10 +225,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Export test app
-const server = app.listen(PORT, () => {
-  console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
-  console.log(`Modo: ${process.env.NODE_ENV || 'development'}`);
-});
+// Only start the server if we're not in a test environment
+let server = null;
+if (process.env.NODE_ENV !== 'test') {
+  server = app.listen(PORT, () => {
+    console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
+    console.log(`Modo: ${process.env.NODE_ENV || 'development'}`);
+  });
+}
 
 module.exports = { app, server };
