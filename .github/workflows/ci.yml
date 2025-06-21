@@ -43,10 +43,13 @@ jobs:
         env:
           # We provide dummy variables for the test environment.
           # The tests are mocked and don't need real secrets.
+          NODE_ENV: 'test'
           MONGODB_URI: ${{ secrets.MONGODB_URI_TEST || 'mongodb://localhost:27017/testdb' }}
           JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test-secret' }}
-          NODE_ENV: 'test'
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY_TEST || 'sk_test_dummykey' }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY_TEST || 'a-dummy-encryption-key-for-testing-!@#$' }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER_TEST || 'test@example.com' }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS_TEST || 'dummypassword' }}
 
   # Job for running frontend tests
   frontend-tests:
@@ -107,6 +110,11 @@ jobs:
           # These should be configured in GitHub Secrets
           CI: true
           PORT: 3000
-          MONGODB_URI: ${{ secrets.MONGODB_URI_TEST }}
+          NODE_ENV: 'test'
+          MONGODB_URI: ${{ secrets.MONGODB_URI_TEST || 'mongodb://localhost:27017/testdb' }}
           JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test-secret' }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY_TEST || 'sk_test_dummykey' }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY_TEST || 'a-dummy-encryption-key-for-testing-!@#$' }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER_TEST || 'test@example.com' }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS_TEST || 'dummypassword' }}
 
