@@ -1,0 +1,212 @@
+<pre><code class="language-markdown"># Guía para Ejecutar Pruebas Unitarias (Jest)
+
+Esta guía te ayudará a ejecutar las pruebas unitarias en los proyectos de frontend y backend.
+
+## Parte Frontend (React - portfolio-ejemplo)
+
+El frontend utiliza `react-scripts` (parte de Create React App) para gestionar las pruebas con Jest.
+
+**1. Navegar al Directorio Correcto:**
+Abre tu terminal y asegúrate de estar en el directorio raíz del frontend:
+```sh
+cd C:\Users\kelvi\CascadeProjects\portfolio-ejemplo
+</code></pre>
+<p><strong>2. Ejecutar Todas las Pruebas (Una Sola Vez, Sin Modo Observación):</strong>
+Este es ahora el comportamiento principal del comando <code>npm test</code> para el frontend. Ejecutará todas las pruebas unitarias una vez y mostrará los resultados.</p>
+<pre><code class="language-sh">npm test
+</code></pre>
+<p><strong>3. Ejecutar Pruebas en Modo Observación (Watch Mode):</strong>
+Si necesitas que Jest observe los cambios en los archivos y re-ejecute las pruebas automáticamente, puedes usar el siguiente comando. Ten en cuenta que esto anulará temporalmente el comportamiento configurado en <code>package.json</code> para <code>npm test</code> solo para esta ejecución:</p>
+<pre><code class="language-sh">npm test -- --watch
+</code></pre>
+<p>(El doble <code>--</code> es para pasar el argumento <code>--watch</code> directamente a Jest).
+Una vez en modo observación, tendrás varias opciones interactivas:</p>
+<ul>
+<li>Pulsar <code>a</code>: Para ejecutar todas las pruebas (si no se ejecutaron todas al inicio del watch mode).</li>
+<li>Pulsar <code>f</code>: Para ejecutar solo las pruebas que fallaron en la última ejecución.</li>
+<li>Pulsar <code>p</code>: Para filtrar pruebas por el nombre de un archivo (expresión regular).</li>
+<li>Pulsar <code>t</code>: Para filtrar pruebas por el nombre de un test específico (expresión regular).</li>
+<li>Pulsar <code>q</code>: Para salir del modo observación.</li>
+<li>Pulsar <code>Enter</code>: Para volver a ejecutar las pruebas con los filtros actuales.</li>
+</ul>
+<p><strong>4. Ejecutar un Archivo de Pruebas Específico (Una Sola Vez):</strong></p>
+<pre><code class="language-sh">npm test -- src/components/WhatsAppButton.test.js --watchAll=false
+</code></pre>
+<p>Reemplaza <code>src/components/WhatsAppButton.test.js</code> con la ruta al archivo que quieras probar.</p>
+<h2>Parte Backend (Node.js/Express - portfolio-ejemplo/backend)</h2>
+<p>El backend tiene su propia configuración de Jest.</p>
+<p><strong>1. Navegar al Directorio Correcto:</strong>
+Abre tu terminal y asegúrate de estar en el directorio del backend:</p>
+<pre><code class="language-sh">cd C:\Users\kelvi\CascadeProjects\portfolio-ejemplo\backend
+</code></pre>
+<p><strong>2. Ejecutar Todas las Pruebas:</strong></p>
+<pre><code class="language-sh">npm test
+</code></pre>
+<p>Esto ejecutará todos los archivos <code>*.test.js</code> en el proyecto backend y mostrará los resultados.</p>
+<p><strong>Nota sobre Pruebas de API y Base de Datos:</strong>
+Para las pruebas de API que interactúan con la base de datos, se utiliza una base de datos de prueba separada configurada mediante la variable de entorno <code>MONGODB_URI_TEST</code> en el archivo <code>.env</code>. Esto asegura que las pruebas no afecten a la base de datos de producción.</p>
+<p><strong>3. Ejecutar un Archivo de Pruebas Específico:</strong>
+Para ejecutar solo un archivo de pruebas (por ejemplo, <code>auth.test.js</code> dentro del directorio <code>middleware</code>):</p>
+<pre><code class="language-sh">npm test -- middleware/auth.test.js
+</code></pre>
+<p>O si quieres ser más específico desde la raíz del backend:</p>
+<pre><code class="language-sh">npm test -- ./middleware/auth.test.js
+</code></pre>
+<p>(El doble <code>--</code> es importante para pasar el nombre del archivo como argumento a Jest).</p>
+<p><strong>4. Ejecutar Solo Pruebas que Fallaron (Después de una ejecución fallida):</strong>
+Jest tiene una opción para esto, aunque su comportamiento puede variar si estás en modo observación o no.
+Si no estás en modo observación, puedes intentar:</p>
+<pre><code class="language-sh">npm test -- --onlyFailures
+</code></pre>
+<p>(Requiere que Jest haya guardado un caché de fallos de una ejecución previa).
+En el modo observación del frontend, la tecla <code>f</code> cumple esta función.</p>
+<hr>
+<p><strong>Nota Importante:</strong>
+El comando <code>jest</code> por sí solo (como <code>jest -all</code>) probablemente no funcionará directamente en tu terminal si Jest no está instalado globalmente. Siempre es mejor usar <code>npm test</code> para que se utilice la versión de Jest especificada en el <code>package.json</code> de cada proyecto.</p>
+<pre><code>
+---
+
+## End-to-End (E2E) Tests (Playwright)
+
+El proyecto utiliza Playwright para las pruebas End-to-End, que simulan interacciones reales del usuario en el navegador.
+
+**1. Navegar al Directorio Correcto:**
+Abre tu terminal y asegúrate de estar en el directorio raíz del proyecto (donde está `playwright.config.js`):
+```sh
+cd C:\Users\kelvi\CascadeProjects\portfolio-ejemplo
+</code></pre>
+<p><strong>2. Ejecutar Todas las Pruebas E2E:</strong>
+Este comando ejecutará todas las pruebas E2E definidas en la configuración de Playwright (por defecto, en todos los navegadores configurados y en modo headless).</p>
+<pre><code class="language-sh">npx playwright test
+</code></pre>
+<p><strong>3. Ejecutar Pruebas E2E en un Navegador Específico y en Modo Headed (con UI):</strong>
+Para ver la ejecución en el navegador (por ejemplo, Chromium):</p>
+<pre><code class="language-sh">npx playwright test --headed --project=chromium
+</code></pre>
+<p><strong>4. Ejecutar un Archivo de Pruebas E2E Específico:</strong>
+Para ejecutar solo las pruebas de un archivo (por ejemplo, <code>contact-form.spec.js</code>):</p>
+<pre><code class="language-sh">npx playwright test tests/contact-form.spec.js
+</code></pre>
+<p>O con un navegador específico y modo headed:</p>
+<pre><code class="language-sh">npx playwright test tests/contact-form.spec.js --headed --project=chromium
+</code></pre>
+<p><strong>5. Abrir el Reporte HTML de Playwright:</strong>
+Después de ejecutar las pruebas, puedes ver un reporte detallado:</p>
+<pre><code class="language-sh">npx playwright show-report
+</code></pre>
+<hr>
+<h2>Listado de Test Suites y Archivos de Prueba</h2>
+<table>
+<thead>
+<tr>
+<th>Test Suite / Archivo</th>
+<th>Ubicación</th>
+<th>Tipo</th>
+<th>Escenarios de Prueba (Resumen)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>auth.test.js</td>
+<td>backend/middleware/auth.test.js</td>
+<td>Backend</td>
+<td>- <code>authenticate</code>: token (válido/inválido/ausente/formato), usuario (activo/inactivo/no encontrado). (6) <br> - <code>authorize</code>: rol (requerido/no), auth (sí/no). (6)</td>
+</tr>
+<tr>
+<td>security.test.js</td>
+<td>backend/middleware/security.test.js</td>
+<td>Backend</td>
+<td>- <code>secureHeaders</code>: config Helmet (prod/dev). (2) <br> - <code>sanitize</code>: config MongoSanitize (prod/dev), callback <code>onSanitize</code>. (3)</td>
+</tr>
+<tr>
+<td>contact.api.test.js</td>
+<td>backend/tests/api/contact.api.test.js</td>
+<td>Backend</td>
+<td>Pruebas de API para el endpoint <code>/api/contact</code>: envío correcto del formulario (validación de datos, respuesta HTTP 200, guardado en BD). (1)</td>
+</tr>
+<tr>
+<td>WhatsAppButton.test.js</td>
+<td>src/components/WhatsAppButton.test.js</td>
+<td>Frontend</td>
+<td>Renderizado, <code>href</code> (teléfono, mensaje), atributos (<code>target</code>, <code>rel</code>, <code>aria-label</code>), imagen (<code>src</code>, <code>alt</code>), <code>className</code>. (7)</td>
+</tr>
+<tr>
+<td>App.test.js</td>
+<td>src/App.test.js</td>
+<td>Frontend</td>
+<td>Renderizado de logo en header (texto, clases, tags). (1)</td>
+</tr>
+<tr>
+<td>Navigation.test.js</td>
+<td>src/components/Navigation.test.js</td>
+<td>Frontend</td>
+<td>Logo (render, click), enlaces nav (render, click, activo), menú móvil (render, toggle, clase <code>menu-open</code>). (7)</td>
+</tr>
+<tr>
+<td>Footer.test.js</td>
+<td>src/components/Footer.test.js</td>
+<td>Frontend</td>
+<td>Renderizado footer, logo, enlaces sociales (hrefs), copyright (año, nombre). (4)</td>
+</tr>
+<tr>
+<td>Portfolio.test.js</td>
+<td>src/components/Portfolio.test.js</td>
+<td>Frontend</td>
+<td>Renderizado (sección, título), filtros (botones, default, por categoría), detalles proyecto (título, categoría, descripción, enlaces). (5)</td>
+</tr>
+<tr>
+<td>Contact.test.js</td>
+<td>src/components/Contact.test.js</td>
+<td>Frontend</td>
+<td>Renderizado (campos, info contacto), validación (vacíos, email, teléfono), envío (éxito, error fetch), enlaces sociales. (6)</td>
+</tr>
+<tr>
+<td>AboutMe.test.js</td>
+<td>src/components/AboutMe.test.js</td>
+<td>Frontend</td>
+<td>Renderizado (títulos, desc, img), botones (descarga CV, contacto), tarjetas de habilidades. (4)</td>
+</tr>
+<tr>
+<td>BackgroundElements.test.js</td>
+<td>src/components/BackgroundElements.test.js</td>
+<td>Frontend</td>
+<td>Renderizado (contenedor, triángulos, grupos de puntos, formas decorativas, líneas). (5)</td>
+</tr>
+<tr>
+<td>DonateButton.test.js</td>
+<td>src/components/DonateButton.test.js</td>
+<td>Frontend</td>
+<td>Botón flotante, modal (estado, interacción), contenido (PayPal, Stripe), lógica Stripe (montos, submit, errores). (16)</td>
+</tr>
+<tr>
+<td>Experience.test.js</td>
+<td>src/components/Experience.test.js</td>
+<td>Frontend</td>
+<td>Renderizado (sección, título, subtítulo), número de trabajos, detalles de cada trabajo (título, empresa, periodo, descripción), resaltado título. (5)</td>
+</tr>
+<tr>
+<td>contact-form.spec.js</td>
+<td>tests/contact-form.spec.js</td>
+<td>E2E</td>
+<td>- Visualización del formulario de contacto y navegación. (1) <br> - Envío exitoso del formulario con datos válidos y verificación del mensaje de éxito. (1) <br> - Verificación de errores de validación: nombre vacío, email vacío, formato de email inválido, mensaje vacío. (4)</td>
+</tr>
+<tr>
+<td>navigation.spec.js</td>
+<td>tests/navigation.spec.js</td>
+<td>E2E</td>
+<td>- Test &quot;should navigate to About Me section when About Me link is clicked&quot;: Verifica scroll, URL hash y títulos visibles. (1) <br> - Test &quot;should navigate to Portfolio section when Portfolio link is clicked&quot;: Verifica scroll, URL hash y títulos visibles. (1) <br> - Test &quot;should navigate to Experience section when Experience link is clicked&quot;: Verifica scroll, URL hash y títulos visibles. (1) <br> - Test &quot;should navigate to Contact Me section when Contact Me link is clicked&quot;: Verifica scroll, URL hash y títulos visibles. (1) <br> - Test &quot;should scroll to top when Kelvin QA logo in navbar is clicked&quot;: Verifica que al hacer click en el logo se regresa al inicio de la página. (1)</td>
+</tr>
+<tr>
+<td>about-me.spec.js</td>
+<td>tests/about-me.spec.js</td>
+<td>E2E</td>
+<td>- Test &quot;should navigate to Contact Me section when About Me Contact button is clicked&quot;: Verifica que al hacer click en el botón Contact me del About Me se navega a la sección de contacto. (1)</td>
+</tr>
+</tbody></table>
+<p><strong>Notas:</strong></p>
+<ul>
+<li>Los archivos <code>auth.test.js</code> y <code>security.test.js</code> cubren middleware del backend.</li>
+<li>El archivo <code>contact.api.test.js</code> prueba la API del formulario de contacto.</li>
+<li>Los archivos en <code>src/components</code> y <code>src/</code> cubren componentes React (frontend).</li>
+<li>Puedes ejecutar un test suite específico usando <code>npm test -- &lt;ruta/al/archivo.test.js&gt; --watchAll=false</code>.</li>
+<li>Para las pruebas de API, asegúrate de que <code>MONGODB_URI_TEST</code> esté configurado en el archivo <code>.env</code>.</li>
+</ul>

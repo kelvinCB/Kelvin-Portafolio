@@ -1,0 +1,134 @@
+# GitHub Actions CI Pipeline for MERN Portfolio
+# This workflow runs backend, frontend, and E2E tests.
+
+name: CI Pipeline
+
+permissions:
+  contents: read
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  # Triggers the workflow on pull request events for the "main" branch
+  pull_request:
+    branches: [ "main" ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Job for running backend tests
+  backend-tests:
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner
+
+    defaults:
+      run:
+        working-directory: ./backend # Set default directory for all run steps
+
+    steps:
+      # 1. Check out the repository code
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Specify Node.js version 18.x
+
+      # 3. Install backend dependencies
+      - name: Install backend dependencies
+        run: npm install
+
+      # 4. Run backend unit tests
+      - name: Run backend tests (Jest)
+        run: npm test
+        env:
+          # We provide dummy variables for the test environment.
+          # The tests are mocked and don't need real secrets.
+          NODE_ENV: 'test'
+          MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST || 'mongodb://localhost:27017/testdb' }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test-secret' }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY_TEST || 'sk_test_dummykey' }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY_TEST || 'a-dummy-encryption-key-for-testing-!@#$' }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER_TEST || 'test@example.com' }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS_TEST || 'dummypassword' }}
+
+  # Job for running frontend tests
+  frontend-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the repository code
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # 3. Install frontend dependencies
+      - name: Install frontend dependencies
+        run: npm install
+
+      # 4. Run frontend unit tests
+      - name: Run frontend tests (React)
+        # Use --ci to prevent tests from running in watch mode
+        # Pass --testPathIgnorePatterns to ensure it doesn't run e2e tests
+        run: npm test -- --watchAll=false
+
+  # Job for running Playwright E2E tests
+  e2e-tests:
+    # Always run E2E tests when backend and frontend tests pass
+    needs: [backend-tests, frontend-tests]
+    runs-on: ubuntu-latest
+
+    env:
+      # Provide environment variables for the E2E tests
+      # These should be configured in GitHub Secrets
+      CI: true
+      PORT: 3000             # Frontend port
+      BACKEND_PORT: 5000     # Backend port (different from frontend)
+      NODE_ENV: 'test'
+      MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST || 'mongodb://localhost:27017/testdb' }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test-secret' }}
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY_TEST || 'sk_test_dummykey' }}
+      ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY_TEST || 'a-dummy-encryption-key-for-testing-!@#$' }}
+      EMAIL_USER: ${{ secrets.EMAIL_USER_TEST || 'test@example.com' }}
+      EMAIL_PASS: ${{ secrets.EMAIL_PASS_TEST || 'dummypassword' }}
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL_TEST || 'admin@example.com' }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD_TEST || 'password123' }}
+
+    steps:
+      # 1. Check out the repository code
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # 3. Install frontend dependencies
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
+        run: |
+          cd ./backend
+          npm ci --no-optional
+          npm list bcryptjs || echo "bcryptjs not found"
+          ls -la node_modules/bcryptjs || echo "bcryptjs directory not found"
+
+      # 4. Install Playwright browsers and dependencies
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # 5. Run Playwright E2E tests
+      - name: Run E2E tests (Playwright)
+        # Runs tests in headless mode on Chromium for CI
+        run: npx playwright test --project=chromium
+

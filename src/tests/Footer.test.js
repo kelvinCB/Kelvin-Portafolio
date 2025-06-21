@@ -33,6 +33,6 @@ describe('Footer', () => {
     render(<Footer />);
     const year = new Date().getFullYear();
     expect(screen.getByText(new RegExp(year.toString()))).toBeInTheDocument();
-    expect(screen.getByText(/Kelvin Calcano/)).toBeInTheDocument();
+    expect(screen.getByText(/Kelvin Calcaño/)).toBeInTheDocument();
   });
 });

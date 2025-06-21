@@ -1,5 +1,18 @@
 // tests/contact-form.spec.js
 const { test, expect } = require('@playwright/test');
+const fs = require('fs');
+const path = require('path');
+
+// Ensure the screenshot directory exists
+const screenshotDir = path.resolve('./test-screenshots');
+try {
+  if (!fs.existsSync(screenshotDir)) {
+    fs.mkdirSync(screenshotDir, { recursive: true });
+  }
+  console.log(`Screenshot directory ready: ${screenshotDir}`);
+} catch (err) {
+  console.error(`Error creating screenshot directory: ${err.message}`);
+}
 
 test.describe('Contact Form', () => {
   // Common setup for tests that interact with the form
@@ -18,6 +31,21 @@ test.describe('Contact Form', () => {
     await expect(contactSectionTitle).toBeVisible();
     const formTitle = page.locator('h3', { hasText: 'Send Me a Message' }); // Changed h2 to h3
     await expect(formTitle).toBeVisible();
+    
+    // Pause for 1 second before taking screenshot
+    console.log('Waiting 1 second before taking screenshot for contact form display...');
+    await page.waitForTimeout(1000);
+    
+    // Take a screenshot and save it
+    try {
+      const screenshotFileName = 'contact-form-display.png';
+      const screenshotPath = path.join(screenshotDir, screenshotFileName);
+      console.log(`Taking screenshot: ${screenshotPath}`);
+      await page.screenshot({ path: screenshotPath, fullPage: false });
+      console.log(`Screenshot saved successfully: ${screenshotFileName}`);
+    } catch (err) {
+      console.error(`Error taking screenshot for contact form display: ${err.message}`);
+    }
   });
 
   test('should submit the form successfully with valid data', async ({ page }) => {
@@ -37,6 +65,21 @@ test.describe('Contact Form', () => {
 
     const successMessage = page.locator('text=Thank you for your message! I will contact you soon.');
     await expect(successMessage).toBeVisible({ timeout: 10000 });
+    
+    // Pause for 1 second before taking screenshot
+    console.log('Waiting 1 second before taking screenshot for successful form submission...');
+    await page.waitForTimeout(1000);
+    
+    // Take a screenshot and save it
+    try {
+      const screenshotFileName = 'contact-form-success.png';
+      const screenshotPath = path.join(screenshotDir, screenshotFileName);
+      console.log(`Taking screenshot: ${screenshotPath}`);
+      await page.screenshot({ path: screenshotPath, fullPage: false });
+      console.log(`Screenshot saved successfully: ${screenshotFileName}`);
+    } catch (err) {
+      console.error(`Error taking screenshot for successful form submission: ${err.message}`);
+    }
   });
 
   test('should display error for empty Full Name field', async ({ page }) => {
@@ -45,6 +88,21 @@ test.describe('Contact Form', () => {
     await page.getByRole('button', { name: 'Send message' }).click();
     const errorMessage = page.locator('text=Name is required.');
     await expect(errorMessage).toBeVisible();
+    
+    // Pause for 1 second before taking screenshot
+    console.log('Waiting 1 second before taking screenshot for empty name error...');
+    await page.waitForTimeout(1000);
+    
+    // Take a screenshot and save it
+    try {
+      const screenshotFileName = 'contact-form-empty-name-error.png';
+      const screenshotPath = path.join(screenshotDir, screenshotFileName);
+      console.log(`Taking screenshot: ${screenshotPath}`);
+      await page.screenshot({ path: screenshotPath, fullPage: false });
+      console.log(`Screenshot saved successfully: ${screenshotFileName}`);
+    } catch (err) {
+      console.error(`Error taking screenshot for empty name error: ${err.message}`);
+    }
   });
 
   test('should display error for empty Email field', async ({ page }) => {
@@ -53,6 +111,21 @@ test.describe('Contact Form', () => {
     await page.getByRole('button', { name: 'Send message' }).click();
     const errorMessage = page.locator('text=Email is required.');
     await expect(errorMessage).toBeVisible();
+    
+    // Pause for 1 second before taking screenshot
+    console.log('Waiting 1 second before taking screenshot for empty email error...');
+    await page.waitForTimeout(1000);
+    
+    // Take a screenshot and save it
+    try {
+      const screenshotFileName = 'contact-form-empty-email-error.png';
+      const screenshotPath = path.join(screenshotDir, screenshotFileName);
+      console.log(`Taking screenshot: ${screenshotPath}`);
+      await page.screenshot({ path: screenshotPath, fullPage: false });
+      console.log(`Screenshot saved successfully: ${screenshotFileName}`);
+    } catch (err) {
+      console.error(`Error taking screenshot for empty email error: ${err.message}`);
+    }
   });
 
   test('should display error for invalid Email format', async ({ page }) => {
@@ -66,6 +139,21 @@ test.describe('Contact Form', () => {
     await page.getByRole('button', { name: 'Send message' }).click();
     const errorMessage = page.locator('text=Email format is not valid.');
     await expect(errorMessage).toBeVisible();
+    
+    // Pause for 1 second before taking screenshot
+    console.log('Waiting 1 second before taking screenshot for invalid email format error...');
+    await page.waitForTimeout(1000);
+    
+    // Take a screenshot and save it
+    try {
+      const screenshotFileName = 'contact-form-invalid-email-format.png';
+      const screenshotPath = path.join(screenshotDir, screenshotFileName);
+      console.log(`Taking screenshot: ${screenshotPath}`);
+      await page.screenshot({ path: screenshotPath, fullPage: false });
+      console.log(`Screenshot saved successfully: ${screenshotFileName}`);
+    } catch (err) {
+      console.error(`Error taking screenshot for invalid email format: ${err.message}`);
+    }
   });
 
   test('should display error for empty Message field', async ({ page }) => {
@@ -74,5 +162,20 @@ test.describe('Contact Form', () => {
     await page.getByRole('button', { name: 'Send message' }).click();
     const errorMessage = page.locator('text=Message is required.');
     await expect(errorMessage).toBeVisible();
+    
+    // Pause for 1 second before taking screenshot
+    console.log('Waiting 1 second before taking screenshot for empty message error...');
+    await page.waitForTimeout(1000);
+    
+    // Take a screenshot and save it
+    try {
+      const screenshotFileName = 'contact-form-empty-message-error.png';
+      const screenshotPath = path.join(screenshotDir, screenshotFileName);
+      console.log(`Taking screenshot: ${screenshotPath}`);
+      await page.screenshot({ path: screenshotPath, fullPage: false });
+      console.log(`Screenshot saved successfully: ${screenshotFileName}`);
+    } catch (err) {
+      console.error(`Error taking screenshot for empty message error: ${err.message}`);
+    }
   });
 });

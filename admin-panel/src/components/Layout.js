@@ -291,7 +291,7 @@ const Layout = ({ children }) => {
         <Divider />
         <Box sx={{ mt: 'auto', mb: 2, mx: 2 }}>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 2, textAlign: 'center' }}>
-            © {new Date().getFullYear()} Kelvin Calcano
+            © {new Date().getFullYear()} Kelvin Calcaño
           </Typography>
         </Box>
       </Drawer>

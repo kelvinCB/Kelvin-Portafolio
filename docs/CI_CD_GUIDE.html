@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI/CD Pipeline Documentation</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"; line-height: 1.6; color: #333; max-width: 800px; margin: 20px auto; padding: 0 20px; }
+        h1, h2, h3, h4 { font-weight: 600; margin-top: 24px; margin-bottom: 16px; border-bottom: 1px solid #eaecef; padding-bottom: .3em; }
+        code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; background-color: #f6f8fa; padding: .2em .4em; margin: 0; font-size: 85%; border-radius: 3px; }
+        pre { background-color: #f6f8fa; padding: 16px; overflow: auto; border-radius: 3px; }
+        pre code { padding: 0; margin: 0; font-size: 100%; background-color: transparent; border: 0; }
+        ul, ol { padding-left: 2em; }
+        li { margin-bottom: 8px; }
+        strong { font-weight: 600; }
+        a { color: #0366d6; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>CI/CD Pipeline Documentation with GitHub Actions</h1>
+    <p>This document outlines the Continuous Integration (CI) pipeline implemented for this project using GitHub Actions. The goal of this pipeline is to automate the testing process to ensure code quality and stability.</p>
+    <h2>1. Overview</h2>
+    <p>The CI pipeline automatically runs a series of checks and tests every time code is pushed to the <code>main</code> branch or a pull request is created against it. This helps catch bugs early and ensures that new changes don't break existing functionality.</p>
+    <p>We chose <strong>GitHub Actions</strong> for its seamless integration with the GitHub repository, ease of setup, and generous free tier for public and private projects.</p>
+    <h2>2. Workflow Configuration</h2>
+    <p>The entire pipeline is defined in a single YAML file located at:</p>
+    <ul>
+        <li><strong><code>.github/workflows/ci.yml</code></strong></li>
+    </ul>
+    <p>This file is the "source of truth" for our CI process.</p>
+    <h2>3. Pipeline Triggers</h2>
+    <p>The workflow is configured to run automatically on two specific events:</p>
+    <ul>
+        <li><strong><code>push</code> to <code>main</code>:</strong> Every time a commit is pushed to the <code>main</code> branch.</li>
+        <li><strong><code>pull_request</code> to <code>main</code>:</strong> Every time a new pull request is opened that targets the <code>main</code> branch.</li>
+    </ul>
+    <h2>4. Pipeline Jobs</h2>
+    <p>The workflow consists of three distinct jobs that run in a specific order.</p>
+    <h3>Job 1: <code>backend-tests</code></h3>
+    <p>This job is responsible for testing the backend application.</p>
+    <ul>
+        <li><strong>Environment:</strong> Runs on an <code>ubuntu-latest</code> virtual machine.</li>
+        <li><strong>Steps:</strong>
+            <ol>
+                <li>Checks out the latest version of the repository code.</li>
+                <li>Sets up Node.js (version 18.x).</li>
+                <li>Navigates to the <code>/backend</code> directory.</li>
+                <li>Installs all necessary npm dependencies using <code>npm install</code>.</li>
+                <li>Runs the backend unit tests using the <code>npm test</code> command (which executes Jest).</li>
+            </ol>
+        </li>
+    </ul>
+    <h3>Job 2: <code>frontend-tests</code></h3>
+    <p>This job runs in parallel with the backend tests and is responsible for testing the frontend React application.</p>
+    <ul>
+        <li><strong>Environment:</strong> Runs on an <code>ubuntu-latest</code> virtual machine.</li>
+        <li><strong>Steps:</strong>
+            <ol>
+                <li>Checks out the latest version of the repository code.</li>
+                <li>Sets up Node.js (version 18.x).</li>
+                <li>Installs all necessary npm dependencies from the root directory using <code>npm install</code>.</li>
+                <li>Runs the frontend unit tests using <code>npm test -- --watchAll=false</code>.</li>
+            </ol>
+        </li>
+    </ul>
+    <h3>Job 3: <code>e2e-tests</code></h3>
+    <p>This job is crucial for testing the application from end to end. It only runs if <strong>both <code>backend-tests</code> and <code>frontend-tests</code> complete successfully</strong>.</p>
+    <ul>
+        <li><strong>Environment:</strong> Runs on an <code>ubuntu-latest</code> virtual machine.</li>
+        <li><strong>Steps:</strong>
+            <ol>
+                <li>Checks out the latest version of the repository code.</li>
+                <li>Sets up Node.js (version 18.x).</li>
+                <li>Installs all necessary npm dependencies.</li>
+                <li>Installs the Playwright browsers and their system dependencies using <code>npx playwright install --with-deps</code>.</li>
+                <li>Runs the end-to-end tests using <code>npx playwright test --headed --project=chromium</code>, respecting the preference for visual testing in Chromium.</li>
+            </ol>
+        </li>
+    </ul>
+    <h2>5. Environment Variables & Secrets</h2>
+    <p>For the tests to run correctly in the automated GitHub Actions environment, certain sensitive variables (secrets) must be configured. These are stored securely in GitHub and are not exposed in the code.</p>
+    <p>Navigate to your repository's <strong>Settings > Secrets and variables > Actions</strong> to configure the following:</p>
+    <ul>
+        <li><strong><code>MONGODB_URI_TEST</code></strong>: The connection string for a <strong>test database</strong>. It is highly recommended to use a separate database for testing to avoid interfering with development or production data.</li>
+        <li><strong><code>JWT_SECRET_TEST</code></strong>: A long, random string used for signing JSON Web Tokens during tests.</li>
+    </ul>
+    <p>These secrets are injected into the jobs as environment variables, as defined in the <code>ci.yml</code> file.</p>
+    <h2>6. How to Use and Monitor</h2>
+    <ol>
+        <li><strong>Commit and Push:</strong> Simply <code>git push</code> your changes to the <code>main</code> branch or open a pull request.</li>
+        <li><strong>Check Status:</strong> Go to the <strong>"Actions"</strong> tab in your GitHub repository. You will see your workflow running.</li>
+        <li><strong>Review Results:</strong> You can click on the workflow run to see the detailed progress of each job. A green checkmark (✅) indicates success, while a red cross (❌) indicates a failure. If a job fails, you can inspect the logs to diagnose the error.</li>
+    </ol>
+    <hr>
+    <p><em>This documentation helps maintain a clear understanding of the project's automated testing strategy.</em></p>
+</body>
+</html>

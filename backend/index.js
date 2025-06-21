@@ -20,7 +20,7 @@ const messageRoutes = require('./routes/messageRoutes');
 
 // Initialize app
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.BACKEND_PORT || process.env.PORT || 5000;
 
 // Middlewares de seguridad y formateo
 app.use(cors());
@@ -225,10 +225,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Export test app
-const server = app.listen(PORT, () => {
-  console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
-  console.log(`Modo: ${process.env.NODE_ENV || 'development'}`);
-});
+// Start the server only when this file is run directly (e.g., `node index.js`)
+// This allows the server to be started for E2E tests, but not for Jest unit tests.
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
+    console.log(`Modo: ${process.env.NODE_ENV || 'development'}`);
+  });
+}
 
-module.exports = { app, server };
+// Export the app for testing purposes
+module.exports = { app };
