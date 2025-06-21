@@ -20,7 +20,7 @@ const messageRoutes = require('./routes/messageRoutes');
 
 // Initialize app
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.BACKEND_PORT || process.env.PORT || 5000;
 
 // Middlewares de seguridad y formateo
 app.use(cors());

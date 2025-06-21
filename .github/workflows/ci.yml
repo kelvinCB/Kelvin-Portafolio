@@ -86,7 +86,8 @@ jobs:
       # Provide environment variables for the E2E tests
       # These should be configured in GitHub Secrets
       CI: true
-      PORT: 3000
+      PORT: 3000             # Frontend port
+      BACKEND_PORT: 5000     # Backend port (different from frontend)
       NODE_ENV: 'test'
       MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST || 'mongodb://localhost:27017/testdb' }}
       JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test-secret' }}
@@ -113,8 +114,11 @@ jobs:
         run: npm ci
 
       - name: Install backend dependencies
-        run: npm ci
-        working-directory: ./backend
+        run: |
+          cd ./backend
+          npm ci --no-optional
+          npm list bcryptjs || echo "bcryptjs not found"
+          ls -la node_modules/bcryptjs || echo "bcryptjs directory not found"
 
       # 4. Install Playwright browsers and dependencies
       - name: Install Playwright browsers
