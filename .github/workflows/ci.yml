@@ -94,6 +94,8 @@ jobs:
       ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY_TEST || 'a-dummy-encryption-key-for-testing-!@#$' }}
       EMAIL_USER: ${{ secrets.EMAIL_USER_TEST || 'test@example.com' }}
       EMAIL_PASS: ${{ secrets.EMAIL_PASS_TEST || 'dummypassword' }}
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL_TEST || 'admin@example.com' }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD_TEST || 'password123' }}
 
     steps:
       # 1. Check out the repository code
