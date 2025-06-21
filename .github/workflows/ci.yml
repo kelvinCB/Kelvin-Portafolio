@@ -82,6 +82,19 @@ jobs:
     needs: [backend-tests, frontend-tests]
     runs-on: ubuntu-latest
 
+    env:
+      # Provide environment variables for the E2E tests
+      # These should be configured in GitHub Secrets
+      CI: true
+      PORT: 3000
+      NODE_ENV: 'test'
+      MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST || 'mongodb://localhost:27017/testdb' }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test-secret' }}
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY_TEST || 'sk_test_dummykey' }}
+      ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY_TEST || 'a-dummy-encryption-key-for-testing-!@#$' }}
+      EMAIL_USER: ${{ secrets.EMAIL_USER_TEST || 'test@example.com' }}
+      EMAIL_PASS: ${{ secrets.EMAIL_PASS_TEST || 'dummypassword' }}
+
     steps:
       # 1. Check out the repository code
       - name: Check out repository
@@ -109,16 +122,4 @@ jobs:
       - name: Run E2E tests (Playwright)
         # Runs tests in headless mode on Chromium for CI
         run: npx playwright test --project=chromium
-        env:
-          # Provide environment variables for the E2E tests
-          # These should be configured in GitHub Secrets
-          CI: true
-          PORT: 3000
-          NODE_ENV: 'test'
-          MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST || 'mongodb://localhost:27017/testdb' }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test-secret' }}
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY_TEST || 'sk_test_dummykey' }}
-          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY_TEST || 'a-dummy-encryption-key-for-testing-!@#$' }}
-          EMAIL_USER: ${{ secrets.EMAIL_USER_TEST || 'test@example.com' }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS_TEST || 'dummypassword' }}
 
