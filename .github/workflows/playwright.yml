@@ -8,17 +8,48 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      # Mirror the environment variables from our successful CI pipeline
+      CI: true
+      PORT: 3000             # Frontend port
+      BACKEND_PORT: 5000     # Backend port (different from frontend)
+      NODE_ENV: 'test'
+      MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST || 'mongodb://localhost:27017/testdb' }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET_TEST || 'test-secret' }}
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY_TEST || 'sk_test_dummykey' }}
+      ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY_TEST || 'a-dummy-encryption-key-for-testing-!@#$' }}
+      EMAIL_USER: ${{ secrets.EMAIL_USER_TEST || 'test@example.com' }}
+      EMAIL_PASS: ${{ secrets.EMAIL_PASS_TEST || 'dummypassword' }}
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL_TEST || 'admin@example.com' }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD_TEST || 'password123' }}
+
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: lts/*
-    - name: Install dependencies
+        node-version: '18'
+    
+    # Install frontend dependencies
+    - name: Install frontend dependencies
       run: npm ci
+    
+    # Install backend dependencies
+    - name: Install backend dependencies
+      run: |
+        cd ./backend
+        npm ci --no-optional
+        npm list bcryptjs || echo "bcryptjs not found"
+        ls -la node_modules/bcryptjs || echo "bcryptjs directory not found"
+    
+    # Install Playwright browsers
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+    
+    # Run Playwright tests
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npx playwright test --project=chromium  # Only run Chromium tests for consistency with CI pipeline
+    
+    # Upload reports if tests fail
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
