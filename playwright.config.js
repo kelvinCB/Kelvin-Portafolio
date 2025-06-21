@@ -89,11 +89,11 @@ export default defineConfig({
       stderr: 'pipe',
     },
     {
-      command: 'node index.js', // Command relative to the new cwd (backend directory)
+      command: 'npm start', // Use npm start for consistency
       port: 5000,    // Port to poll for backend readiness
       reuseExistingServer: !process.env.CI,
       timeout: 60 * 1000, // 1 minute for backend
-      cwd: 'c:\\Users\\kelvi\\CascadeProjects\\portfolio-ejemplo\\backend', // Change cwd to backend directory
+      cwd: './backend', // Use relative path for cross-platform compatibility
       stdout: 'pipe',
       stderr: 'pipe',
     }
