@@ -78,14 +78,7 @@ jobs:
 
   # Job for running Playwright E2E tests
   e2e-tests:
-    # Only run E2E tests when:
-    # 1. The commit message contains [e2e]
-    # 2. OR when pushing to main/master branch
-    # 3. OR when manually triggered
-    if: |
-      contains(github.event.head_commit.message, '[e2e]') ||
-      github.ref == 'refs/heads/main' ||
-      github.ref == 'refs/heads/master'
+    # Always run E2E tests when backend and frontend tests pass
     needs: [backend-tests, frontend-tests]
     runs-on: ubuntu-latest
 

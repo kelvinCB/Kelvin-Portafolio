@@ -53,12 +53,9 @@ This job runs in parallel with the backend tests and is responsible for testing 
 
 ### Job 3: `e2e-tests`
 
-This job is crucial for testing the application from end to end. It only runs if **both `backend-tests` and `frontend-tests` complete successfully** AND one of these conditions is met:
+This job is crucial for testing the application from end to end. It runs automatically on every commit after **both `backend-tests` and `frontend-tests` complete successfully**.
 
-- The commit message contains the tag `[e2e]`
-- The push is to the `main` or `master` branch
-
-This conditional execution allows developers to control when the full E2E test suite runs.
+By including E2E tests in every CI run, we ensure all code changes are thoroughly validated against real application behavior.
 
 - **Environment:** Runs on an `ubuntu-latest` virtual machine.
 - **Port Configuration:**
@@ -97,19 +94,15 @@ These variables are injected into the jobs as environment variables, as defined 
 
 ## 6. How to Use and Monitor
 
-1. **Regular Development:**
+1. **Development Workflow:**
    ```bash
    git commit -m "feat: add new feature"
    git push origin branch-name
    ```
-   This will run only backend and frontend unit tests (faster CI pipeline).
+   This will trigger the complete CI pipeline including unit tests and E2E tests.
 
-2. **When You Need E2E Tests:**
-   ```bash
-   git commit -m "[e2e] feat: add new feature"
-   git push origin branch-name
-   ```
-   This will run the complete test suite including E2E tests.
+2. **Monitor CI Results:**
+   After pushing your changes, the CI pipeline will automatically run backend tests, frontend tests, and E2E tests in sequence.
 
 3. **Check Status:** Go to the **"Actions"** tab in your GitHub repository to monitor your workflows.
 
