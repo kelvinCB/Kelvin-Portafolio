@@ -103,8 +103,8 @@ jobs:
 
       # 5. Run Playwright E2E tests
       - name: Run E2E tests (Playwright)
-        # Runs tests in headed mode and only on Chromium as per user preference
-        run: npx playwright test --headed --project=chromium
+        # Runs tests in headless mode on Chromium for CI
+        run: npx playwright test --project=chromium
         env:
           # Provide environment variables for the E2E tests
           # These should be configured in GitHub Secrets
