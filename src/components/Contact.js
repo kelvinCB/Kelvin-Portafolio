@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaLinkedinIn, FaGithub, FaTwitter, FaFacebookF } from 'react-icons/fa';
+import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaLinkedinIn, FaGithub, FaInstagram } from 'react-icons/fa';
 import '../styles/Contact.css';
 
 const Contact = ({ id }) => {
@@ -185,10 +185,9 @@ const Contact = ({ id }) => {
               </div>
               
               <div className="contact-social">
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaLinkedinIn /></a>
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaGithub /></a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaTwitter /></a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-link"><FaFacebookF /></a>
+                <a href="https://www.linkedin.com/in/kelvin-calcano-qa-automation/" target="_blank" rel="noopener noreferrer" className="social-link"><FaLinkedinIn /></a>
+                <a href="https://github.com/kelvinCB" target="_blank" rel="noopener noreferrer" className="social-link"><FaGithub /></a>
+                <a href="https://instagram.com/kelvinr02" target="_blank" rel="noopener noreferrer" className="social-link"><FaInstagram /></a>
               </div>
             </div>
           </div>

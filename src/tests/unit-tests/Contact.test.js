@@ -153,7 +153,7 @@ describe('Contact Component', () => {
 
   it('renders social links', () => {
     render(<Contact />);
-    expect(screen.getAllByRole('link').length).toBeGreaterThanOrEqual(4); // Social + email/phone links
+    expect(screen.getAllByRole('link').length).toBeGreaterThanOrEqual(3); // Social + email/phone links
   });
 });
 
