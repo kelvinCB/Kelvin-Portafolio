@@ -12,20 +12,14 @@ const Footer = () => {
         
 
         <div className="social-links">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon">
-            <FaFacebookF />
-          </a>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="social-icon">
-            <FaTwitter />
-          </a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+          <a href="https://linkedin.com/in/kelvin-calcano-qa-automation/" target="_blank" rel="noopener noreferrer" className="social-icon">
             <FaLinkedinIn />
           </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon">
-            <FaInstagram />
-          </a>
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+          <a href="https://github.com/kelvinCB" target="_blank" rel="noopener noreferrer" className="social-icon">
             <FaGithub />
+          </a>
+          <a href="https://instagram.com/kelvinr02" target="_blank" rel="noopener noreferrer" className="social-icon">
+            <FaInstagram />
           </a>
         </div>
       </div>

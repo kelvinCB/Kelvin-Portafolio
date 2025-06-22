@@ -20,11 +20,9 @@ describe('Footer', () => {
     const hrefs = links.map(link => link.getAttribute('href'));
     expect(hrefs).toEqual(
       expect.arrayContaining([
-        'https://facebook.com',
-        'https://twitter.com',
-        'https://linkedin.com',
-        'https://instagram.com',
-        'https://github.com'
+        'https://linkedin.com/in/kelvin-calcano-qa-automation/',
+        'https://github.com/kelvinCB',
+        'https://instagram.com/kelvinr02'
       ])
     );
   });
