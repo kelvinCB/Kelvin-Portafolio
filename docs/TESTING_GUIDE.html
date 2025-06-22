@@ -1,60 +1,4 @@
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testing Guide</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            color: #333;
-        }
-        h1, h2, h3 {
-            margin-top: 24px;
-            margin-bottom: 16px;
-            font-weight: 600;
-            line-height: 1.25;
-        }
-        h1 { font-size: 2em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
-        h2 { font-size: 1.5em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
-        h3 { font-size: 1.25em; }
-        code {
-            background-color: rgba(27, 31, 35, 0.05);
-            border-radius: 3px;
-            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-            padding: 0.2em 0.4em;
-        }
-        pre code {
-            display: block;
-            padding: 16px;
-            overflow: auto;
-            line-height: 1.45;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-bottom: 16px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px 13px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-    </style>
-</head>
-<body>
-    <pre><code class="language-markdown"># Guía para Ejecutar Pruebas Unitarias (Jest)
+<pre><code class="language-markdown"># Guía para Ejecutar Pruebas Unitarias (Jest)
 
 Esta guía te ayudará a ejecutar las pruebas unitarias en los proyectos de frontend y backend.
 
@@ -161,7 +105,8 @@ Después de ejecutar las pruebas, puedes ver un reporte detallado:</p>
 <th>Escenarios de Prueba (Resumen)</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>auth.test.js</td>
 <td>backend/middleware/auth.test.js</td>
 <td>Backend</td>
@@ -257,7 +202,14 @@ Después de ejecutar las pruebas, puedes ver un reporte detallado:</p>
 <td>E2E</td>
 <td>- Test &quot;should navigate to Contact Me section when About Me Contact button is clicked&quot;: Verifica que al hacer click en el botón Contact me del About Me se navega a la sección de contacto. (1) <br> - Test &quot;should show download toast and initiate CV download&quot;: Verifica la descarga del CV y la aparición/desaparición del mensaje toast. (1)</td>
 </tr>
-</tbody></table>
+<tr>
+<td>experience-section.spec.js</td>
+<td>tests/e2e-tests/experience-section.spec.js</td>
+<td>E2E</td>
+<td>- Visualización de la sección de experiencia y su título. (1) <br> - Verificación del número correcto de elementos de experiencia (5). (1) <br> - Verificación de los detalles del primer elemento de experiencia (título, empresa, período, descripción). (1)</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Notas:</strong></p>
 <ul>
 <li>Los archivos <code>auth.test.js</code> y <code>security.test.js</code> cubren middleware del backend.</li>
@@ -266,6 +218,3 @@ Después de ejecutar las pruebas, puedes ver un reporte detallado:</p>
 <li>Puedes ejecutar un test suite específico usando <code>npm test -- &lt;ruta/al/archivo.test.js&gt; --watchAll=false</code>.</li>
 <li>Para las pruebas de API, asegúrate de que <code>MONGODB_URI_TEST</code> esté configurado en el archivo <code>.env</code>.</li>
 </ul>
-
-</body>
-</html>

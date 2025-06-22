@@ -3,25 +3,37 @@ import { render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Experience from '../../components/Experience';
 
-// Datos de experiencia definidos en el componente, para comparación
+// Updated experience data for comparison
 const experiencesData = [
   {
-    title: 'QA Automation Engineer',
-    company: 'Interfell',
-    period: '2022 - Present',
-    desc: 'Test automation for web and mobile applications using Cypress, Playwright, Selenium, Appium, and Postman. Focused on quality and continuous improvement.',
+    title: 'Sr QA Automation Engineer',
+    company: 'Blizzard Entertainment, Irvine, CA (Remote)',
+    period: 'Jul 2024 – Present',
+    desc: 'Designed and implemented over 100 automated test scripts for a high-traffic gaming platform, focusing on SOAP and REST API testing. Covered critical backend services including: DirectGrant, SplitPayment, DiscountForTitles, DynamicBundle, RevokeEntitlements, ChargeBack, Refund, and more. Ensured robustness and reliability of core game mechanics and financial transactions through comprehensive automated validation.',
+  },
+  {
+    title: 'QA Automation Engineer (Blockchain)',
+    company: 'Taringa, Uruguay (Remote)',
+    period: 'Sep 2022 – Apr 2024',
+    desc: 'Spearheaded blockchain-oriented test automation, integrating Web3Auth wallets and verifying transactions. Created E2E scripts for AI image generation, crypto economy, user content, and payments, monitoring quality across 10+ mobile devices. Authored documentation and built a multi-platform automation framework.',
   },
   {
     title: 'QA Automation Engineer',
-    company: 'CENIT',
-    period: '2021 - 2022',
-    desc: 'Design and execution of automated tests for software projects, ensuring quality in every delivery.',
+    company: 'Baptist Health, Florida, USA (Remote)',
+    period: 'Jul 2022 – Jun 2023',
+    desc: 'Optimized QA processes for hospitals and pharmacies with regression, smoke, and sanity testing in an Agile framework. Conducted failure analysis and engaged in the full project lifecycle, from requirements analysis to risk identification, ensuring comprehensive quality.',
   },
   {
-    title: 'QA Tester',
-    company: 'Interfell',
-    period: '2020 - 2021',
-    desc: 'Execution of functional tests and bug reporting in web and mobile applications.',
+    title: 'QA Automation MID',
+    company: 'Popular Bank, Dominican Republic (Hybrid)',
+    period: 'Apr 2021 – Jul 2022',
+    desc: 'Deployed Appium from scratch for native Android/iOS testing, increasing test speed by 4x. Designed and implemented a strategic testing plan, established an integrated QA environment, and implemented a CI system to enhance development pipeline efficiency.',
+  },
+  {
+    title: 'Software Test Engineer',
+    company: 'Metaconxept, Dominican Republic (On-Site)',
+    period: 'Jul 2019 – Apr 2021',
+    desc: 'Implemented a modern, low-code automation tool and migrated old scripts to elevate quality for a banking project. Collaborated with cross-functional teams to review specifications and ensure alignment with requirements and Agile methodologies.',
   },
 ];
 
@@ -45,8 +57,7 @@ describe('Experience Component', () => {
   });
 
   test('renders the correct number of experience jobs', () => {
-    const jobElements = screen.getAllByRole('heading', { level: 3 });
-    // Cada 'experience-job' tiene un h3 para el título del trabajo
+    const jobElements = screen.getAllByRole('article');
     expect(jobElements.length).toBe(experiencesData.length);
   });
 
@@ -59,9 +70,9 @@ describe('Experience Component', () => {
       const jobElement = jobElements[index];
       const utils = within(jobElement);
 
-      expect(utils.getByRole('heading', { name: jobData.title })).toBeInTheDocument();
+      expect(utils.getByRole('heading', { name: jobData.title, level: 3 })).toBeInTheDocument();
       expect(utils.getByText(jobData.company)).toBeInTheDocument();
-      expect(utils.getByText(`(${jobData.period})`)).toBeInTheDocument();
+      expect(utils.getByText(jobData.period)).toBeInTheDocument(); // Period is no longer in parentheses
       expect(utils.getByText(jobData.desc)).toBeInTheDocument();
     });
   });
