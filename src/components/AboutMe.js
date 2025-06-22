@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaDownload, FaCode, FaBug, FaMobile, FaTools } from 'react-icons/fa';
+import { FaDownload, FaDesktop, FaNetworkWired, FaMobile, FaCogs } from 'react-icons/fa';
 import '../styles/AboutMe.css';
 
 const AboutMe = ({ id }) => {
@@ -53,26 +53,27 @@ const AboutMe = ({ id }) => {
         </div>
       </div>
       
+            {/* Skills Highlights */}
       <div className="skills-highlights">
           <div className="skill-card">
-            <div className="skill-icon"><FaCode /></div>
-            <h3>Automation Scripts</h3>
-            <p>Development of effective scripts for automated testing</p>
+            <div className="skill-icon"><FaDesktop /></div>
+            <h3>UI Web Automation</h3>
+            <p>E2E browser testing with Playwright & Selenium</p>
           </div>
           <div className="skill-card">
-            <div className="skill-icon"><FaBug /></div>
-            <h3>Bug Detection</h3>
-            <p>Proactive identification of bugs and quality issues</p>
+            <div className="skill-icon"><FaNetworkWired /></div>
+            <h3>API Testing</h3>
+            <p>Automated RESTful API validation with Postman & RestAssured</p>
           </div>
           <div className="skill-card">
             <div className="skill-icon"><FaMobile /></div>
-            <h3>Mobile Testing</h3>
-            <p>Thorough testing on iOS and Android applications</p>
+            <h3>Mobile Automation</h3>
+            <p>Cross-platform mobile tests using Appium & Maestro Studio</p>
           </div>
           <div className="skill-card">
-            <div className="skill-icon"><FaTools /></div>
-            <h3>CI/CD Pipeline</h3>
-            <p>Test integration in continuous integration pipelines</p>
+            <div className="skill-icon"><FaCogs /></div>
+            <h3>CI/CD & DevOps</h3>
+            <p>Integration in GitHub Actions & Jenkins</p>
           </div>
         </div>
     </section>
