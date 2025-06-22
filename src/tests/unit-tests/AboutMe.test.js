@@ -50,10 +50,10 @@ describe('AboutMe Component', () => {
 
   it('renders all skill cards with icons and titles', () => {
     const { container } = render(<AboutMe />);
-    expect(screen.getByRole('heading', { name: /Automation Scripts/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /Bug Detection/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /Mobile Testing/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /CI\/CD Pipeline/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /UI Web Automation/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /API Testing/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Mobile Automation/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /CI\/CD & DevOps/i })).toBeInTheDocument();
     // Check for the skill-card divs directly
     const skillCards = container.querySelectorAll('.skill-card');
     expect(skillCards.length).toBe(4);
