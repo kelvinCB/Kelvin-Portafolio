@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Experience from '../components/Experience';
+import Experience from '../../components/Experience';
 
 // Datos de experiencia definidos en el componente, para comparación
 const experiencesData = [

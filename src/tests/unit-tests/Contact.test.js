@@ -6,7 +6,7 @@ global.XMLHttpRequest = jest.fn(() => mockXHR_instance);
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import Contact from '../components/Contact';
+import Contact from '../../components/Contact';
 
 describe('Contact Component', () => {
   beforeEach(() => {

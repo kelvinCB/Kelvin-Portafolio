@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import DonateButton from '../components/DonateButton';
+import DonateButton from '../../components/DonateButton';
 
 // Mockear window.alert
 global.alert = jest.fn();
@@ -21,8 +21,7 @@ afterAll(() => {
 // Mockear fetch
 global.fetch = jest.fn();
 
-// Mockear el módulo de imagen para que Jest no intente cargarlo
-jest.mock('../resources/donation.png', () => 'donation.png');
+
 
 describe('DonateButton Component', () => {
   beforeEach(() => {
@@ -39,7 +38,7 @@ describe('DonateButton Component', () => {
       expect(floatButton).toBeInTheDocument();
       const img = screen.getByAltText('Donate');
       expect(img).toBeInTheDocument();
-      expect(img).toHaveAttribute('src', 'donation.png'); // Verifica el mock
+      expect(img).toHaveAttribute('src', '/resources/donation.png');
     });
 
     test('modal is initially closed', () => {

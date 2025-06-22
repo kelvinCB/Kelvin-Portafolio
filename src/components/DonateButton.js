@@ -45,7 +45,7 @@ const DonateButton = () => {
         aria-label="Make a donation"
       >
         <img 
-          src={require('../resources/donation.png')} 
+          src="/resources/donation.png" 
           alt="Donate" 
           style={{ width: '80px', height: 'auto', borderRadius: '40px' }}
         />

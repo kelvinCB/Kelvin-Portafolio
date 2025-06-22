@@ -29,12 +29,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --testPathIgnorePatterns=[] --watchAll=false",
+    "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
-    "test:e2e": "npx playwright test",
-    "test:e2e:dev": "npx playwright test",
-    "test:e2e:prod": "cross-env TARGET_ENV=production npx playwright test",
-    "test:e2e:headed": "npx playwright test --headed",
+    "test:e2e": "npx playwright test --headed --project=chromium",
+    "test:e2e:dev": "npx playwright test --headed --project=chromium",
+    "test:e2e:prod": "cross-env TARGET_ENV=production npx playwright test --headed --project=chromium",
+    "test:e2e:headed": "npx playwright test --headed --project=chromium",
     "test:e2e:prod:headed": "cross-env TARGET_ENV=production npx playwright test --headed --project=chromium"
   },
   "eslintConfig": {
@@ -59,6 +59,7 @@
     "@playwright/test": "^1.52.0",
     "@types/node": "^22.15.24",
     "cross-env": "^7.0.3",
-    "markdown-to-html-cli": "^5.0.3"
+    "markdown-to-html-cli": "^5.0.3",
+    "marked": "^15.0.12"
   }
 }
