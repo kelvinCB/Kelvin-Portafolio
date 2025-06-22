@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaDownload, FaCode, FaBug, FaMobile, FaTools } from 'react-icons/fa';
 import '../styles/AboutMe.css';
 
 const AboutMe = ({ id }) => {
-  const downloadCV = () => {
-    // In a real scenario, this would point to an actual PDF
-    alert('CV downloaded (simulation)');
-    // Alternative: window.open('/path-to-your-cv.pdf', '_blank');
-  };
+  const [showDownloadMsg, setShowDownloadMsg] = useState(false);
+  // downloadCV function removed – anchor tag handles download directly
+
+  useEffect(() => {
+    if (showDownloadMsg) {
+      const timer = setTimeout(() => setShowDownloadMsg(false), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [showDownloadMsg]);
 
   return (
     <section id={id} className="about-section">
@@ -18,24 +22,32 @@ const AboutMe = ({ id }) => {
           <h3 className="role-title">Senior QA Automation Engineer</h3>
           
           <p className="hero-description">
-            Engineer specialized in automation testing for web and mobile applications, 
-            with experience in Cypress, Playwright, Selenium, Appium, and Postman. 
-            Passionate about quality and continuous process improvement.
+          With over 5 years of experience in QA Automation, I specialize in <strong>Appium</strong> for mobile testing, and <strong>Selenium</strong> and <strong>Playwright</strong> for web, using <strong>Java</strong> as my primary programming language. I have a deep understanding of <strong>E2E</strong>, <strong>functional</strong> and <strong>API</strong> testing, and I enjoy transforming quality challenges into efficient solutions, ensuring that products not only work but also exceed user expectations.
           </p>
           
           <div className="buttons-container">
-            <button className="download-cv-btn" onClick={downloadCV}>
+            <a
+              className="download-cv-btn"
+              href="/resources/QA-Automation-Kelvin-Calcano-2025.pdf"
+              download
+              onClick={() => setShowDownloadMsg(true)}
+            >
               <FaDownload /> Download my CV
-            </button>
+            </a>
             <a href="#contact" className="contact-btn">Contact me</a>
           </div>
+          {showDownloadMsg && (
+            <div className="download-toast">
+              CV downloaded! Please check your downloads folder.
+            </div>
+          )}
         </div>
         
         <div className="profile-container">
           <div className="profile-bg"></div>
           <img 
             className="profile-img" 
-            src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80" 
+            src="/resources/slack-profile-picture.jpg" 
             alt="Kelvin Calcaño QA Automation" 
           />
         </div>

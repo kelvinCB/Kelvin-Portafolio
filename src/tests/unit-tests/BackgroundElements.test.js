@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import BackgroundElements from '../components/BackgroundElements';
+import BackgroundElements from '../../components/BackgroundElements';
 
 describe('BackgroundElements Component', () => {
   test('renders the main background-elements container', () => {

@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
-import App from './App';
+import App from '../../App';
 // Ensure App is imported if not already
-// import App from './App'; 
+// import App from '../../App'; 
 
 test('renders header with logo text "Kelvin" and "QA"', () => {
   render(<App />);

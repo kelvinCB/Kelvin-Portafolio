@@ -62,4 +62,41 @@ test.describe('About Me Section E2E Tests', () => {
       console.error(`Error taking screenshot for About contact button navigation: ${err.message}`);
     }
   });
+
+  test('should show download toast and initiate CV download', async ({ page }) => {
+    // Locator for the download link
+    const downloadLink = page.getByRole('link', { name: /Download my CV/i });
+    await expect(downloadLink).toBeVisible();
+
+    // Start waiting for the download event BEFORE clicking
+    const downloadPromise = page.waitForEvent('download');
+
+    // Click the download link
+    await downloadLink.click();
+
+    // Wait for the download to start
+    const download = await downloadPromise;
+
+    // Assert that the download is for the correct file
+    expect(download.suggestedFilename()).toBe('QA-Automation-Kelvin-Calcano-2025.pdf');
+
+    // Check if the toast message appears
+    const toast = page.getByText(/CV downloaded! Please check your downloads folder./i);
+    await expect(toast).toBeVisible();
+
+    // Take a screenshot of the toast
+    try {
+      const screenshotFileName = 'cv-download-toast-visible.png';
+      const screenshotPath = path.join(screenshotDir, screenshotFileName);
+      console.log(`Taking screenshot: ${screenshotPath}`);
+      await page.screenshot({ path: screenshotPath, fullPage: false });
+      console.log(`Screenshot saved successfully: ${screenshotFileName}`);
+    } catch (err) {
+      console.error(`Error taking screenshot for CV download toast: ${err.message}`);
+    }
+
+    // Wait for the toast to disappear (it has a 4s timeout + 1s buffer)
+    await expect(toast).not.toBeVisible({ timeout: 5000 });
+    console.log('Toast message has disappeared as expected.');
+  });
 });

@@ -35,9 +35,9 @@ Una vez en modo observación, tendrás varias opciones interactivas:
 
 **4. Ejecutar un Archivo de Pruebas Específico (Una Sola Vez):**
 ```sh
-npm test -- src/components/WhatsAppButton.test.js --watchAll=false
+npm test -- src/tests/unit-tests/WhatsAppButton.test.js --watchAll=false
 ```
-Reemplaza `src/components/WhatsAppButton.test.js` con la ruta al archivo que quieras probar.
+Reemplaza `src/tests/unit-tests/WhatsAppButton.test.js` con la ruta al archivo que quieras probar.
 
 ## Parte Backend (Node.js/Express - portfolio-ejemplo/backend)
 
@@ -111,11 +111,11 @@ npx playwright test --headed --project=chromium
 **4. Ejecutar un Archivo de Pruebas E2E Específico:**
 Para ejecutar solo las pruebas de un archivo (por ejemplo, `contact-form.spec.js`):
 ```sh
-npx playwright test tests/contact-form.spec.js
+npx playwright test tests/e2e-tests/contact-form.spec.js
 ```
 O con un navegador específico y modo headed:
 ```sh
-npx playwright test tests/contact-form.spec.js --headed --project=chromium
+npx playwright test tests/e2e-tests/contact-form.spec.js --headed --project=chromium
 ```
 
 **5. Abrir el Reporte HTML de Playwright:**
@@ -133,19 +133,19 @@ npx playwright show-report
 | auth.test.js                  | backend/middleware/auth.test.js            | Backend   | - `authenticate`: token (válido/inválido/ausente/formato), usuario (activo/inactivo/no encontrado). (6) <br> - `authorize`: rol (requerido/no), auth (sí/no). (6) |
 | security.test.js              | backend/middleware/security.test.js        | Backend   | - `secureHeaders`: config Helmet (prod/dev). (2) <br> - `sanitize`: config MongoSanitize (prod/dev), callback `onSanitize`. (3)                                  |
 | contact.api.test.js           | backend/tests/api/contact.api.test.js      | Backend   | Pruebas de API para el endpoint `/api/contact`: envío correcto del formulario (validación de datos, respuesta HTTP 200, guardado en BD). (1)                     |
-| WhatsAppButton.test.js        | src/components/WhatsAppButton.test.js      | Frontend  | Renderizado, `href` (teléfono, mensaje), atributos (`target`, `rel`, `aria-label`), imagen (`src`, `alt`), `className`. (7)                                    |
-| App.test.js                   | src/App.test.js                           | Frontend  | Renderizado de logo en header (texto, clases, tags). (1)                                                                                                     |
-| Navigation.test.js            | src/components/Navigation.test.js          | Frontend  | Logo (render, click), enlaces nav (render, click, activo), menú móvil (render, toggle, clase `menu-open`). (7)                                                 |
-| Footer.test.js                | src/components/Footer.test.js              | Frontend  | Renderizado footer, logo, enlaces sociales (hrefs), copyright (año, nombre). (4)                                                                               |
-| Portfolio.test.js             | src/components/Portfolio.test.js           | Frontend  | Renderizado (sección, título), filtros (botones, default, por categoría), detalles proyecto (título, categoría, descripción, enlaces). (5)                   |
-| Contact.test.js               | src/components/Contact.test.js             | Frontend  | Renderizado (campos, info contacto), validación (vacíos, email, teléfono), envío (éxito, error fetch), enlaces sociales. (6)                                    |
-| AboutMe.test.js               | src/components/AboutMe.test.js             | Frontend  | Renderizado (títulos, desc, img), botones (descarga CV, contacto), tarjetas de habilidades. (4)                                                                 |
-| BackgroundElements.test.js    | src/components/BackgroundElements.test.js  | Frontend  | Renderizado (contenedor, triángulos, grupos de puntos, formas decorativas, líneas). (5)                                                                      |
-| DonateButton.test.js          | src/components/DonateButton.test.js        | Frontend  | Botón flotante, modal (estado, interacción), contenido (PayPal, Stripe), lógica Stripe (montos, submit, errores). (16)                                         |
-| Experience.test.js            | src/components/Experience.test.js          | Frontend  | Renderizado (sección, título, subtítulo), número de trabajos, detalles de cada trabajo (título, empresa, periodo, descripción), resaltado título. (5)             |
-| contact-form.spec.js        | tests/contact-form.spec.js                | E2E       | - Visualización del formulario de contacto y navegación. (1) <br> - Envío exitoso del formulario con datos válidos y verificación del mensaje de éxito. (1) <br> - Verificación de errores de validación: nombre vacío, email vacío, formato de email inválido, mensaje vacío. (4) |
-| navigation.spec.js          | tests/navigation.spec.js                  | E2E       | - Test "should navigate to About Me section when About Me link is clicked": Verifica scroll, URL hash y títulos visibles. (1) <br> - Test "should navigate to Portfolio section when Portfolio link is clicked": Verifica scroll, URL hash y títulos visibles. (1) <br> - Test "should navigate to Experience section when Experience link is clicked": Verifica scroll, URL hash y títulos visibles. (1) <br> - Test "should navigate to Contact Me section when Contact Me link is clicked": Verifica scroll, URL hash y títulos visibles. (1) <br> - Test "should scroll to top when Kelvin QA logo in navbar is clicked": Verifica que al hacer click en el logo se regresa al inicio de la página. (1) |
-| about-me.spec.js           | tests/about-me.spec.js                   | E2E       | - Test "should navigate to Contact Me section when About Me Contact button is clicked": Verifica que al hacer click en el botón Contact me del About Me se navega a la sección de contacto. (1) |
+| WhatsAppButton.test.js        | src/tests/unit-tests/WhatsAppButton.test.js      | Frontend  | Renderizado, `href` (teléfono, mensaje), atributos (`target`, `rel`, `aria-label`), imagen (`src`, `alt`), `className`. (7)                                    |
+| App.test.js                   | src/tests/unit-tests/App.test.js                           | Frontend  | Renderizado de logo en header (texto, clases, tags). (1)                                                                                                     |
+| Navigation.test.js            | src/tests/unit-tests/Navigation.test.js          | Frontend  | Logo (render, click), enlaces nav (render, click, activo), menú móvil (render, toggle, clase `menu-open`). (7)                                                 |
+| Footer.test.js                | src/tests/unit-tests/Footer.test.js              | Frontend  | Renderizado footer, logo, enlaces sociales (hrefs), copyright (año, nombre). (4)                                                                               |
+| Portfolio.test.js             | src/tests/unit-tests/Portfolio.test.js           | Frontend  | Renderizado (sección, título), filtros (botones, default, por categoría), detalles proyecto (título, categoría, descripción, enlaces). (5)                   |
+| Contact.test.js               | src/tests/unit-tests/Contact.test.js             | Frontend  | Renderizado (campos, info contacto), validación (vacíos, email, teléfono), envío (éxito, error fetch), enlaces sociales. (6)                                    |
+| AboutMe.test.js               | src/tests/unit-tests/AboutMe.test.js             | Frontend  | Renderizado (títulos, desc, img), enlace de descarga (atributos), mensaje toast (aparición/desaparición), enlace de contacto, tarjetas de habilidades. (6)         |
+| BackgroundElements.test.js    | src/tests/unit-tests/BackgroundElements.test.js  | Frontend  | Renderizado (contenedor, triángulos, grupos de puntos, formas decorativas, líneas). (5)                                                                      |
+| DonateButton.test.js          | src/tests/unit-tests/DonateButton.test.js        | Frontend  | Botón flotante, modal (estado, interacción), contenido (PayPal, Stripe), lógica Stripe (montos, submit, errores). (16)                                         |
+| Experience.test.js            | src/tests/unit-tests/Experience.test.js          | Frontend  | Renderizado (sección, título, subtítulo), número de trabajos, detalles de cada trabajo (título, empresa, periodo, descripción), resaltado título. (5)             |
+| contact-form.spec.js        | tests/e2e-tests/contact-form.spec.js                | E2E       | - Visualización del formulario de contacto y navegación. (1) <br> - Envío exitoso del formulario con datos válidos y verificación del mensaje de éxito. (1) <br> - Verificación de errores de validación: nombre vacío, email vacío, formato de email inválido, mensaje vacío. (4) |
+| navigation.spec.js          | tests/e2e-tests/navigation.spec.js                  | E2E       | - Test "should navigate to About Me section when About Me link is clicked": Verifica scroll, URL hash y títulos visibles. (1) <br> - Test "should navigate to Portfolio section when Portfolio link is clicked": Verifica scroll, URL hash y títulos visibles. (1) <br> - Test "should navigate to Experience section when Experience link is clicked": Verifica scroll, URL hash y títulos visibles. (1) <br> - Test "should navigate to Contact Me section when Contact Me link is clicked": Verifica scroll, URL hash y títulos visibles. (1) <br> - Test "should scroll to top when Kelvin QA logo in navbar is clicked": Verifica que al hacer click en el logo se regresa al inicio de la página. (1) |
+| about-me.spec.js           | tests/e2e-tests/about-me.spec.js                   | E2E       | - Test "should navigate to Contact Me section when About Me Contact button is clicked": Verifica que al hacer click en el botón Contact me del About Me se navega a la sección de contacto. (1) <br> - Test "should show download toast and initiate CV download": Verifica la descarga del CV y la aparición/desaparición del mensaje toast. (1) |
 
 **Notas:**
 - Los archivos `auth.test.js` y `security.test.js` cubren middleware del backend.
