@@ -98,7 +98,7 @@ const DonateButton = () => {
                   onClick={handleStripeDonate}
                   disabled={isStripeLoading || !amount || amount < 1}
                 >
-                  {isStripeLoading ? 'Redirecting...' : <><img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" style={{height: '20px', marginRight: '10px'}} />Donate with card</>}
+                  {isStripeLoading ? 'Redirecting...' : <><img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" style={{height: '20px', marginRight: '10px', filter: 'brightness(0) invert(1)'}} />- Donate with card</>}
                 </button>
               </div>
             </div>
