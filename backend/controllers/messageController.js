@@ -4,117 +4,117 @@ const path = require('path');
 const { Parser } = require('json2csv');
 const emailService = require('../utils/emailService');
 
-// Guardar un nuevo mensaje de contacto
+// Save a new contact message
 exports.createMessage = async (req, res) => {
+  console.log(' [messageController] Recibida solicitud de contacto');
+  
   try {
-    const { name, email, phone, message, honeypot } = req.body;
+    // Extract form data
+    const { name, email, phone = '', message, honeypot } = req.body;
+    console.log(` [messageController] Mensaje recibido de: ${name} (${email})`);
 
-    // Protección anti-spam: honeypot
+    // Spam detection using honeypot
     if (honeypot && honeypot.trim() !== "") {
-      return res.status(400).json({ 
-        success: false,
-        message: 'Detección de spam.' 
-      });
+      console.log(' [messageController] Detección de spam por honeypot');
+      return res.status(400).json({ success: false, message: 'Detección de spam.' });
     }
 
-    // Validación básica de campos
+    // Basic field validation
     if (!name || !name.trim()) {
-      return res.status(400).json({ 
-        success: false,
-        message: 'El nombre es obligatorio.' 
-      });
+      console.warn(' [messageController] Validation failed: empty name');
+      return res.status(400).json({ success: false, message: 'El nombre es obligatorio.' });
     }
-    
+
     if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-      return res.status(400).json({ 
-        success: false,
-        message: 'El email no es válido.' 
-      });
+      console.warn(' [messageController] Validation failed: invalid email');
+      return res.status(400).json({ success: false, message: 'El email no es válido.' });
     }
-    
+
     if (!message || !message.trim()) {
-      return res.status(400).json({ 
-        success: false,
-        message: 'El mensaje es obligatorio.' 
-      });
+      console.warn(' [messageController] Validation failed: empty message');
+      return res.status(400).json({ success: false, message: 'El mensaje es obligatorio.' });
     }
 
-    // Validación de teléfono (solo si se proporciona)
-    if (phone && phone.trim() !== "") {
-      const phoneDigits = phone.replace(/\D/g, '');
-      const phoneSanitized = phone.trim();
-      
-      if (!/^[+]?\d[\d\s-]{6,}$/.test(phoneSanitized) || phoneDigits.length < 7 || phoneDigits.length > 15) {
-        return res.status(400).json({ 
-          success: false,
-          message: 'El teléfono no es válido.' 
-        });
-      }
-    }
-
-    // Obtener IP y User-Agent para detectar spam/abusos
+    // Get IP and User-Agent for spam detection
     const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const userAgent = req.headers['user-agent'];
 
-    // Crear nuevo mensaje
+    // Create new message
+    console.log('💾 [messageController] Creating new message record in the database');
     const newMessage = new Message({
-      name,
-      email,
-      phone: phone || '',
-      message,
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      message: message.trim(),
       ipAddress,
-      userAgent
+      userAgent,
+      date: new Date(),
+      read: false
     });
 
-    await newMessage.save();
+    console.log('💾 [messageController] Guardando mensaje en la base de datos');
+    const savedMessage = await newMessage.save();
+    console.log(`✅ [messageController] Mensaje guardado con ID: ${savedMessage._id}`);
 
-    // Intentar enviar el email de notificación
-    const emailSent = await emailService.sendContactNotification({
-      name,
-      email,
-      phone: phone || '',
-      message
+    // Try to send notification email
+    const emailResult = await emailService.sendContactNotification({
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      message: message.trim()
     });
 
-    // Registrar si el email fue enviado o no
-    console.log(`Mensaje guardado correctamente. Email de notificación enviado: ${emailSent ? 'Sí' : 'No'}`);
+    // Register email sending result
+    if (emailResult.success) {
+      console.log(`✅ [messageController] Email enviado correctamente: ${emailResult.messageId}`);
+    } else {
+      console.warn(`⚠️ [messageController] No se pudo enviar el email: ${emailResult.error || 'Error desconocido'}`);
+      // Register additional details for diagnosis but continue with the response
+      if (emailResult.errorDetails) {
+        console.error('📋 [messageController] Detalles del error de email:', JSON.stringify(emailResult.errorDetails));
+      }
+      console.log('📋 [messageController] Estado de la configuración del email:', JSON.stringify(emailResult.configStatus));
+    }
 
-    return res.status(201).json({
-      success: true,
-      message: 'Mensaje recibido correctamente.'
+    // Respond to client (always with success if the message was saved, even if the email fails)
+    // This prevents the user from seeing errors even if the message was saved
+    return res.status(201).json({ 
+      success: true, 
+      message: 'Mensaje recibido correctamente.' + (emailResult.success ? '' : ' La notificación por email podría retrasarse.'),
+      emailSent: emailResult.success
     });
+
   } catch (error) {
-    console.error('Error al guardar mensaje:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Error al procesar el mensaje.',
-      error: error.message
+    console.error('❌ [messageController] Error al crear mensaje:', error);
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Error al procesar el mensaje. Por favor, inténtalo de nuevo.' 
     });
   }
 };
 
-// Obtener todos los mensajes con paginación y filtros
+// Get all messages with pagination and filters
 exports.getMessages = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     
-    // Opciones de filtrado
+    //  Filtering options
     const filter = {};
     
-    // Filtro por estado de lectura
+    // Filter by read status
     if (req.query.read === 'true') filter.read = true;
     if (req.query.read === 'false') filter.read = false;
     
-    // Filtro por estado destacado
+    // Filter by starred status
     if (req.query.starred === 'true') filter.starred = true;
     if (req.query.starred === 'false') filter.starred = false;
     
-    // Filtro por etiquetas
+    // Filter by tag
     if (req.query.tag) filter.tags = req.query.tag;
     
-    // Filtro por texto (búsqueda)
+    // Filter by text (search)
     if (req.query.search) {
       const searchRegex = new RegExp(req.query.search, 'i');
       filter.$or = [
@@ -125,7 +125,7 @@ exports.getMessages = async (req, res) => {
       ];
     }
     
-    // Filtro por fecha
+    // Filter by date
     if (req.query.dateFrom || req.query.dateTo) {
       filter.createdAt = {};
       if (req.query.dateFrom) {
@@ -138,13 +138,13 @@ exports.getMessages = async (req, res) => {
       }
     }
     
-    // Ejecutar consulta con paginación
+    // Execute query with pagination
     const messages = await Message.find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
     
-    // Contar total para la paginación
+    // Count total for pagination
     const total = await Message.countDocuments(filter);
     
     return res.status(200).json({
@@ -165,7 +165,7 @@ exports.getMessages = async (req, res) => {
   }
 };
 
-// Obtener un mensaje específico por ID
+// Get a specific message by ID
 exports.getMessage = async (req, res) => {
   try {
     const message = await Message.findById(req.params.id);
@@ -191,7 +191,7 @@ exports.getMessage = async (req, res) => {
   }
 };
 
-// Marcar un mensaje como leído/no leído
+// Mark a message as read/unread
 exports.updateReadStatus = async (req, res) => {
   try {
     const { read } = req.body;
@@ -230,7 +230,7 @@ exports.updateReadStatus = async (req, res) => {
   }
 };
 
-// Destacar/quitar destacado de un mensaje
+// Mark a message as starred/unstarred
 exports.updateStarredStatus = async (req, res) => {
   try {
     const { starred } = req.body;
@@ -269,7 +269,7 @@ exports.updateStarredStatus = async (req, res) => {
   }
 };
 
-// Agregar o quitar etiquetas a un mensaje
+// Add or remove tags from a message
 exports.updateTags = async (req, res) => {
   try {
     const { tags, action } = req.body;
@@ -324,7 +324,7 @@ exports.updateTags = async (req, res) => {
   }
 };
 
-// Eliminar un mensaje
+// Delete a message
 exports.deleteMessage = async (req, res) => {
   try {
     const message = await Message.findByIdAndDelete(req.params.id);
@@ -350,13 +350,13 @@ exports.deleteMessage = async (req, res) => {
   }
 };
 
-// Exportar mensajes a CSV
+// Export messages to CSV
 exports.exportToCSV = async (req, res) => {
   try {
-    // Filtros similares a getMessages
+    // Filters similar to getMessages
     const filter = {};
     
-    // Aplicar filtros si se proporcionan
+    // Apply filters if provided
     if (req.query.read === 'true') filter.read = true;
     if (req.query.read === 'false') filter.read = false;
     if (req.query.starred === 'true') filter.starred = true;
@@ -385,7 +385,7 @@ exports.exportToCSV = async (req, res) => {
       }
     }
     
-    // Obtener todos los mensajes que coincidan con el filtro
+    // Get all messages that match the filter
     const messages = await Message.find(filter).sort({ createdAt: -1 });
     
     if (messages.length === 0) {
@@ -395,7 +395,7 @@ exports.exportToCSV = async (req, res) => {
       });
     }
     
-    // Configurar los campos para el CSV
+    // Configure fields for CSV
     const fields = [
       { label: 'ID', value: '_id' },
       { label: 'Nombre', value: 'name' },
@@ -408,31 +408,31 @@ exports.exportToCSV = async (req, res) => {
       { label: 'Fecha', value: (row) => new Date(row.createdAt).toLocaleString() }
     ];
     
-    // Convertir a CSV
+    // Convert to CSV
     const json2csvParser = new Parser({ fields });
     const csv = json2csvParser.parse(messages);
     
-    // Generar nombre de archivo
+    // Generate file name
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const fileName = `mensajes_${timestamp}.csv`;
     const filePath = path.join(__dirname, '..', 'exports', fileName);
     
-    // Asegurar que el directorio de exportación existe
+    // Ensure export directory exists
     const exportDir = path.join(__dirname, '..', 'exports');
     if (!fs.existsSync(exportDir)) {
       fs.mkdirSync(exportDir, { recursive: true });
     }
     
-    // Guardar archivo
+    // Save file
     fs.writeFileSync(filePath, csv);
     
-    // Enviar archivo
+    // Send file
     res.download(filePath, fileName, (err) => {
       if (err) {
         console.error('Error al descargar archivo:', err);
       }
       
-      // Eliminar archivo después de la descarga
+      // Delete file after download
       fs.unlinkSync(filePath);
     });
   } catch (error) {

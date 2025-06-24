@@ -82,7 +82,7 @@ jobs:
   # Job for running Playwright E2E tests
   e2e-tests:
     # Always run E2E tests when backend and frontend tests pass
-    needs: [backend-tests, frontend-tests]
+  #  needs: [backend-tests, frontend-tests]
     runs-on: ubuntu-latest
 
     env:
