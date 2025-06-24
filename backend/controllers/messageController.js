@@ -2,6 +2,7 @@ const Message = require('../models/Message');
 const fs = require('fs');
 const path = require('path');
 const { Parser } = require('json2csv');
+const emailService = require('../utils/emailService');
 
 // Guardar un nuevo mensaje de contacto
 exports.createMessage = async (req, res) => {
@@ -66,6 +67,17 @@ exports.createMessage = async (req, res) => {
     });
 
     await newMessage.save();
+
+    // Intentar enviar el email de notificación
+    const emailSent = await emailService.sendContactNotification({
+      name,
+      email,
+      phone: phone || '',
+      message
+    });
+
+    // Registrar si el email fue enviado o no
+    console.log(`Mensaje guardado correctamente. Email de notificación enviado: ${emailSent ? 'Sí' : 'No'}`);
 
     return res.status(201).json({
       success: true,
