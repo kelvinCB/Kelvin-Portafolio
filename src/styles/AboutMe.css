@@ -127,6 +127,7 @@
   min-height: 350px;
   display: flex;
   justify-content: center;
+  align-items: center;
   animation: fadeInRight 1s;
 }
 
@@ -137,17 +138,20 @@
 
 .profile-bg {
   position: absolute;
-  width: 410px;
-  height: 400px;
+  width: 388px;
+  height: 388px;
   background: linear-gradient(45deg, #7f53ac 0%, #647dee 100%);
   border-radius: 50%;
   z-index: 1;
   animation: pulse 3s infinite alternate;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  100% { transform: scale(1.05); opacity: 1; }
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
 }
 
 .profile-img {
@@ -263,20 +267,132 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .about-section {
+    padding: 2rem 0.5rem;
+    min-height: calc(100vh - 60px);
+  }
+
   .about-content {
     flex-direction: column-reverse;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .about-text {
+    width: 100%;
+    min-width: unset;
+    text-align: center;
+  }
+
+  .welcome-text {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.8rem;
   }
   
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+    line-height: 1.2;
+    margin-bottom: 0.8rem;
+  }
+
+  .role-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
   }
   
-  .profile-container, .about-text {
+  .profile-container {
     width: 100%;
+    min-width: unset;
+    min-height: 280px;
+    margin-bottom: 1rem;
   }
   
-  .profile-bg, .profile-img {
-    width: 300px;
-    height: 300px;
+  .profile-bg {
+    width: 256px;
+    height: 256px;
+  }
+
+  .profile-img {
+    width: 240px;
+    height: 240px;
+    border: 6px solid #1a1a2e;
+  }
+
+  .buttons-container {
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .download-cv-btn, .contact-btn {
+    padding: 0.7rem 1.3rem;
+    font-size: 0.9rem;
+  }
+
+  .skills-highlights {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 1.5rem auto;
+  }
+
+  .skill-card {
+    padding: 1.2rem;
+  }
+
+  .services-section {
+    padding-top: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-section {
+    padding: 1.5rem 0.3rem;
+  }
+
+  .about-content {
+    padding: 0.5rem;
+  }
+
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .role-title {
+    font-size: 1.1rem;
+  }
+
+  .hero-description {
+    font-size: 0.95rem;
+  }
+
+  .profile-bg {
+    width: 208px;
+    height: 208px;
+  }
+
+  .profile-img {
+    width: 200px;
+    height: 200px;
+    border: 4px solid #1a1a2e;
+  }
+
+  .buttons-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .download-cv-btn, .contact-btn {
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+    justify-content: center;
   }
 }
