@@ -52,19 +52,13 @@ const Contact = ({ id }) => {
   // Updated URL construction for simplified backend - Force redeploy
     let directBackendUrl;
     if (process.env.NODE_ENV === 'production') {
-      let baseApiUrl = process.env.REACT_APP_API_URL || ''; // Should be https://kelvin-portfolio-ipc3.onrender.com
+      let baseApiUrl = process.env.REACT_APP_API_URL || 'https://kelvin-portfolio-ipc3.onrender.com';
       
       // Remove any trailing slash
       baseApiUrl = baseApiUrl.replace(/\/$/, '');
       
-      // If baseApiUrl ends with /api, remove it to match our new simplified backend
-      if (baseApiUrl.endsWith('/api')) {
-        baseApiUrl = baseApiUrl.slice(0, -4); // Remove the /api part
-        console.log('Removed /api from baseApiUrl:', baseApiUrl);
-      }
-      
       // Construct the final URL for the contact endpoint
-      directBackendUrl = `${baseApiUrl}/contact`;
+      directBackendUrl = `${baseApiUrl}/api/contact`;
       
       console.log('Production API URL (original):', process.env.REACT_APP_API_URL);
       console.log('Production API URL (normalized):', baseApiUrl);
