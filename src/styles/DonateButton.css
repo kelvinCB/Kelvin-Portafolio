@@ -211,21 +211,86 @@
 }
 
 @media (max-width: 768px) {
+  .donate-float {
+    bottom: 15px;
+    left: 15px;
+  }
+
+  .donate-float img {
+    width: 70px;
+  }
+
   .donate-modal {
-    width: 99%;
-    padding: 16px 5px 20px 5px;
+    width: 95%;
+    padding: 20px 16px;
     min-width: unset;
-    max-width: 98vw;
+    max-width: 95vw;
   }
+  
   .donate-modal h2 {
-    font-size: 1.05rem;
+    font-size: 1.2rem;
   }
+  
   .stripe-button {
     font-size: 1rem;
-    padding: 11px 0;
+    padding: 12px 0;
   }
+  
+  .amount-options {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
   .amount-options button {
+    font-size: 0.9rem;
+    padding: 6px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .donate-float {
+    bottom: 12px;
+    left: 12px;
+  }
+
+  .donate-float img {
+    width: 55px;
+  }
+
+  .donate-modal {
+    width: 92%;
+    padding: 16px 12px;
+    max-width: 92vw;
+  }
+  
+  .donate-modal h2 {
+    font-size: 1.1rem;
+  }
+
+  .donate-modal p {
     font-size: 0.95rem;
-    padding: 7px 10px;
+  }
+  
+  .amount-options {
+    gap: 6px;
+  }
+  
+  .amount-options button {
+    font-size: 0.85rem;
+    padding: 5px 12px;
+  }
+
+  .custom-amount input {
+    width: 100px;
+    font-size: 14px;
+  }
+
+  .stripe-button {
+    font-size: 0.95rem;
+    padding: 10px 0;
+  }
+
+  .donation-message {
+    font-size: 14px;
   }
 }

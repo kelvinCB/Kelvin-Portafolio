@@ -1,6 +1,15 @@
 /* Estilos para el componente App */
 .main-container {
   min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.App {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .app-header {
@@ -76,6 +85,14 @@
 }
 
 @media (max-width: 768px) {
+  .app-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .logo {
+    font-size: 1.6rem;
+  }
+
   .mobile-menu-button {
     display: block;
   }
@@ -97,5 +114,25 @@
 
   .main-nav.menu-open {
     display: flex;
+  }
+
+  .nav-link {
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 0.8rem 1rem;
+  }
+
+  .logo {
+    font-size: 1.4rem;
+  }
+
+  .mobile-menu-button {
+    font-size: 1.3rem;
   }
 }

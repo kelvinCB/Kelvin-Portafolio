@@ -212,16 +212,122 @@
 }
 
 @media (max-width: 768px) {
+  .portfolio-section {
+    padding: 2rem 0.5rem 3rem;
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  .portfolio-container {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   .projects-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 100%;
   }
   
   .portfolio-filters {
     flex-wrap: wrap;
     justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .filter-btn {
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
   }
   
   .section-title {
     font-size: 2rem;
+  }
+
+  .portfolio-subtitle {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .project-card {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .project-img {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .project-content {
+    padding: 1.5rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  .project-title {
+    font-size: 1.2rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  .project-desc {
+    font-size: 0.95rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-section {
+    padding: 1.5rem 0.5rem 2.5rem;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .portfolio-subtitle {
+    font-size: 0.95rem;
+    padding: 0 0.5rem;
+  }
+
+  .filter-btn {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .project-content {
+    padding: 1.2rem;
+  }
+
+  .project-img {
+    height: 180px;
+  }
+
+  .project-category {
+    top: 15px;
+    left: 15px;
+    padding: 0.2rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .project-title {
+    font-size: 1.1rem;
+  }
+
+  .project-desc {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .project-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
   }
 }
