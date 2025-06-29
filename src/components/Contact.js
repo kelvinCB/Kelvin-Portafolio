@@ -49,7 +49,7 @@ const Contact = ({ id }) => {
     setErrors({});
     setLoading(true);
     
-    // Updated URL construction for simplified backend
+  // Updated URL construction for simplified backend - Force redeploy
     let directBackendUrl;
     if (process.env.NODE_ENV === 'production') {
       let baseApiUrl = process.env.REACT_APP_API_URL || ''; // Should be https://kelvin-portfolio-ipc3.onrender.com
