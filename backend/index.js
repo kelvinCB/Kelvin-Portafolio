@@ -23,7 +23,16 @@ const app = express();
 const PORT = process.env.BACKEND_PORT || process.env.PORT || 5000;
 
 // Middlewares de seguridad y formateo
-app.use(cors());
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://kelvin-portafolio.netlify.app', 'https://kelvin-portfolio-ipc3.onrender.com']
+    : ['http://localhost:3000', 'http://localhost:3001'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use(secureHeaders); // Security headers
