@@ -47,7 +47,6 @@ const DonateButton = () => {
         <img 
           src="/resources/donation.png" 
           alt="Donate" 
-          style={{ width: '80px', height: 'auto', borderRadius: '40px' }}
         />
       </button>
 
