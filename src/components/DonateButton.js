@@ -7,6 +7,7 @@ const DonateButton = () => {
   const [customAmount, setCustomAmount] = useState('');
   const [isStripeLoading, setIsStripeLoading] = useState(false);
 
+  // Stripe donate function
   const handleStripeDonate = async () => {
     if (!amount || amount < 1) return;
     setIsStripeLoading(true);
@@ -28,25 +29,25 @@ const DonateButton = () => {
       setIsStripeLoading(false);
     }
   };
-  
+
   const openModal = () => {
     setIsModalOpen(true);
   };
-  
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
   return (
     <>
-      <button 
-        className="donate-float" 
+      <button
+        className="donate-float"
         onClick={openModal}
         aria-label="Make a donation"
       >
-        <img 
-          src="/resources/donation.png" 
-          alt="Donate" 
+        <img
+          src="/resources/donation.png"
+          alt="Donate"
         />
       </button>
 
@@ -56,7 +57,7 @@ const DonateButton = () => {
             <button className="close-button" onClick={closeModal}>×</button>
             <h2>Support my work!</h2>
             <p>Thank you for considering a donation. Your contribution helps me continue developing projects like this.</p>
-            
+
             <div className="donation-options">
               {/* PayPal button - verify account */}
               <div className="paypal-option">
@@ -91,13 +92,13 @@ const DonateButton = () => {
                     }}
                   />
                 </div>
-                <button 
+                <button
                   className="stripe-button"
-                  style={{marginTop: '10px'}}
+                  style={{ marginTop: '10px' }}
                   onClick={handleStripeDonate}
                   disabled={isStripeLoading || !amount || amount < 1}
                 >
-                  {isStripeLoading ? 'Redirecting...' : <><img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" style={{height: '20px', marginRight: '10px', filter: 'brightness(0) invert(1)'}} />- Donate with card</>}
+                  {isStripeLoading ? 'Redirecting...' : <><img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" style={{ height: '20px', marginRight: '10px', filter: 'brightness(0) invert(1)' }} />- Donate with card</>}
                 </button>
               </div>
             </div>
