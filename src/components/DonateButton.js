@@ -7,7 +7,7 @@ const DonateButton = () => {
   const [customAmount, setCustomAmount] = useState('');
   const [isStripeLoading, setIsStripeLoading] = useState(false);
 
-  // Stripe donate function
+
   const handleStripeDonate = async () => {
     if (!amount || amount < 1) return;
     setIsStripeLoading(true);
