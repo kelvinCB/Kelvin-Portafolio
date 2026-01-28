@@ -52,10 +52,10 @@ const Contact = ({ id }) => {
     // Updated URL construction for simplified backend - Force redeploy
     // Use relative URL to let Netlify proxy the request to the backend
     // This avoids "Mixed Content" issues (HTTPS -> HTTP)
-    directBackendUrl = '/api/contact';
+    const directBackendUrl = '/api/contact';
 
     if (process.env.NODE_ENV === 'production') {
-      console.log('Build Timestamp:', '2026-01-28 07:22');
+      console.log('Build Timestamp:', '2026-01-28 07:30');
       console.log('Environment:', 'Production (Proxy enabled)');
     } else {
       console.log('Development mode - Using proxy URL:', directBackendUrl);
