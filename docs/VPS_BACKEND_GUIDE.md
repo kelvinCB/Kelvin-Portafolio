@@ -4,18 +4,23 @@ This guide ensures your backend remains active and healthy on the Contabo VPS.
 
 ## 🚀 Quick Check: Is the backend running?
 
-Run this command from your terminal to see the status of the application:
+1. **Connect to the Server**:
+   ```bash
+   ssh kelvin@86.48.24.125
+   ```
 
-```bash
-pm2 status
-```
+2. **Navigate to the Project Folder**:
+   ```bash
+   cd ~/portfolio-kelvin
+   ```
+
+3. **Check Status with PM2**:
+   Run this command to see the status of the application:
+   ```bash
+   pm2 status
+   ```
 
 You should see `portfolio-backend` (or your app name) with a green **online** status.
-
-### Accessing the Server
-```bash
-ssh kelvin@86.48.24.125
-```
 
 ---
 
