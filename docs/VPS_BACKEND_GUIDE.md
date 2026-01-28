@@ -37,9 +37,37 @@ PM2 is the process manager that keeps the app alive after crashes or reboots.
 ### Database Management (PostgreSQL)
 We moved from MongoDB to PostgreSQL for better performance and control.
 
-- **Enter Database Console**: `sudo -u postgres psql -d portfolio_db`
+- **Log in to PostgreSQL**:
+   ```bash
+   sudo -u postgres psql -d portfolio_db
+   ```
+   *(Exit with `\q`)*
+
+- **📖 See Full Schema**: Check `docs/DATABASE_SCHEMA.md` for table definitions.
+
+#### Query Cheat Sheet (Run inside `psql` shell)
+
+**Messages**:
+- **See last 10 messages**:
+  ```sql
+  SELECT id, name, created_at, read FROM messages ORDER BY created_at DESC LIMIT 10;
+  ```
+- **Read full content of a specific message (e.g., ID 1)**:
+  ```sql
+  SELECT message FROM messages WHERE id = 1;
+  ```
+- **Count unread messages**:
+  ```sql
+  SELECT COUNT(*) FROM messages WHERE read = false;
+  ```
+
+**Users**:
+- **List admin users**:
+  ```sql
+  SELECT id, username, email, last_login FROM users;
+  ```
+
 - **Check Table Sizes**: `\dt+`
-- **List last 5 messages**: `SELECT * FROM messages ORDER BY created_at DESC LIMIT 5;`
 
 ### Web Server (Nginx)
 Nginx acts as the gatekeeper, routing traffic from port 80 (HTTP) to your Node.js app on port 5000.
