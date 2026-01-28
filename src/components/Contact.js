@@ -64,6 +64,7 @@ const Contact = ({ id }) => {
         directBackendUrl = `${baseApiUrl}/api/contact`;
       }
 
+      console.log('Build Timestamp:', '2026-01-28 07:15');
       console.log('Production API URL (original):', process.env.REACT_APP_API_URL);
       console.log('Production API URL (normalized):', baseApiUrl);
       console.log('Constructed URL:', directBackendUrl);
