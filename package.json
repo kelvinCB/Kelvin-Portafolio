@@ -2,9 +2,9 @@
   "name": "portfolio-ejemplo",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:5001",
   "engines": {
-    "node": "18.x"
+    "node": "24.x"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^3.7.0",

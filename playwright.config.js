@@ -15,7 +15,7 @@ import { defineConfig, devices } from '@playwright/test';
 const isProduction = process.env.TARGET_ENV === 'production';
 
 export default defineConfig({
-    testDir: './tests/e2e-tests',
+  testDir: './tests/e2e-tests',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -41,7 +41,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 }, // Set a large viewport
       },
@@ -89,8 +89,8 @@ export default defineConfig({
       stderr: 'pipe',
     },
     {
-      command: 'npm start', // Use npm start for consistency
-      port: 5000,    // Port to poll for backend readiness
+      command: 'BACKEND_PORT=5001 npm start', // Use port 5001 to avoid macOS AirPlay conflict
+      port: 5001,    // Port to poll for backend readiness
       reuseExistingServer: !process.env.CI,
       timeout: 60 * 1000, // 1 minute for backend
       cwd: './backend', // Use relative path for cross-platform compatibility
