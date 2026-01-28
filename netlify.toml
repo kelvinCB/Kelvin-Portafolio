@@ -20,12 +20,9 @@
 [context.development.environment]
   REACT_APP_API_URL = "http://localhost:5000/api"
 
-# Environment variables for production
+# Environment variables for production (to be managed in Netlify dashboard)
 [context.production.environment]
-  # Using direct backend URL
-  REACT_APP_API_URL = "https://kelvin-portfolio-ipc3.onrender.com"
-  REACT_APP_CONTACT_PHONE = "18299698254"
-  REACT_APP_DEFAULT_WHATSAPP_MESSAGE = "Hola, vi tu portafolio y me gustaria hablar contigo"
+  NODE_ENV = "production"
 
 # Netlify serverless functions configuration (if needed)
 [functions]

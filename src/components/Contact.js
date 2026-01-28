@@ -57,8 +57,12 @@ const Contact = ({ id }) => {
       // Remove any trailing slash
       baseApiUrl = baseApiUrl.replace(/\/$/, '');
 
-      // Construct the final URL for the contact endpoint
-      directBackendUrl = `${baseApiUrl}/api/contact`;
+      // Support both base URL and URL with /api included
+      if (baseApiUrl.endsWith('/api')) {
+        directBackendUrl = `${baseApiUrl}/contact`;
+      } else {
+        directBackendUrl = `${baseApiUrl}/api/contact`;
+      }
 
       console.log('Production API URL (original):', process.env.REACT_APP_API_URL);
       console.log('Production API URL (normalized):', baseApiUrl);
