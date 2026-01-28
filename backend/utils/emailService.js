@@ -44,13 +44,15 @@ class EmailService {
         },
         debug: NODE_ENV === 'development', // Enable debug logging in development
       });
-      
+
       this.configured = true;
       console.log('✅ [EmailService] Transporter configured successfully');
-      
+
       // Verify that the connection works
-      this.verifyConnection();
-      
+      if (process.env.NODE_ENV !== 'test') {
+        this.verifyConnection();
+      }
+
       return true;
     } catch (error) {
       console.error('❌ [EmailService] Error al inicializar transporter:', error);
@@ -58,7 +60,7 @@ class EmailService {
       return false;
     }
   }
-  
+
   /**
    * Verifies the connection with the SMTP server
    * @returns {Promise<Boolean>}
@@ -68,7 +70,7 @@ class EmailService {
       console.error('❌ [EmailService] No hay transporter para verificar');
       return false;
     }
-    
+
     try {
       const result = await this.transporter.verify();
       console.log('✅ [EmailService] Conexión verificada:', result);
@@ -109,7 +111,7 @@ class EmailService {
         result.error = error;
         return result;
       }
-      
+
       // If credentials are missing, try reinitializing
       if (!this.configured) {
         console.log('🔄 [EmailService] Intentando reinicializar el transporter...');
@@ -168,12 +170,12 @@ Este mensaje fue enviado desde el formulario de contacto de tu portafolio.`
         this.transporter.sendMail(mailOptions),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout al enviar email')), 30000))
       ]);
-      
+
       // Register success
       result.success = true;
       result.messageId = sendResult.messageId;
       console.log('✅ [EmailService] Email enviado correctamente:', sendResult.messageId);
-      
+
       return result;
     } catch (error) {
       // Capture and format the error for diagnosis
