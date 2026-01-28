@@ -37,7 +37,7 @@ exports.contactFormLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: {
-    message: 'Has enviado demasiados mensajes en poco tiempo. Por favor, espera unos minutos.'
+    message: 'You have sent too many messages in a short time. Please wait a few minutes before trying again.'
   },
   handler: (req, res, next, options) => {
     return res.status(options.statusCode).json(options.message);
