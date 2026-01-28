@@ -39,7 +39,12 @@ portfolio-ejemplo/          # Carpeta raíz (frontend principal)
    ```
    PORT=5000
    NODE_ENV=development
-   MONGODB_URI=mongodb+srv://username:password@clusterportafolio.xxxxx.mongodb.net/portfolio-contactos
+   MONGODB_URI= (OBSERTO: Ya no se usa. Ahora usamos PostgreSQL)
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USER=tu_usuario
+   DB_PASSWORD=tu_password
+   DB_NAME=portfolio_db
    JWT_SECRET=tu_secreto_jwt
    ENCRYPTION_KEY=tu_clave_encriptacion
    EMAIL_USER=tu_email@gmail.com
@@ -206,11 +211,11 @@ portfolio-ejemplo/          # Carpeta raíz (frontend principal)
 
 ## 5. Despliegue en Producción
 
-### Backend (Render)
+### Backend (VPS Contabo)
 
 1. **Preparar cambios para producción**:
-   - Asegúrate de que el archivo `.env.production` en la carpeta `backend` tiene las variables correctas.
-   - Verificar que `bcryptjs` está siendo utilizado en lugar de `bcrypt`.
+   - Asegúrate de que el archivo `.env` en el VPS contiene las variables de PostgreSQL correctas.
+   - Usamos **Knex.js** para las migraciones y consultas.
 
 2. **Commit y push al repositorio**:
    ```bash
@@ -219,11 +224,16 @@ portfolio-ejemplo/          # Carpeta raíz (frontend principal)
    git push origin main
    ```
 
-3. **Verificar el despliegue automático** en el dashboard de Render:
-   - Si el despliegue automático está configurado, Render iniciará la compilación automáticamente.
-   - Si no, inicia manualmente un despliegue desde el dashboard.
+3. **Desplegar en el VPS**:
+   ```bash
+   ssh kelvin@86.48.24.125
+   cd ~/portfolio-kelvin
+   git pull
+   pm2 restart portfolio-backend
+   ```
 
-4. **Monitorear logs** en Render para detectar posibles errores.
+4. **Verificar**: 
+   Consulta `http://86.48.24.125/api/health` para confirmar que el servidor está arriba.
 
 5. **Implementar UptimeRobot** para mantener el servicio activo:
    - Crea una cuenta en UptimeRobot.com
@@ -259,9 +269,9 @@ portfolio-ejemplo/          # Carpeta raíz (frontend principal)
 
 ### Copias de Seguridad
 
-1. **Base de datos MongoDB**:
-   - Configura copias de seguridad automatizadas en MongoDB Atlas.
-   - Descarga copias manuales periódicamente como respaldo adicional.
+1. **Base de Datos PostgreSQL**:
+   - Ejecuta el script de backup: `bash ~/portfolio-kelvin/backend/scripts/backup-postgres.sh`
+   - Los backups se guardan en `~/backups/postgres/`.
 
 2. **Código fuente**:
    - Mantén siempre el repositorio actualizado.
@@ -290,12 +300,12 @@ portfolio-ejemplo/          # Carpeta raíz (frontend principal)
    - Comprueba los logs de error.
    - Asegúrate de que los puertos no están siendo utilizados por otra aplicación.
 
-2. **Error de conexión a MongoDB**:
-   - Verifica la cadena de conexión.
-   - Asegúrate de que la IP desde la que te conectas está permitida en MongoDB Atlas.
+2. **Error de conexión a PostgreSQL**:
+   - Verifica que el servicio de Postgres esté corriendo: `sudo systemctl status postgresql`
+   - Revisa las credenciales en el archivo `.env`.
 
-3. **Problemas con bcrypt en Render**:
-   - Asegúrate de usar `bcryptjs` en lugar de `bcrypt`.
+3. **PM2 Errores**:
+   - Revisa los logs: `pm2 logs portfolio-backend`
 
 ### Problemas en el Frontend
 

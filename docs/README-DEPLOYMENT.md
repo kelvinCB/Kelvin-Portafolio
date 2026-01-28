@@ -11,35 +11,21 @@ El proyecto consta de dos partes principales:
 
 ## Requisitos Previos
 
-- Cuenta en [Netlify](https://www.netlify.com/) para el frontend
-- Servidor para el backend (puede ser [Render](https://render.com/), [Heroku](https://www.heroku.com/), [DigitalOcean](https://www.digitalocean.com/), etc.)
-- Cuenta en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (ya configurada)
+- **Backend**: Servidor VPS (Contabo) con Node.js y PostgreSQL
+- **Frontend**: [Netlify](https://www.netlify.com/)
 
-## Pasos para la Implementación
+### 1. Preparación del Backend (VPS)
 
-### 1. Preparación del Backend
+1. **Configurar el servidor**:
+   - Conéctate vía SSH: `ssh kelvin@86.48.24.125`
+   - Clona el repositorio y configura el archivo `.env`.
+   - Inicializa la base de datos PostgreSQL.
 
-1. **Configurar variables de entorno**:
-   - Edita el archivo `.env.production` en la carpeta `/backend`
-   - Actualiza `FRONTEND_URL`, `SUCCESS_URL` y `CANCEL_URL` con tu dominio real
-   - Si es necesario, actualiza las credenciales de administrador
+2. **Gestión de procesos**:
+   - Usa **PM2** para mantener el servidor activo: `pm2 start backend/index.js --name portfolio-backend`
 
-2. **Implementar en el servidor**:
-   ```bash
-   # Navegar a la carpeta del backend
-   cd backend
-   
-   # Instalar dependencias de producción
-   npm ci --production
-   
-   # Iniciar el servidor en modo producción
-   NODE_ENV=production node index.js
-   ```
-
-3. **Importantes consideraciones de seguridad**:
-   - Asegúrate de que el firewall del servidor permita conexiones en el puerto configurado
-   - Configura un certificado SSL para HTTPS (recomendado Let's Encrypt)
-   - Considera usar un proxy inverso como Nginx para manejar SSL y balanceo de carga
+3. **Proxy Inverso**:
+   - Configura **Nginx** para redirigir el tráfico del puerto 80 al puerto 5000 de tu aplicación Node.js.
 
 ### 2. Implementación del Panel de Administración en Netlify
 
