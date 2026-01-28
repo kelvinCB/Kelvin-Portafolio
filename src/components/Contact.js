@@ -50,27 +50,14 @@ const Contact = ({ id }) => {
     setLoading(true);
 
     // Updated URL construction for simplified backend - Force redeploy
-    let directBackendUrl;
+    // Use relative URL to let Netlify proxy the request to the backend
+    // This avoids "Mixed Content" issues (HTTPS -> HTTP)
+    directBackendUrl = '/api/contact';
+
     if (process.env.NODE_ENV === 'production') {
-      let baseApiUrl = process.env.REACT_APP_API_URL || 'http://86.48.24.125';
-
-      // Remove any trailing slash
-      baseApiUrl = baseApiUrl.replace(/\/$/, '');
-
-      // Support both base URL and URL with /api included
-      if (baseApiUrl.endsWith('/api')) {
-        directBackendUrl = `${baseApiUrl}/contact`;
-      } else {
-        directBackendUrl = `${baseApiUrl}/api/contact`;
-      }
-
-      console.log('Build Timestamp:', '2026-01-28 07:15');
-      console.log('Production API URL (original):', process.env.REACT_APP_API_URL);
-      console.log('Production API URL (normalized):', baseApiUrl);
-      console.log('Constructed URL:', directBackendUrl);
+      console.log('Build Timestamp:', '2026-01-28 07:22');
+      console.log('Environment:', 'Production (Proxy enabled)');
     } else {
-      // For development still use the proxy with /api prefix
-      directBackendUrl = '/api/contact';
       console.log('Development mode - Using proxy URL:', directBackendUrl);
     }
     console.log('Sending request to:', directBackendUrl);

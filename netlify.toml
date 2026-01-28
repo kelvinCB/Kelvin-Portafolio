@@ -10,6 +10,13 @@
 # No proxy redirects needed since we use direct backend URL
 # CORS is handled by the backend configuration
 
+# Proxy redirects to bypass Mixed Content (HTTPS -> HTTP)
+[[redirects]]
+  from = "/api/*"
+  to = "http://86.48.24.125/api/:splat"
+  status = 200
+  force = true
+
 # Single Page Application redirect configuration - KEEP THIS LAST
 [[redirects]]
   from = "/*"
