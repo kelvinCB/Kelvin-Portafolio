@@ -1,39 +1,36 @@
-// Script to delete the admin user
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const path = require('path');
 const User = require('../models/User');
+const db = require('../config/database');
+require('dotenv').config();
 
-// Load environment variables
-dotenv.config({ path: path.join(__dirname, '..', '.env') });
-
-// Function to delete admin user
+/**
+ * Script to delete the admin user (Refactored for PostgreSQL)
+ */
 const deleteAdminUser = async () => {
   try {
-    // Connect to MongoDB
-    await mongoose.connect(process.env.MONGODB_URI, {});
-    
-    console.log('Conectado a MongoDB');
-    
-    // Find and delete the default admin user
-    const result = await User.deleteOne({ email: 'admin@example.com' });
-    
-    if (result.deletedCount > 0) {
-      console.log('Usuario administrador eliminado con éxito');
+    console.log('🚀 Conectando a PostgreSQL para eliminar usuario...');
+
+    const emailToDelete = process.env.ADMIN_EMAIL || 'admin@example.com';
+
+    // Find user first
+    const user = await User.findOne({ email: emailToDelete });
+
+    if (!user) {
+      console.log(`ℹ️ No se encontró el usuario administrador con email: ${emailToDelete}`);
     } else {
-      console.log('No se encontró el usuario administrador para eliminar');
+      // Delete using Knex
+      await db('users').where({ id: user.id }).del();
+      console.log(`✅ Usuario administrador (${emailToDelete}) eliminado con éxito`);
     }
-    
-    // Check if there are any admin users left
-    const adminCount = await User.countDocuments({ role: 'admin' });
-    console.log(`Usuarios administradores restantes: ${adminCount}`);
-    
+
+    // Check remaining admins
+    const result = await db('users').where({ role: 'admin' }).count('id as count').first();
+    console.log(`📊 Usuarios administradores restantes: ${result.count}`);
+
     process.exit(0);
   } catch (error) {
-    console.error('Error al eliminar usuario administrador:', error.message);
+    console.error('❌ Error al eliminar usuario administrador:', error.message);
     process.exit(1);
   }
 };
 
-// Execute the function
 deleteAdminUser();

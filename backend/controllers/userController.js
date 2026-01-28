@@ -15,8 +15,11 @@ exports.register = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
 
-    // Verificar si el usuario ya existe
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    // Verificar si el usuario ya existe (Knex refactor)
+    const existingUser = await User.findOne(function () {
+      this.where({ email }).orWhere({ username });
+    });
+
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -24,15 +27,13 @@ exports.register = async (req, res) => {
       });
     }
 
-    // Crear nuevo usuario
-    const user = new User({
+    // Crear nuevo usuario usando el modelo refactorizado
+    await User.create({
       username,
       email,
       password,
       role: role || 'admin'
     });
-
-    await user.save();
 
     res.status(201).json({
       success: true,
@@ -51,40 +52,29 @@ exports.register = async (req, res) => {
 // Iniciar sesión
 exports.login = async (req, res) => {
   try {
-    console.log('INICIO DE SESIÓN: Recibida solicitud de login');
-    console.log('BODY:', req.body);
-    
     const { email, password } = req.body;
-    
+
     if (!email || !password) {
-      console.log('ERROR: Falta email o password en la solicitud');
       return res.status(400).json({
         success: false,
         message: 'Falta email o contraseña'
       });
     }
-    
-    console.log('BUSCANDO USUARIO:', email);
-    
-    // Buscar usuario
-    const user = await User.findOne({ email }).select('+password');
-    console.log('USUARIO ENCONTRADO:', user ? 'SI' : 'NO');
-    
+
+    // Buscar usuario (En Postgres devuelve todos los campos, incluyendo password)
+    const user = await User.findOne({ email });
+
     if (!user || !user.active) {
-      console.log('ERROR: Usuario no encontrado o inactivo');
       return res.status(401).json({
         success: false,
         message: 'Credenciales inválidas o usuario inactivo'
       });
     }
 
-    console.log('VERIFICANDO CONTRASEÑA');
-    // Verificar contraseña
-    const isMatch = await user.comparePassword(password);
-    console.log('CONTRASEÑA CORRECTA:', isMatch ? 'SI' : 'NO');
-    
+    // Verificar contraseña usando el método del modelo
+    const isMatch = await User.comparePassword(password, user.password);
+
     if (!isMatch) {
-      console.log('ERROR: Contraseña incorrecta');
       return res.status(401).json({
         success: false,
         message: 'Credenciales inválidas'
@@ -92,20 +82,16 @@ exports.login = async (req, res) => {
     }
 
     // Actualizar última conexión
-    console.log('ACTUALIZANDO ÚLTIMA CONEXIÓN');
-    user.lastLogin = Date.now();
-    await user.save();
+    await User.update(user.id, { last_login: new Date() });
 
-    // Generar token
-    console.log('GENERANDO TOKEN');
-    const token = generateToken(user._id);
+    // Generar token (Usando .id del objeto Postgres)
+    const token = generateToken(user.id);
 
-    console.log('LOGIN EXITOSO');
     res.status(200).json({
       success: true,
       token,
       user: {
-        id: user._id,
+        id: user.id,
         username: user.username,
         email: user.email,
         role: user.role
@@ -113,7 +99,6 @@ exports.login = async (req, res) => {
     });
   } catch (error) {
     console.error('ERROR EN LOGIN:', error);
-    console.error('STACK:', error.stack);
     res.status(500).json({
       success: false,
       message: 'Error en el servidor',
@@ -122,18 +107,20 @@ exports.login = async (req, res) => {
   }
 };
 
-// Obtener perfil del usuario actual
+// Obtener perfil del usuario actual (req.user viene del middleware auth)
 exports.getProfile = async (req, res) => {
   try {
+    // req.user ya está poblado por el middleware protect
+    const user = req.user;
     res.status(200).json({
       success: true,
       user: {
-        id: req.user._id,
-        username: req.user.username,
-        email: req.user.email,
-        role: req.user.role,
-        lastLogin: req.user.lastLogin,
-        createdAt: req.user.createdAt
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        lastLogin: user.last_login,
+        createdAt: user.created_at
       }
     });
   } catch (error) {
@@ -150,10 +137,10 @@ exports.getProfile = async (req, res) => {
 exports.updatePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-    const user = await User.findById(req.user._id).select('+password');
+    const user = await User.findById(req.user.id);
 
     // Verificar contraseña actual
-    const isMatch = await user.comparePassword(currentPassword);
+    const isMatch = await User.comparePassword(currentPassword, user.password);
     if (!isMatch) {
       return res.status(401).json({
         success: false,
@@ -161,9 +148,8 @@ exports.updatePassword = async (req, res) => {
       });
     }
 
-    // Actualizar contraseña
-    user.password = newPassword;
-    await user.save();
+    // Actualizar contraseña (el modelo se encarga del hashing)
+    await User.update(user.id, { password: newPassword });
 
     res.status(200).json({
       success: true,
@@ -182,8 +168,10 @@ exports.updatePassword = async (req, res) => {
 // Obtener lista de usuarios (solo para admins)
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-__v');
-    
+    // Usamos el driver directo de Knex para simplificar el listado sin password
+    const db = require('../config/database');
+    const users = await db('users').select('id', 'username', 'email', 'role', 'active', 'last_login', 'created_at');
+
     res.status(200).json({
       success: true,
       count: users.length,

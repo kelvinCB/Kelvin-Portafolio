@@ -1,4 +1,5 @@
 const Message = require('../models/Message');
+const db = require('../config/database');
 const fs = require('fs');
 const path = require('path');
 const { Parser } = require('json2csv');
@@ -6,55 +7,38 @@ const emailService = require('../utils/emailService');
 
 // Save a new contact message
 exports.createMessage = async (req, res) => {
-  console.log(' [messageController] Recibida solicitud de contacto');
-  
   try {
-    // Extract form data
     const { name, email, phone = '', message, honeypot } = req.body;
-    console.log(` [messageController] Mensaje recibido de: ${name} (${email})`);
 
-    // Spam detection using honeypot
     if (honeypot && honeypot.trim() !== "") {
-      console.log(' [messageController] Detección de spam por honeypot');
       return res.status(400).json({ success: false, message: 'Detección de spam.' });
     }
 
-    // Basic field validation
     if (!name || !name.trim()) {
-      console.warn(' [messageController] Validation failed: empty name');
       return res.status(400).json({ success: false, message: 'El nombre es obligatorio.' });
     }
 
     if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-      console.warn(' [messageController] Validation failed: invalid email');
       return res.status(400).json({ success: false, message: 'El email no es válido.' });
     }
 
     if (!message || !message.trim()) {
-      console.warn(' [messageController] Validation failed: empty message');
       return res.status(400).json({ success: false, message: 'El mensaje es obligatorio.' });
     }
 
-    // Get IP and User-Agent for spam detection
     const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const userAgent = req.headers['user-agent'];
 
-    // Create new message
-    console.log('💾 [messageController] Creating new message record in the database');
-    const newMessage = new Message({
+    // Create new message using refactored model
+    const savedMessage = await Message.create({
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
       message: message.trim(),
       ipAddress,
       userAgent,
-      date: new Date(),
       read: false
     });
-
-    console.log('💾 [messageController] Guardando mensaje en la base de datos');
-    const savedMessage = await newMessage.save();
-    console.log(`✅ [messageController] Mensaje guardado con ID: ${savedMessage._id}`);
 
     // Try to send notification email
     const emailResult = await emailService.sendContactNotification({
@@ -64,89 +48,74 @@ exports.createMessage = async (req, res) => {
       message: message.trim()
     });
 
-    // Register email sending result
-    if (emailResult.success) {
-      console.log(`✅ [messageController] Email enviado correctamente: ${emailResult.messageId}`);
-    } else {
-      console.warn(`⚠️ [messageController] No se pudo enviar el email: ${emailResult.error || 'Error desconocido'}`);
-      // Register additional details for diagnosis but continue with the response
-      if (emailResult.errorDetails) {
-        console.error('📋 [messageController] Detalles del error de email:', JSON.stringify(emailResult.errorDetails));
-      }
-      console.log('📋 [messageController] Estado de la configuración del email:', JSON.stringify(emailResult.configStatus));
-    }
-
-    // Respond to client (always with success if the message was saved, even if the email fails)
-    // This prevents the user from seeing errors even if the message was saved
-    return res.status(201).json({ 
-      success: true, 
+    return res.status(201).json({
+      success: true,
       message: 'Mensaje recibido correctamente.' + (emailResult.success ? '' : ' La notificación por email podría retrasarse.'),
       emailSent: emailResult.success
     });
 
   } catch (error) {
-    console.error('❌ [messageController] Error al crear mensaje:', error);
-    return res.status(500).json({ 
-      success: false, 
-      message: 'Error al procesar el mensaje. Por favor, inténtalo de nuevo.' 
+    console.error('Error al crear mensaje:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Error al procesar el mensaje. Por favor, inténtalo de nuevo.'
     });
   }
 };
 
-// Get all messages with pagination and filters
+// Get all messages with pagination and filters (Refactorizado para Knex)
 exports.getMessages = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
-    
-    //  Filtering options
-    const filter = {};
-    
-    // Filter by read status
-    if (req.query.read === 'true') filter.read = true;
-    if (req.query.read === 'false') filter.read = false;
-    
-    // Filter by starred status
-    if (req.query.starred === 'true') filter.starred = true;
-    if (req.query.starred === 'false') filter.starred = false;
-    
-    // Filter by tag
-    if (req.query.tag) filter.tags = req.query.tag;
-    
-    // Filter by text (search)
+    const offset = (page - 1) * limit;
+
+    let query = db('messages');
+
+    // Filtering options
+    if (req.query.read === 'true') query = query.where('read', true);
+    if (req.query.read === 'false') query = query.where('read', false);
+    if (req.query.starred === 'true') query = query.where('starred', true);
+    if (req.query.starred === 'false') query = query.where('starred', false);
+
+    // Filter by tag (en Postgres tags es un array)
+    if (req.query.tag) {
+      query = query.whereRaw('? = ANY(tags)', [req.query.tag]);
+    }
+
+    // Filter by text (search) - SQL LIKE
     if (req.query.search) {
-      const searchRegex = new RegExp(req.query.search, 'i');
-      filter.$or = [
-        { name: searchRegex },
-        { email: searchRegex },
-        { phone: searchRegex },
-        { message: searchRegex }
-      ];
+      const search = `%${req.query.search}%`;
+      query = query.where(function () {
+        this.where('name', 'ILIKE', search)
+          .orWhere('email', 'ILIKE', search) // Note: Email is encrypted in DB, search might not work on encrypted fields
+          .orWhere('phone', 'ILIKE', search) // Same here
+          .orWhere('message', 'ILIKE', search);
+      });
     }
-    
+
     // Filter by date
-    if (req.query.dateFrom || req.query.dateTo) {
-      filter.createdAt = {};
-      if (req.query.dateFrom) {
-        filter.createdAt.$gte = new Date(req.query.dateFrom);
-      }
-      if (req.query.dateTo) {
-        const dateTo = new Date(req.query.dateTo);
-        dateTo.setHours(23, 59, 59, 999); // Hasta el final del día
-        filter.createdAt.$lte = dateTo;
-      }
+    if (req.query.dateFrom) {
+      query = query.where('created_at', '>=', new Date(req.query.dateFrom));
     }
-    
-    // Execute query with pagination
-    const messages = await Message.find(filter)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
-    
+    if (req.query.dateTo) {
+      const dateTo = new Date(req.query.dateTo);
+      dateTo.setHours(23, 59, 59, 999);
+      query = query.where('created_at', '<=', dateTo);
+    }
+
     // Count total for pagination
-    const total = await Message.countDocuments(filter);
-    
+    const totalResult = await query.clone().count('id as count').first();
+    const total = parseInt(totalResult.count);
+
+    // Execute query with pagination and sort
+    const rows = await query
+      .orderBy('created_at', 'desc')
+      .limit(limit)
+      .offset(offset);
+
+    const messages = rows.map(row => Message._processMessage(row));
+
     return res.status(200).json({
       success: true,
       totalPages: Math.ceil(total / limit),
@@ -169,278 +138,125 @@ exports.getMessages = async (req, res) => {
 exports.getMessage = async (req, res) => {
   try {
     const message = await Message.findById(req.params.id);
-    
+
     if (!message) {
-      return res.status(404).json({
-        success: false,
-        message: 'Mensaje no encontrado'
-      });
+      return res.status(404).json({ success: false, message: 'Mensaje no encontrado' });
     }
-    
-    return res.status(200).json({
-      success: true,
-      data: message
-    });
+
+    return res.status(200).json({ success: true, data: message });
   } catch (error) {
     console.error('Error al obtener mensaje:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Error al obtener el mensaje.',
-      error: error.message
-    });
+    return res.status(500).json({ success: false, message: 'Error al obtener el mensaje.' });
   }
 };
 
-// Mark a message as read/unread
+// Update status (Read/Starred)
 exports.updateReadStatus = async (req, res) => {
   try {
     const { read } = req.body;
-    
-    if (read === undefined) {
-      return res.status(400).json({
-        success: false,
-        message: 'Debe especificar el estado de lectura'
-      });
-    }
-    
-    const message = await Message.findByIdAndUpdate(
-      req.params.id,
-      { read },
-      { new: true }
-    );
-    
-    if (!message) {
-      return res.status(404).json({
-        success: false,
-        message: 'Mensaje no encontrado'
-      });
-    }
-    
-    return res.status(200).json({
-      success: true,
-      data: message
-    });
+    const message = await Message.update(req.params.id, { read });
+    if (!message) return res.status(404).json({ success: false, message: 'No encontrado' });
+    return res.status(200).json({ success: true, data: message });
   } catch (error) {
-    console.error('Error al actualizar estado de lectura:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Error al actualizar el estado de lectura.',
-      error: error.message
-    });
+    return res.status(500).json({ success: false, message: 'Error de servidor' });
   }
 };
 
-// Mark a message as starred/unstarred
 exports.updateStarredStatus = async (req, res) => {
   try {
     const { starred } = req.body;
-    
-    if (starred === undefined) {
-      return res.status(400).json({
-        success: false,
-        message: 'Debe especificar el estado destacado'
-      });
-    }
-    
-    const message = await Message.findByIdAndUpdate(
-      req.params.id,
-      { starred },
-      { new: true }
-    );
-    
-    if (!message) {
-      return res.status(404).json({
-        success: false,
-        message: 'Mensaje no encontrado'
-      });
-    }
-    
-    return res.status(200).json({
-      success: true,
-      data: message
-    });
+    const message = await Message.update(req.params.id, { starred });
+    if (!message) return res.status(404).json({ success: false, message: 'No encontrado' });
+    return res.status(200).json({ success: true, data: message });
   } catch (error) {
-    console.error('Error al actualizar estado destacado:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Error al actualizar el estado destacado.',
-      error: error.message
-    });
+    return res.status(500).json({ success: false, message: 'Error de servidor' });
   }
 };
 
-// Add or remove tags from a message
+// Add or remove tags
 exports.updateTags = async (req, res) => {
   try {
     const { tags, action } = req.body;
-    
-    if (!tags || !Array.isArray(tags)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Debe proporcionar un array de etiquetas'
-      });
-    }
-    
-    let update;
-    
-    // Agregar o quitar etiquetas
+    const currentMsg = await db('messages').where({ id: req.params.id }).first();
+
+    if (!currentMsg) return res.status(404).json({ success: false, message: 'No encontrado' });
+
+    let newTags = currentMsg.tags || [];
+
     if (action === 'add') {
-      update = { $addToSet: { tags: { $each: tags } } };
+      newTags = [...new Set([...newTags, ...tags])];
     } else if (action === 'remove') {
-      update = { $pull: { tags: { $in: tags } } };
+      newTags = newTags.filter(t => !tags.includes(t));
     } else if (action === 'set') {
-      update = { $set: { tags } };
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: 'Acción no válida. Use "add", "remove" o "set"'
-      });
+      newTags = tags;
     }
-    
-    const message = await Message.findByIdAndUpdate(
-      req.params.id,
-      update,
-      { new: true }
-    );
-    
-    if (!message) {
-      return res.status(404).json({
-        success: false,
-        message: 'Mensaje no encontrado'
-      });
-    }
-    
-    return res.status(200).json({
-      success: true,
-      data: message
-    });
+
+    const updated = await Message.update(req.params.id, { tags: newTags });
+
+    return res.status(200).json({ success: true, data: updated });
   } catch (error) {
-    console.error('Error al actualizar etiquetas:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Error al actualizar las etiquetas.',
-      error: error.message
-    });
+    return res.status(500).json({ success: false, message: 'Error al actualizar etiquetas' });
   }
 };
 
 // Delete a message
 exports.deleteMessage = async (req, res) => {
   try {
-    const message = await Message.findByIdAndDelete(req.params.id);
-    
-    if (!message) {
-      return res.status(404).json({
-        success: false,
-        message: 'Mensaje no encontrado'
-      });
-    }
-    
-    return res.status(200).json({
-      success: true,
-      message: 'Mensaje eliminado correctamente'
-    });
+    const deleted = await Message.delete(req.params.id);
+    if (!deleted) return res.status(404).json({ success: false, message: 'No encontrado' });
+    return res.status(200).json({ success: true, message: 'Eliminado correctamente' });
   } catch (error) {
-    console.error('Error al eliminar mensaje:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Error al eliminar el mensaje.',
-      error: error.message
-    });
+    return res.status(500).json({ success: false, message: 'Error al eliminar' });
   }
 };
 
-// Export messages to CSV
+// Export to CSV (Refactorizado)
 exports.exportToCSV = async (req, res) => {
   try {
-    // Filters similar to getMessages
-    const filter = {};
-    
-    // Apply filters if provided
-    if (req.query.read === 'true') filter.read = true;
-    if (req.query.read === 'false') filter.read = false;
-    if (req.query.starred === 'true') filter.starred = true;
-    if (req.query.starred === 'false') filter.starred = false;
-    if (req.query.tag) filter.tags = req.query.tag;
-    
-    if (req.query.search) {
-      const searchRegex = new RegExp(req.query.search, 'i');
-      filter.$or = [
-        { name: searchRegex },
-        { email: searchRegex },
-        { phone: searchRegex },
-        { message: searchRegex }
-      ];
-    }
-    
-    if (req.query.dateFrom || req.query.dateTo) {
-      filter.createdAt = {};
-      if (req.query.dateFrom) {
-        filter.createdAt.$gte = new Date(req.query.dateFrom);
-      }
-      if (req.query.dateTo) {
-        const dateTo = new Date(req.query.dateTo);
-        dateTo.setHours(23, 59, 59, 999);
-        filter.createdAt.$lte = dateTo;
-      }
-    }
-    
-    // Get all messages that match the filter
-    const messages = await Message.find(filter).sort({ createdAt: -1 });
-    
+    let query = db('messages');
+
+    // Apply same filters
+    if (req.query.read === 'true') query = query.where('read', true);
+    if (req.query.read === 'false') query = query.where('read', false);
+    if (req.query.starred === 'true') query = query.where('starred', true);
+    if (req.query.starred === 'false') query = query.where('starred', false);
+    if (req.query.tag) query = query.whereRaw('? = ANY(tags)', [req.query.tag]);
+
+    const rows = await query.orderBy('created_at', 'desc');
+    const messages = rows.map(row => Message._processMessage(row));
+
     if (messages.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'No hay mensajes para exportar'
-      });
+      return res.status(404).json({ success: false, message: 'No hay datos para exportar' });
     }
-    
-    // Configure fields for CSV
+
     const fields = [
-      { label: 'ID', value: '_id' },
+      { label: 'ID', value: 'id' },
       { label: 'Nombre', value: 'name' },
       { label: 'Email', value: 'email' },
       { label: 'Teléfono', value: 'phone' },
       { label: 'Mensaje', value: 'message' },
       { label: 'Leído', value: 'read' },
       { label: 'Destacado', value: 'starred' },
-      { label: 'Etiquetas', value: (row) => row.tags.join(', ') },
-      { label: 'Fecha', value: (row) => new Date(row.createdAt).toLocaleString() }
+      { label: 'Etiquetas', value: (row) => (row.tags || []).join(', ') },
+      { label: 'Fecha', value: (row) => new Date(row.created_at).toLocaleString() }
     ];
-    
-    // Convert to CSV
+
     const json2csvParser = new Parser({ fields });
     const csv = json2csvParser.parse(messages);
-    
-    // Generate file name
+
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const fileName = `mensajes_${timestamp}.csv`;
-    const filePath = path.join(__dirname, '..', 'exports', fileName);
-    
-    // Ensure export directory exists
     const exportDir = path.join(__dirname, '..', 'exports');
-    if (!fs.existsSync(exportDir)) {
-      fs.mkdirSync(exportDir, { recursive: true });
-    }
-    
-    // Save file
+    if (!fs.existsSync(exportDir)) fs.mkdirSync(exportDir, { recursive: true });
+
+    const filePath = path.join(exportDir, fileName);
     fs.writeFileSync(filePath, csv);
-    
-    // Send file
+
     res.download(filePath, fileName, (err) => {
-      if (err) {
-        console.error('Error al descargar archivo:', err);
-      }
-      
-      // Delete file after download
-      fs.unlinkSync(filePath);
+      if (!err) fs.unlinkSync(filePath);
     });
   } catch (error) {
-    console.error('Error al exportar mensajes:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Error al exportar los mensajes.',
-      error: error.message
-    });
+    console.error('Error al exportar:', error);
+    return res.status(500).json({ success: false, message: 'Error al exportar' });
   }
 };

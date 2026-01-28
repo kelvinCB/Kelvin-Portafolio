@@ -6,11 +6,10 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
-const expressMongoSanitize = require('express-mongo-sanitize');
 
 // Importación de utilidades y configuraciones
 require('dotenv').config();
-const { connectDB, scheduleBackups } = require('./config/database');
+const db = require('./config/database');
 const { apiLimiter, secureHeaders } = require('./middleware/security');
 const setupAdmin = require('./utils/setupAdmin');
 
@@ -24,8 +23,8 @@ const PORT = process.env.BACKEND_PORT || process.env.PORT || 5000;
 
 // Middlewares de seguridad y formateo
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://kelvin-portafolio.netlify.app', 'https://kelvin-portfolio-ipc3.onrender.com']
+  origin: process.env.NODE_ENV === 'production'
+    ? ['https://kelvin-portafolio.netlify.app', 'https://portfolio-admin-kelvin.netlify.app']
     : ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -34,10 +33,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-
 app.use(secureHeaders); // Security headers
 
-// Endpoint para donaciones con Stripe
+// Stripe (para donaciones)
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 app.post('/api/create-checkout-session', async (req, res) => {
@@ -53,7 +51,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
               name: 'Donación',
               description: 'Gracias por tu apoyo',
             },
-            unit_amount: Math.round(amount * 100), // Stripe espera centavos
+            unit_amount: Math.round(amount * 100),
           },
           quantity: 1,
         },
@@ -69,124 +67,69 @@ app.post('/api/create-checkout-session', async (req, res) => {
   }
 });
 
-// MongoDB connection
-connectDB()
-  .then(() => {
-    // Schedule daily backups only if not in test environment
-    if (process.env.NODE_ENV !== 'test') {
-      scheduleBackups();
+// Inicialización de directorios y Admin
+(async () => {
+  // Crear directorios si no existen
+  const dirs = ['exports', 'backups', 'logs'];
+  dirs.forEach(dir => {
+    const fullPath = path.join(__dirname, dir);
+    if (!fs.existsSync(fullPath)) {
+      fs.mkdirSync(fullPath, { recursive: true });
     }
-
-    // Create export directory if it doesn't exist
-    const exportDir = path.join(__dirname, 'exports');
-    if (!fs.existsSync(exportDir)) {
-      fs.mkdirSync(exportDir, { recursive: true });
-    }
-
-    // Create backup directory if it doesn't exist
-    const backupDir = path.join(__dirname, 'backups');
-    if (!fs.existsSync(backupDir)) {
-      fs.mkdirSync(backupDir, { recursive: true });
-    }
-    
-    // Setup initial admin user
-    setupAdmin();
-  })
-  .catch(err => {
-    console.error('Error al inicializar MongoDB:', err);
   });
+
+  // Configurar admin inicial después de que la DB esté lista
+  try {
+    await setupAdmin();
+  } catch (err) {
+    console.error('Error configurando admin inicial:', err.message);
+  }
+})();
 
 // API routes
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 
-// Maintain the original endpoint for compatibility (redirects to the new route)
+// Endpoint de contacto (Migrado a Postgres)
 app.post('/api/contact', async (req, res) => {
-  req.body = expressMongoSanitize.sanitize(req.body);
-  console.log('BODY RECIBIDO (después de sanitizar):', req.body);
-  const { name, email, phone, message, honeypot, captcha } = req.body;
+  const { name, email, phone, message, honeypot } = req.body;
 
-  // Anti-spam protection: honeypot
   if (honeypot && honeypot.trim() !== "") {
     return res.status(400).json({ message: 'Detección de spam.' });
   }
 
-  // Basic field validation
   if (!name || !name.trim()) return res.status(400).json({ message: 'El nombre es obligatorio.' });
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) return res.status(400).json({ message: 'El email no es válido.' });
   if (!message || !message.trim()) return res.status(400).json({ message: 'El mensaje es obligatorio.' });
 
-  // Phone validation (only if provided)
-  let phoneValid = false;
-  let phoneSanitized = '';
-  if (phone && phone.trim() !== "") {
-    // Allows +, digits and spaces, minimum 7 real digits
-    const phoneDigits = phone.replace(/\D/g, '');
-    phoneSanitized = phone.trim();
-    if (/^[+]?\d[\d\s-]{6,}$/.test(phoneSanitized) && phoneDigits.length >= 7 && phoneDigits.length <= 15) {
-      phoneValid = true;
-      console.log('Teléfono válido recibido:', phoneSanitized);
-    } else {
-      console.log('Teléfono inválido recibido:', phone);
-      return res.status(400).json({ message: 'El teléfono no es válido.' });
-    }
-  } else {
-    console.log('No se recibió teléfono o está vacío.');
-  }
-
-  // Configure your email account (can be Gmail, Outlook, etc.)
-  // If you use Gmail, enable "Less secure app access" or use an App Password
   const transporter = nodemailer.createTransport({
-    // --- Configuration for Gmail + App Password ---
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER, // Your Gmail account
-      pass: process.env.EMAIL_PASS,  // Your App Password for Gmail
-    },
-    // --- End Gmail + App Password configuration ---
-
-    /*
-    // --- Alternative configuration: Gmail with OAuth2 ---
-    // For more information and steps: https://nodemailer.com/usage/using-gmail/
-    // Uncomment and complete the data if you want to use OAuth2 in the future
-    auth: {
-      type: 'OAuth2',
-      user: 'kelvinc0219@gmail.com',
-      clientId: 'TU_CLIENT_ID',
-      clientSecret: 'TU_CLIENT_SECRET',
-      refreshToken: 'TU_REFRESH_TOKEN',
-      accessToken: 'TU_ACCESS_TOKEN', // Optional
-    },
-    // --- End Gmail OAuth2 configuration ---
-    */
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    }
   });
 
-  // HTML template for the email
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; padding: 20px; background: #fafafa; border-radius: 8px;">
       <h2 style="color: #0078d7;">¡Nuevo mensaje de contacto!</h2>
       <p><strong>Nombre:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
-      ${phoneValid ? `<p><strong>Teléfono:</strong> ${phoneSanitized}</p>` : '<!-- Teléfono no proporcionado o inválido -->'}
+      ${phone ? `<p><strong>Teléfono:</strong> ${phone}</p>` : ''}
       <p><strong>Mensaje:</strong></p>
       <div style="background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 5px;">
         ${message}
       </div>
-      <hr>
-      <small style="color: #888;">This message was sent from the contact form of your portfolio.</small>
     </div>
   `;
-  console.log('¿Se incluirá teléfono en el email?', phoneValid ? phoneSanitized : 'NO');
 
   try {
-    // 1. Save in database (calls the message controller)
-    // Get IP and User-Agent for registration
     const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const userAgent = req.headers['user-agent'];
-    
-    // Create message in MongoDB
+
+    // Guardar en Postgres usando el modelo refactorizado
     const Message = require('./models/Message');
-    const newMessage = new Message({
+    await Message.create({
       name,
       email,
       phone: phone || '',
@@ -194,31 +137,25 @@ app.post('/api/contact', async (req, res) => {
       ipAddress,
       userAgent
     });
-    
-    await newMessage.save();
-    console.log('Mensaje guardado con ID:', newMessage._id);
-    
-    // 2. Send by email
+
+    // Enviar email
     await transporter.sendMail({
-      from: '"Portafolio Web" <kelvinc0219@gmail.com>', // Use my own email to avoid spam and the recipient can be seen in the body
-      to: 'kelvinc0219@gmail.com',
-      subject: '💼 New contact message from your portfolio',
+      from: `"Portafolio Web" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
+      subject: '💼 Nuevo mensaje de contacto',
       html: htmlContent,
     });
-    
-    res.status(200).json({ message: 'Mensaje guardado y enviado con éxito.' });
+
+    res.status(200).json({ message: 'Mensaje enviado con éxito.' });
   } catch (error) {
-    console.error('Error enviando el correo:', error);
-    res.status(500).json({ message: 'Ocurrió un error al enviar el mensaje.' });
+    console.error('Error procesando contacto:', error);
+    res.status(500).json({ message: 'Ocurrió un error al procesar tu solicitud.' });
   }
 });
 
-// Serve admin panel in production
+// Serve frontend in production
 if (process.env.NODE_ENV === 'production') {
-  // Serve static frontend files
   app.use(express.static(path.join(__dirname, '../build')));
-  
-  // For any undefined route, serve the index.html
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));
   });
@@ -229,19 +166,16 @@ app.use((err, req, res, next) => {
   console.error('Error no controlado:', err);
   res.status(500).json({
     success: false,
-    message: 'Error interno del servidor',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    message: 'Error interno del servidor'
   });
 });
 
-// Start the server only when this file is run directly (e.g., `node index.js`)
-// This allows the server to be started for E2E tests, but not for Jest unit tests.
+// Server Listen
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
-    console.log(`Modo: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
+    console.log(`📡 Modo: ${process.env.NODE_ENV || 'development'}`);
   });
 }
 
-// Export the app for testing purposes
 module.exports = { app };

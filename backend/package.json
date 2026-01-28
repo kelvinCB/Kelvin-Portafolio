@@ -12,7 +12,7 @@
     "test": "jest"
   },
   "engines": {
-    "node": "18.x"
+    "node": ">=20.0.0"
   },
   "keywords": [],
   "author": "Kelvin Calcaño",
@@ -25,13 +25,13 @@
     "dotenv": "^16.3.1",
     "dotenv-safe": "^8.2.0",
     "express": "^4.21.2",
-    "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
     "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.0.1",
+    "knex": "^3.1.0",
     "nodemailer": "^7.0.3",
+    "pg": "^8.17.2",
     "stripe": "^18.1.0"
   },
   "devDependencies": {

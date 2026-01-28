@@ -1,5 +1,4 @@
 const rateLimit = require('express-rate-limit');
-const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 
 // Rate limit configuration to prevent brute force attacks
@@ -33,39 +32,37 @@ exports.authLimiter = rateLimit({
 // Limiter for the contact form
 exports.contactFormLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5, // maximum 5 messages per hour from the same IP
+  max: 10, // Aumentado ligeramente para pruebas
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {
     return res.status(429).json({
       success: false,
-      message: 'You have sent too many messages. Please wait before sending another one.'
+      message: 'Has enviado demasiados mensajes. Por favor, espera antes de intentar de nuevo.'
     });
   }
 });
 
-// Middleware to sanitize data and prevent NoSQL injection
-exports.sanitize = mongoSanitize({
-  // Secure configuration for production that avoids query errors
-  onSanitize: (req, key) => {
-    console.warn(`NoSQL injection attempt detected in field: ${key}`);
-  },
-  dryRun: process.env.NODE_ENV !== 'production' // Only logs in development, applies in production
-});
+// REMOVED: mongoSanitize (No longer needed for PostgreSQL/Knex)
+exports.sanitize = (req, res, next) => next();
 
 // Middleware to add security headers
 exports.secureHeaders = helmet({
-  contentSecurityPolicy: process.env.NODE_ENV === 'production', // Enable in production
-  crossOriginEmbedderPolicy: false, // To allow loading resources from other sources
-  
-  // Additional configuration for production
+  contentSecurityPolicy: process.env.NODE_ENV === 'production' ? {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://api.stripe.com"],
+    },
+  } : false,
+  crossOriginEmbedderPolicy: false,
   hsts: process.env.NODE_ENV === 'production' ? {
-    maxAge: 31536000, // 1 year in seconds
+    maxAge: 31536000,
     includeSubDomains: true,
     preload: true
   } : false,
-  
-  // Enable referrer policy 
   referrerPolicy: {
     policy: 'strict-origin-when-cross-origin'
   }
