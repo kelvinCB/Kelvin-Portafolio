@@ -48,18 +48,18 @@ const Contact = ({ id }) => {
     }
     setErrors({});
     setLoading(true);
-    
-  // Updated URL construction for simplified backend - Force redeploy
+
+    // Updated URL construction for simplified backend - Force redeploy
     let directBackendUrl;
     if (process.env.NODE_ENV === 'production') {
-      let baseApiUrl = process.env.REACT_APP_API_URL || 'https://kelvin-portfolio-ipc3.onrender.com';
-      
+      let baseApiUrl = process.env.REACT_APP_API_URL || 'http://86.48.24.125';
+
       // Remove any trailing slash
       baseApiUrl = baseApiUrl.replace(/\/$/, '');
-      
+
       // Construct the final URL for the contact endpoint
       directBackendUrl = `${baseApiUrl}/api/contact`;
-      
+
       console.log('Production API URL (original):', process.env.REACT_APP_API_URL);
       console.log('Production API URL (normalized):', baseApiUrl);
       console.log('Constructed URL:', directBackendUrl);
@@ -70,24 +70,24 @@ const Contact = ({ id }) => {
     }
     console.log('Sending request to:', directBackendUrl);
     console.log('Request payload:', JSON.stringify(form, null, 2));
-    
+
     // Using XMLHttpRequest for CORS compatibility and test compatibility
     const xhr = new XMLHttpRequest();
     xhr.open('POST', directBackendUrl);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    
+
     // Define what happens on successful data submission
-    xhr.onload = function() {
+    xhr.onload = function () {
       try {
         const status = xhr.status;
         console.log('Response status:', status);
-        
+
         if (status >= 200 && status < 300) {
           console.log('Form submitted successfully');
           setResponseMessage('Thank you for your message! I will contact you soon.');
           setSubmitted(true);
           setForm(initialFormState);
-          
+
           // Reset submitted state after 3 seconds to allow users to submit again
           setTimeout(() => {
             setSubmitted(false);
@@ -115,16 +115,16 @@ const Contact = ({ id }) => {
         setLoading(false);
       }
     };
-    
+
     // Define what happens in case of error
-    xhr.onerror = function() {
+    xhr.onerror = function () {
       if (process.env.NODE_ENV !== 'test') {
         console.error('Network error occurred');
       }
       setResponseError('Network error occurred. Please check your connection and try again.');
       setLoading(false);
     };
-    
+
     // Send the request
     xhr.send(JSON.stringify(form));
   };
@@ -136,21 +136,21 @@ const Contact = ({ id }) => {
           <h2 className="section-title">Contact <span className="highlight">Me</span></h2>
           <p className="contact-subtitle">Do you have a project in mind or want to talk about QA Automation opportunities? I'm here to help</p>
         </div>
-        
+
         <div className="contact-content">
           <div className="contact-info-column">
             <div className="contact-image-container">
-              <img 
-                src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1000&q=80" 
-                alt="Contact" 
+              <img
+                src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1000&q=80"
+                alt="Contact"
                 className="contact-image"
               />
             </div>
-            
+
             <div className="contact-info-card">
               <h3>Contact Information</h3>
               <p>Feel free to contact me directly or fill out the form and I'll get back to you shortly</p>
-              
+
               <div className="contact-details">
                 <div className="contact-item">
                   <div className="contact-icon"><FaPhoneAlt /></div>
@@ -159,7 +159,7 @@ const Contact = ({ id }) => {
                     <p>+1 829 969 8254</p>
                   </div>
                 </div>
-                
+
                 <div className="contact-item">
                   <div className="contact-icon"><FaEnvelope /></div>
                   <div>
@@ -167,7 +167,7 @@ const Contact = ({ id }) => {
                     <p>kelvinr02@hotmail.com</p>
                   </div>
                 </div>
-                
+
                 <div className="contact-item">
                   <div className="contact-icon"><FaMapMarkerAlt /></div>
                   <div>
@@ -177,7 +177,7 @@ const Contact = ({ id }) => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="contact-social">
                 <a href="https://www.linkedin.com/in/kelvin-calcano-qa-automation/" target="_blank" rel="noopener noreferrer" className="social-link"><FaLinkedinIn /></a>
                 <a href="https://github.com/kelvinCB" target="_blank" rel="noopener noreferrer" className="social-link"><FaGithub /></a>
@@ -185,24 +185,24 @@ const Contact = ({ id }) => {
               </div>
             </div>
           </div>
-          
+
           <div className="contact-form-column">
             <form className="contact-form" onSubmit={handleSubmit} autoComplete="off">
-                {/* Hidden field to prevent bots - works better than captcha */}
-                <input
-                  type="text"
-                  name="honeypot"
-                  value={form.honeypot}
-                  onChange={handleChange}
-                  style={{display:'none'}}
-                  tabIndex="-1"
-                  autoComplete="off"
-                />
+              {/* Hidden field to prevent bots - works better than captcha */}
+              <input
+                type="text"
+                name="honeypot"
+                value={form.honeypot}
+                onChange={handleChange}
+                style={{ display: 'none' }}
+                tabIndex="-1"
+                autoComplete="off"
+              />
               <div className="form-header">
                 <h3>Send Me a Message</h3>
                 <p>Complete the form and I'll get back to you shortly</p>
               </div>
-              
+
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="name">Full Name</label>
@@ -216,7 +216,7 @@ const Contact = ({ id }) => {
                   />
                   {errors.name && <span className="error-message">{errors.name}</span>}
                 </div>
-                
+
                 <div className="form-group">
                   <label htmlFor="email">Email</label>
                   <input
@@ -230,7 +230,7 @@ const Contact = ({ id }) => {
                   {errors.email && <span className="error-message">{errors.email}</span>}
                 </div>
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="phone">Phone (optional)</label>
                 <input
@@ -243,7 +243,7 @@ const Contact = ({ id }) => {
                 />
                 {errors.phone && <span className="error-message">{errors.phone}</span>}
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="message">Message</label>
                 <textarea
@@ -256,11 +256,11 @@ const Contact = ({ id }) => {
                 />
                 {errors.message && <span className="error-message">{errors.message}</span>}
               </div>
-              
+
               <button className="submit-button" type="submit" disabled={loading || submitted}>
                 {loading ? 'Sending...' : 'Send message'}
               </button>
-              
+
               {responseMessage && <p className="success-message">{responseMessage}</p>}
               {responseError && <p className="error-message">{responseError}</p>}
             </form>
