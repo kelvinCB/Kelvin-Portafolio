@@ -32,12 +32,12 @@ exports.authLimiter = rateLimit({
 // Limiter for the contact form
 // Limiter for the contact form
 exports.contactFormLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 3, // 3 requests per minute per IP
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 3, // 3 requests per 10 minutes per IP
   standardHeaders: true,
   legacyHeaders: false,
   message: {
-    message: 'Has enviado demasiados mensajes en poco tiempo. Por favor, espera un minuto.'
+    message: 'Has enviado demasiados mensajes en poco tiempo. Por favor, espera unos minutos.'
   },
   handler: (req, res, next, options) => {
     return res.status(options.statusCode).json(options.message);
