@@ -6,7 +6,6 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import BackgroundElements from './components/BackgroundElements';
 import WhatsAppButton from './components/WhatsAppButton';
-import DonateButton from './components/DonateButton';
 import Navigation from './components/Navigation';
 import './styles/App.css';
 
@@ -64,11 +63,10 @@ function App() {
       <Experience id="experience" />
       <Contact id="contact" />
       <Footer />
-      <WhatsAppButton 
-        phoneNumber="18299698254" 
-        message="Hello, I saw your portfolio and would like to talk with you" 
+      <WhatsAppButton
+        phoneNumber="18299698254"
+        message="Hello, I saw your portfolio and would like to talk with you"
       />
-      <DonateButton />
     </div>
   );
 }
