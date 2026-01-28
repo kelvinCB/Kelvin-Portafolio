@@ -87,6 +87,9 @@ app.post('/api/create-checkout-session', async (req, res) => {
 })();
 
 // API routes
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', environment: process.env.NODE_ENV, timestamp: new Date() });
+});
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 
