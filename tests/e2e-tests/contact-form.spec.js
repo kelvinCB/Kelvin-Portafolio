@@ -31,11 +31,11 @@ test.describe('Contact Form', () => {
     await expect(contactSectionTitle).toBeVisible();
     const formTitle = page.locator('h3', { hasText: 'Send Me a Message' }); // Changed h2 to h3
     await expect(formTitle).toBeVisible();
-    
+
     // Pause for 1 second before taking screenshot
     console.log('Waiting 1 second before taking screenshot for contact form display...');
     await page.waitForTimeout(1000);
-    
+
     // Take a screenshot and save it
     try {
       const screenshotFileName = 'contact-form-display.png';
@@ -49,6 +49,9 @@ test.describe('Contact Form', () => {
   });
 
   test('should submit the form successfully with valid data', async ({ page }) => {
+    // Skip this test in development since it requires PostgreSQL
+    test.skip(process.env.TARGET_ENV !== 'production', 'Skipping in development - requires PostgreSQL');
+
     const fullNameInput = page.getByLabel('Full Name');
     await fullNameInput.waitFor({ state: 'visible', timeout: 10000 });
     await fullNameInput.fill('Test User');
@@ -65,11 +68,11 @@ test.describe('Contact Form', () => {
 
     const successMessage = page.locator('text=Thank you for your message! I will contact you soon.');
     await expect(successMessage).toBeVisible({ timeout: 10000 });
-    
+
     // Pause for 1 second before taking screenshot
     console.log('Waiting 1 second before taking screenshot for successful form submission...');
     await page.waitForTimeout(1000);
-    
+
     // Take a screenshot and save it
     try {
       const screenshotFileName = 'contact-form-success.png';
@@ -88,11 +91,11 @@ test.describe('Contact Form', () => {
     await page.getByRole('button', { name: 'Send message' }).click();
     const errorMessage = page.locator('text=Name is required.');
     await expect(errorMessage).toBeVisible();
-    
+
     // Pause for 1 second before taking screenshot
     console.log('Waiting 1 second before taking screenshot for empty name error...');
     await page.waitForTimeout(1000);
-    
+
     // Take a screenshot and save it
     try {
       const screenshotFileName = 'contact-form-empty-name-error.png';
@@ -111,11 +114,11 @@ test.describe('Contact Form', () => {
     await page.getByRole('button', { name: 'Send message' }).click();
     const errorMessage = page.locator('text=Email is required.');
     await expect(errorMessage).toBeVisible();
-    
+
     // Pause for 1 second before taking screenshot
     console.log('Waiting 1 second before taking screenshot for empty email error...');
     await page.waitForTimeout(1000);
-    
+
     // Take a screenshot and save it
     try {
       const screenshotFileName = 'contact-form-empty-email-error.png';
@@ -139,11 +142,11 @@ test.describe('Contact Form', () => {
     await page.getByRole('button', { name: 'Send message' }).click();
     const errorMessage = page.locator('text=Email format is not valid.');
     await expect(errorMessage).toBeVisible();
-    
+
     // Pause for 1 second before taking screenshot
     console.log('Waiting 1 second before taking screenshot for invalid email format error...');
     await page.waitForTimeout(1000);
-    
+
     // Take a screenshot and save it
     try {
       const screenshotFileName = 'contact-form-invalid-email-format.png';
@@ -162,11 +165,11 @@ test.describe('Contact Form', () => {
     await page.getByRole('button', { name: 'Send message' }).click();
     const errorMessage = page.locator('text=Message is required.');
     await expect(errorMessage).toBeVisible();
-    
+
     // Pause for 1 second before taking screenshot
     console.log('Waiting 1 second before taking screenshot for empty message error...');
     await page.waitForTimeout(1000);
-    
+
     // Take a screenshot and save it
     try {
       const screenshotFileName = 'contact-form-empty-message-error.png';

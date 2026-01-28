@@ -89,11 +89,11 @@ export default defineConfig({
       stderr: 'pipe',
     },
     {
-      command: 'BACKEND_PORT=5001 npm start', // Use port 5001 to avoid macOS AirPlay conflict
-      port: 5001,    // Port to poll for backend readiness
+      command: 'npm start',
+      port: 5000,
       reuseExistingServer: !process.env.CI,
       timeout: 60 * 1000, // 1 minute for backend
-      cwd: './backend', // Use relative path for cross-platform compatibility
+      cwd: './backend',
       stdout: 'pipe',
       stderr: 'pipe',
     }
