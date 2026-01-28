@@ -30,16 +30,17 @@ exports.authLimiter = rateLimit({
 });
 
 // Limiter for the contact form
+// Limiter for the contact form
 exports.contactFormLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10, // Aumentado ligeramente para pruebas
+  windowMs: 60 * 1000, // 1 minute
+  max: 3, // 3 requests per minute per IP
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (req, res) => {
-    return res.status(429).json({
-      success: false,
-      message: 'Has enviado demasiados mensajes. Por favor, espera antes de intentar de nuevo.'
-    });
+  message: {
+    message: 'Has enviado demasiados mensajes en poco tiempo. Por favor, espera un minuto.'
+  },
+  handler: (req, res, next, options) => {
+    return res.status(options.statusCode).json(options.message);
   }
 });
 

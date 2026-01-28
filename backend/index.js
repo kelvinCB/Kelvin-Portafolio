@@ -10,7 +10,7 @@ const fs = require('fs');
 // Importación de utilidades y configuraciones
 require('dotenv').config();
 const db = require('./config/database');
-const { apiLimiter, secureHeaders } = require('./middleware/security');
+const { apiLimiter, secureHeaders, contactFormLimiter } = require('./middleware/security');
 const setupAdmin = require('./utils/setupAdmin');
 
 // Routes
@@ -19,6 +19,7 @@ const messageRoutes = require('./routes/messageRoutes');
 
 // Initialize app
 const app = express();
+app.set('trust proxy', 1); // Trust Nginx/Netlify proxy for correct IP rate limiting
 const PORT = process.env.BACKEND_PORT || process.env.PORT || 5000;
 
 // Middlewares de seguridad y formateo
@@ -94,7 +95,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 
 // Endpoint de contacto (Migrado a Postgres)
-app.post('/api/contact', async (req, res) => {
+app.post('/api/contact', contactFormLimiter, async (req, res) => {
   const { name, email, phone, message, honeypot } = req.body;
 
   if (honeypot && honeypot.trim() !== "") {
