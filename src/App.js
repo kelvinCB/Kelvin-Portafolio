@@ -64,8 +64,8 @@ function App() {
       <Contact id="contact" />
       <Footer />
       <WhatsAppButton
-        phoneNumber="18299698254"
-        message="Hello, I saw your portfolio and would like to talk with you"
+        phoneNumber={process.env.REACT_APP_CONTACT_PHONE || "18299698254"}
+        message={process.env.REACT_APP_DEFAULT_WHATSAPP_MESSAGE || "Hola, vi tu portafolio y me gustaria hablar contigo"}
       />
     </div>
   );
