@@ -28,6 +28,7 @@ You should see `portfolio-backend` (or your app name) with a green **online** st
 
 ### Performance Management (PM2)
 PM2 is the process manager that keeps the app alive after crashes or reboots.
+# Delete this
 
 - **Restart the app**: `pm2 restart portfolio-backend`
 - **View live logs**: `pm2 logs portfolio-backend`
